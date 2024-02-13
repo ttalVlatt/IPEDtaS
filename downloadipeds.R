@@ -40,12 +40,12 @@
 ## -----------------------------------------------------------------------------
 
 ## default
-primary_data = TRUE
-dictionary = TRUE
+primary_data = FALSE
+dictionary = FALSE
 
 ## STATA version
 ## (NB: downloading Stata version of data will also get Stata program files)
-stata_data = FALSE
+stata_data = TRUE
 
 ## other program files
 prog_spss = FALSE
@@ -119,9 +119,9 @@ url <- 'https://nces.ed.gov/ipeds/datacenter/data/'
 
 ## init potential file paths
 data_dir <- file.path(out_dir, 'data')
-stata_data_dir <- file.path(out_dir, 'stata_data')
+stata_data_dir <- file.path(out_dir, 'stata-data')
 dictionary_dir <- file.path(out_dir, 'dictionary')
-stata_prog_dir <- file.path(out_dir, 'stata_prog')
+stata_prog_dir <- file.path(out_dir, 'stata-prog')
 spss_prog_dir <- file.path(out_dir, 'spss_prog')
 sas_prog_dir <-  file.path(out_dir, 'sas_prog')
 
@@ -176,6 +176,35 @@ for(i in 1:length(ipeds)) {
 
 mess('Finished!')
 
+
+## Unzip folders in stata_data
+dir.create("unzip-stata-data")
+
+sd_files <- list.files("stata-data", recursive = T, full.names = T)
+
+for(i in sd_files) {
+  unzip(i,
+        exdir = "unzip-stata-data")
+}
+
+## Unzip folders in stata_prog
+dir.create("unzip-stata-prog")
+
+sd_files <- list.files("stata-prog", recursive = T, full.names = T)
+
+for(i in sd_files) {
+  unzip(i,
+        exdir = "unzip-stata-prog")
+}
+
+dir.create("labeled-data")
+
+## Change directory in all do files using regex
+do <- readLines("unzip-stata-prog/hd2019.do")
+insheet <- do[29]
+
+gsub('C:\\\\DCT\\\\', 'W:\\\\unzip_stata_data\\\\', insheet)
+insheet
 ## =============================================================================
 ## END
 ################################################################################
