@@ -121,7 +121,7 @@ url <- 'https://nces.ed.gov/ipeds/datacenter/data/'
 data_dir <- file.path(out_dir, 'data')
 stata_data_dir <- file.path(out_dir, 'stata-data')
 dictionary_dir <- file.path(out_dir, 'dictionary')
-stata_prog_dir <- file.path(out_dir, 'stata-prog')
+stata_prog_dir <- file.path(out_dir, 'stata-dofiles')
 spss_prog_dir <- file.path(out_dir, 'spss_prog')
 sas_prog_dir <-  file.path(out_dir, 'sas_prog')
 
@@ -188,23 +188,49 @@ for(i in sd_files) {
 }
 
 ## Unzip folders in stata_prog
-dir.create("unzip-stata-prog")
+dir.create("unzip-stata-dofiles")
 
-sd_files <- list.files("stata-prog", recursive = T, full.names = T)
+sd_files <- list.files("stata-dofiles", recursive = T, full.names = T)
 
 for(i in sd_files) {
   unzip(i,
-        exdir = "unzip-stata-prog")
+        exdir = "unzip-stata-dofiles")
 }
 
 dir.create("labeled-data")
 
-## Change directory in all do files using regex
-do <- readLines("unzip-stata-prog/hd2019.do")
-insheet <- do[29]
 
-gsub('C:\\\\DCT\\\\', 'W:\\\\unzip_stata_data\\\\', insheet)
-insheet
+## Correct .do file line that reads data in to use the path to
+## file downloaded above
+do_files <- list.files("unzip-stata-dofiles", recursive = T, full.names = T)
+
+for(i in do_files) {
+  
+  ## read the do file as plain text
+  do_file <- readLines(i)
+  
+  ## Get the .csv file name from .do file name i
+  data_file <- sub("unzip-stata-dofiles/", "", i) |>
+    sub(".do", "", x = _) |>
+    paste0("_data_stata.csv")
+  
+  ## Write a replacement read in line
+  new_read_line <- paste0("insheet using ",
+                          "../unzip-stata-data/",
+                          data_file,
+                          ", comma clear")
+  
+  ## Replace the line of the do_file that starts with insheet with the
+  ## new_read_line (suppress warnings about some lines grep doesn't like)
+  suppressWarnings(
+    do_file[grep("^insheet", do_file)] <- new_read_line
+  )
+  
+  ## Write the updated do_file back out as i to overwrite
+  writeLines(do_file, i)
+  
+}
+
 ## =============================================================================
 ## END
 ################################################################################
