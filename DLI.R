@@ -207,7 +207,9 @@ do_files <- list.files("unzip-stata-dofiles", recursive = T, full.names = T)
 for(i in do_files) {
   
   ## read the do file as plain text
-  do_file <- readLines(i)
+  suppressWarnings(
+    do_file <- readLines(i)
+  )
   
   ## Get the .csv file name from .do file name i
   data_file <- sub("unzip-stata-dofiles/", "", i) |>
@@ -215,8 +217,7 @@ for(i in do_files) {
     paste0("_data_stata.csv")
   
   ## Write a replacement read in line
-  new_read_line <- paste0("insheet using ",
-                          "../unzip-stata-data/",
+  new_read_line <- paste0("insheet using ../unzip-stata-data/",
                           data_file,
                           ", comma clear")
   
@@ -224,6 +225,10 @@ for(i in do_files) {
   ## new_read_line (suppress warnings about some lines grep doesn't like)
   suppressWarnings(
     do_file[grep("^insheet", do_file)] <- new_read_line
+  )
+  ## Also remove the line they wrote that saves the data
+  suppressWarnings(
+    do_file[grep("^save", do_file)] <- ""
   )
   
   ## Write the updated do_file back out as i to overwrite
