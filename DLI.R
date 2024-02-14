@@ -236,6 +236,23 @@ for(i in do_files) {
   
 }
 
+
+##'[If _rv file exists, use it to overwrite original data]
+
+rv_files <- list.files("unzip-stata-data",
+                       pattern = "_rv",
+                       recursive = T,
+                       full.names = T)
+
+for(i in rv_files) {
+  
+  ## Get the original data file name by dropping _rv
+  og_name <- sub("_rv", "", i)
+  ## Rename the revised file the original name (overwrites og data)
+  file.rename(from = i, to = og_name)
+  
+}
+
 ## =============================================================================
 ## END
 ################################################################################
