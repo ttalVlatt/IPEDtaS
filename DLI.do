@@ -31,6 +31,8 @@ To Run
 0. You will need an installation of R which can be downloaded from https://cran.rstudio.com
 
 1. Un-comment the files you want from ipeds-file-list.txt (remove ## from name)
+	Hint: in many text editors you can hold alt to drag a cursor to multiple
+	lines at once, so you can comment/un-comment many lines at once
 
 2. Ensure the working directory is set to the main DLI folder
 
