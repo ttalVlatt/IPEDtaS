@@ -68,13 +68,16 @@ foreach file in `files_list' {
 	di "`dta_name'"
 	** h/t https://stackoverflow.com/questions/17388874/how-to-get-rid-of-the-extensions-in-stata-loop
 	
-	**Probably add if file exists statement
+	** Only run .do file to label if the file doesn't exist
+	if(!fileexists("../labeled-data/`dta_name'")) {
 	
-	** Run the modified .do file from IPEDS
-	do `file'
+		** Run the modified .do file from IPEDS
+		do `file'
 	
-	** Write the labaled data file as .dta
-	save ../labeled-data/`dta_name', replace
+		** Write the labaled data file as .dta
+		save ../labeled-data/`dta_name', replace
+	
+	}
 	
 	** Clear the data from memory before next loop
 	clear
