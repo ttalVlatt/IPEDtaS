@@ -259,6 +259,16 @@ for(i in do_files) {
     do_file[grep("^\\s?save", do_file)] <- ""
   )
   
+  ## Also remove the line that create cross-tab tables
+  suppressWarnings(
+    do_file[grep("^\\s?tab", do_file)] <- ""
+  )
+  
+  ## Also remove the line that creates summary tables
+  suppressWarnings(
+    do_file[grep("^\\s?summarize", do_file)] <- ""
+  )
+  
   ## Write the updated do_file back out as i to overwrite
   writeLines(do_file, i)
   
@@ -280,6 +290,60 @@ for(i in rv_files) {
   file.rename(from = i, to = og_name)
   
 }
+
+##'[5: Fix IPEDS .do Mistakes...]
+
+do_fix <- function(do_file_name, line_to_replace, replacement) {
+  
+  if(file.exists(do_file_name)) {
+    
+    suppressWarnings(
+      do_file <- readLines(do_file_name)
+    )
+    
+    do_file[line_to_replace] <- replacement
+    
+    writeLines(do_file, do_file_name)
+    
+  } else {
+    
+    paste("File", do_file_name, "not found")
+    
+  }
+  
+}
+
+do_fix("unzip-stata-dofiles/gr2021_pell_ssl.do", 81, 'label define label_psgrtype 1 "Total 2015 cohort (Bachelor^s and other degree/certificate seeking) - four-year institutions",add')
+do_fix("unzip-stata-dofiles/gr2021_pell_ssl.do", 82, '')
+do_fix("unzip-stata-dofiles/gr2021_pell_ssl.do", 83, 'label define label_psgrtype 2 "Bachelor^s degree seeking 2015 cohort - four-year institutions",add')
+do_fix("unzip-stata-dofiles/gr2021_pell_ssl.do", 84, '')
+do_fix("unzip-stata-dofiles/gr2021_pell_ssl.do", 85, 'label define label_psgrtype 3 "Other degree/certificate seeking 2015 cohort - four-year institutions",add')
+do_fix("unzip-stata-dofiles/gr2021_pell_ssl.do", 86, '')
+do_fix("unzip-stata-dofiles/gr2021_pell_ssl.do", 87, 'label define label_psgrtype 4 "Degree/certificate seeking 2018 cohort (less than four-year institutions)",add')
+do_fix("unzip-stata-dofiles/gr2021_pell_ssl.do", 88, '')
+
+do_fix("unzip-stata-dofiles/hd2020.do", 104, '/*label define label_stabbr AL "Alabama"')
+
+## In earlier years GR2017 and GR2014 this section is entirely commented out
+## so apply same treatment
+do_fix("unzip-stata-dofiles/gr2021.do", 166, '')
+do_fix("unzip-stata-dofiles/gr2021.do", 167, '')
+do_fix("unzip-stata-dofiles/gr2021.do", 168, '')
+do_fix("unzip-stata-dofiles/gr2021.do", 169, '')
+
+do_fix("unzip-stata-dofiles/gr2022.do", 165, '/*')
+do_fix("unzip-stata-dofiles/gr2022.do", 182, '*/')
+
+do_fix("unzip-stata-dofiles/GR2020.do", 166, '/*')
+do_fix("unzip-stata-dofiles/GR2020.do", 168, '*/')
+
+
+do_fix("unzip-stata-dofiles/ef2022a.do", 96, 'label variable xefgndru "Imputation field for efgndrun - Gender unknown"')
+do_fix("unzip-stata-dofiles/ef2022a.do", 98, 'label variable xefgndra "Imputation field for efgndran - Another gender"')
+do_fix("unzip-stata-dofiles/ef2022a.do", 100, 'label variable xefgndru "Imputation field for efgndrua - Total of gender unknown and another gender"')
+do_fix("unzip-stata-dofiles/ef2022a.do", 102, 'label variable xefgndrk "Imputation field for efgndrkn - Total gender reported as one of the mutually exclusive binary categories (Men/Women)"')
+
+## To fix, some files such as ef_2022cp are writing .dta files 
 
 ## -----------------------------------------------------------------------------
 ##' *END SCRIPT*

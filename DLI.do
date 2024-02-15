@@ -68,6 +68,8 @@ foreach file in `files_list' {
 	di "`dta_name'"
 	** h/t https://stackoverflow.com/questions/17388874/how-to-get-rid-of-the-extensions-in-stata-loop
 	
+	**Probably add if file exists statement
+	
 	** Run the modified .do file from IPEDS
 	do `file'
 	
