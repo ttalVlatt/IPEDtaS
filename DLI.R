@@ -252,11 +252,11 @@ for(i in do_files) {
   ## Replace the line of the do_file that starts with insheet with the
   ## new_read_line (suppress warnings about some lines grep doesn't like)
   suppressWarnings(
-    do_file[grep("^insheet", do_file)] <- new_read_line
+    do_file[grep("^\\s?insheet", do_file)] <- new_read_line
   )
   ## Also remove the line they wrote that saves the data
   suppressWarnings(
-    do_file[grep("^save", do_file)] <- ""
+    do_file[grep("^\\s?save", do_file)] <- ""
   )
   
   ## Write the updated do_file back out as i to overwrite
