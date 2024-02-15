@@ -10,32 +10,43 @@
 
 /* 
 
-This project is an extension of @btskinner's downloadipeds.R to auto-magically
+This project is an extension of @btskinner's downloadipeds.R to automagically
 download labeled .dta versions of IPEDS data files, which can then be used for
 analysis in Stata or R (via haven)
 
 First, this script first calls DWI.R, which downloads and prepares IPEDS data.
 If you are not running a version of Stata locally installed on your computer, it
 will be easier to first run DWI.R separately to download and set up the files,
-then run this script with line xxx commented out
+then run this script with lines 40 and 42 commented out
 
 Second, this script loops through these prepared files running .do scripts to 
-make labeled .dta copies of the data in the labeled-data/ sub-folder
+make labeled .dta copies of the data in the labeled-data sub-folder
 
 Note: Part of this process replaces original data files with _rv revised
-versions if available, but the resulting file uses the og name without _rv
+versions if available, the resulting file uses the original name without _rv
+
+To Run
+
+0. You will need an installation of R which can be downloaded from https://cran.rstudio.com
+
+1. Un-comment the files you want from ipeds-file-list.txt (remove ## from name)
+
+2. Ensure the working directory is set to the main DLI folder
+
+3. Hit "Do"
 
 */
 
-clear
-
-** Ensure the working directory is set to the main DLI folder
-
+** Install rscript package, more info at https://github.com/reifjulian/rscript
+net install rscript, from("https://raw.githubusercontent.com/reifjulian/rscript/master")
 ** Source R script
-** Development Opportunity: STATA-ify the R code to run entirely within STATA
+rscript using DLI.R
+** Optional: specify path to R with , rpath() but rscript checks usual locations
 
+** Development Opportunity: Stata-ify the R code to run entirely within Stata
 
-	** Shell appears to start at current working directory, need confirmation
+** Clear any data currently stored
+clear	
 
 ** Change directory to .do files folder
 cd unzip-stata-dofiles
@@ -67,4 +78,13 @@ foreach file in `files_list' {
 	
 cd ..
 
+** Clear any data currently stored
 clear
+
+** Delete downloaded files (optional: un-comment to run and save storage space)
+*shell rm -r stata-data
+*shell rm -r stata-dofiles
+*shell rm -r unzip-stata-data
+*shell rm -r unzip-stata-dofiles
+
+** If on Windows without Unix shell, use "shell rmdir stata-data" etc.
