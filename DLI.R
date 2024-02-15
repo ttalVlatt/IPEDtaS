@@ -1,12 +1,58 @@
-################################################################################
+## -----------------------------------------------------------------------------
 ##
-## <PROJ> Batch download IPEDS files
-## <FILE> downloadipeds.R
-## <AUTH> Benjamin Skinner (@btskinner)
-## <INIT> 21 July 2015
-## <REVN> 30 June 2018
+##' [PROJ: DLI: Download Labeled IPEDS]
+##' [FILE: DLI.R]
+##' [AUTH: Benjamin Skinner] @btskinner
+##' [INIT: 21 July 2015]
+##' [EDIT: Matt Capaldi] @ttalVlatt
+##' [MODI: February 14 2024]
 ##
-################################################################################
+## -----------------------------------------------------------------------------
+
+##' This project is an extension of @btskinner's *downloadipeds.R* to 
+##' auto-magically download labeled *.dta* versions of IPEDS data files,
+##' which can then be used for analysis in [Stata] or [R] (via haven).
+##' 
+##' This project does require access to licensed [Stata]
+##'   If Stata is installed locally, you can just run *DLI.do*
+##'   If you are using Stata in other location, run the R scripts then comment
+##'   out line *xx* of *DLI.do* when you run it
+##' 
+##' This script starts with the original content to download IPEDS files, then
+##' sets up the downloaded content to work with @ttalVlatt's *DLI.do*
+##' script, which loops through said set up files to apply labels to the
+##' data using the provided (and modified) *.do* files from IPEDS
+##' 
+##' The result of running *DLI.R* then *DLI.do* should be a full set of
+##' labelled *.dta* files  in the folder *labeled-data/*. *DLI.do* is set
+##' up to call this script, as in, if you run the whole of *DLR.do* it will
+##' run this code automatically. If this doesn't work for your setup,
+##' such as if you are using a virtual copy of Stata through school, you
+##' can always run this script, then comment out *line x* in *DLI.do*
+##' before running it.
+##' 
+##' To edit what data files are downloaded, edit *ipeds-file-list.txt*
+##' accordingly. This file should contain names of all available IPEDS files,
+##' with all files expect HD2022 commented out with ##. Commenting a file out
+##' with a #, or deleting it, will stop it from downloading. To download a file
+##' simply remove the ## from it's line.
+##' 
+##' Hint: You can hold alt to drag your cursor to more than one line
+##' in many text editors (including RStudio), to comment/un-comment 
+##' multiple lines at once
+##' 
+##' *Note: Part of this process replaces original data files with _rv*
+##' *revised versions if available but the resulting file uses the og*
+##' *name without _rv*
+##' 
+##' *Caution: Leave all below settings as they are*
+
+## Ensure working directory is DLI folder
+setwd(this.path::here())
+
+## ---------------------------
+##' [Original: downloadipeds.R content]
+## ---------------------------
 
 ## PURPOSE ---------------------------------------------------------------------
 ##
@@ -111,7 +157,7 @@ countdown <- function(pause, text) {
 ## =============================================================================
 
 ## read in files; remove blank lines & lines starting with #
-ipeds <- readLines('./ipeds_file_list.txt')
+ipeds <- readLines('./ipeds-file-list.txt')
 ipeds <- ipeds[ipeds != '' & !grepl('^#', ipeds)]
 
 ## data url
@@ -176,8 +222,18 @@ for(i in 1:length(ipeds)) {
 
 mess('Finished!')
 
+## ---------------------------
+##' [New: Prepare Downloaded Content for Stata]
+## ---------------------------
 
-## Unzip folders in stata_data
+##'[1: Create folder for labeled data]
+
+dir.create("labeled-data")
+
+
+##'[2: Unzip folders]
+
+## unzip data folder
 dir.create("unzip-stata-data")
 
 sd_files <- list.files("stata-data", recursive = T, full.names = T)
@@ -187,7 +243,7 @@ for(i in sd_files) {
         exdir = "unzip-stata-data")
 }
 
-## Unzip folders in stata_prog
+## unzip .do files folder
 dir.create("unzip-stata-dofiles")
 
 sd_files <- list.files("stata-dofiles", recursive = T, full.names = T)
@@ -197,11 +253,9 @@ for(i in sd_files) {
         exdir = "unzip-stata-dofiles")
 }
 
-dir.create("labeled-data")
 
+##'[3: Correct the .do files to use path to downloaded data]
 
-## Correct .do file line that reads data in to use the path to
-## file downloaded above
 do_files <- list.files("unzip-stata-dofiles", recursive = T, full.names = T)
 
 for(i in do_files) {
@@ -237,7 +291,7 @@ for(i in do_files) {
 }
 
 
-##'[If _rv file exists, use it to overwrite original data]
+##'[4: If _rv file exists, use it to overwrite original data]
 
 rv_files <- list.files("unzip-stata-data",
                        pattern = "_rv",
@@ -253,6 +307,6 @@ for(i in rv_files) {
   
 }
 
-## =============================================================================
-## END
-################################################################################
+## -----------------------------------------------------------------------------
+##' *END SCRIPT*
+## -----------------------------------------------------------------------------
