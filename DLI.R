@@ -47,7 +47,7 @@
 ##' 
 ##' *Caution: Leave all below settings as they are*
 
-## Ensure working directory is DLI folder
+## Ensure working directory is DLI main folder
 setwd(this.path::here())
 
 ## ---------------------------
