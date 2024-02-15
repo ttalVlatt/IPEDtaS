@@ -8,3 +8,4 @@ unzip-stata-dofiles/
 labeled-data/
 *.do.stswp
 ipeds-file-list.txt
+*.Rproj
