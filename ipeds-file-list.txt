@@ -18,9 +18,6 @@
 ## LAST UPDATED: 14 February 2024
 ## -------------------------------
 
-# NB: Those files marked out are not currently available, but likely
-# to be available in the future.
-
 ## ## ---------------------------
 ## ## 2022
 ## ## ---------------------------
