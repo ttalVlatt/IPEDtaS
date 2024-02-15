@@ -10,13 +10,24 @@
 ## -----------------------------------------------------------------------------
 
 ##' This project is an extension of @btskinner's *downloadipeds.R* to 
-##' auto-magically download labeled *.dta* versions of IPEDS data files,
+##' automagically download labeled *.dta* versions of IPEDS data files,
 ##' which can then be used for analysis in [Stata] or [R] (via haven).
 ##' 
 ##' This project does require access to licensed [Stata]
-##'   If Stata is installed locally, you can just run *DLI.do*
-##'   If you are using Stata in other location, run the R scripts then comment
-##'   out line *xx* of *DLI.do* when you run it
+##'   [If both Stata & R are installed locally] you can just run *DLI.do*
+##'   [If you are using Stata or R in another location]
+##'     run *DLI.R* (this script) first
+##'     then comment out lines 40 and 42 of *DLI.do* and run it
+##' 
+##' [To edit what data files are downloaded], edit *ipeds-file-list.txt*
+##' accordingly. This file should contain names of all available IPEDS files,
+##' with all files expect HD2022 commented out with ##. Commenting a file out
+##' with a #, or deleting it, will stop it from downloading. To download a file
+##' simply remove the ## from that line.
+##' 
+##' Hint: You can hold alt to drag your cursor to more than one line
+##' in many text editors (including RStudio), to comment/un-comment 
+##' multiple lines at once
 ##' 
 ##' This script starts with the original content to download IPEDS files, then
 ##' sets up the downloaded content to work with @ttalVlatt's *DLI.do*
@@ -28,21 +39,11 @@
 ##' up to call this script, as in, if you run the whole of *DLR.do* it will
 ##' run this code automatically. If this doesn't work for your setup,
 ##' such as if you are using a virtual copy of Stata through school, you
-##' can always run this script, then comment out *line x* in *DLI.do*
+##' can always run this script, then comment out line 40 and 42 of *DLI.do*
 ##' before running it.
 ##' 
-##' To edit what data files are downloaded, edit *ipeds-file-list.txt*
-##' accordingly. This file should contain names of all available IPEDS files,
-##' with all files expect HD2022 commented out with ##. Commenting a file out
-##' with a #, or deleting it, will stop it from downloading. To download a file
-##' simply remove the ## from it's line.
-##' 
-##' Hint: You can hold alt to drag your cursor to more than one line
-##' in many text editors (including RStudio), to comment/un-comment 
-##' multiple lines at once
-##' 
 ##' *Note: Part of this process replaces original data files with _rv*
-##' *revised versions if available but the resulting file uses the og*
+##' *revised versions if available but the resulting file uses the original*
 ##' *name without _rv*
 ##' 
 ##' *Caution: Leave all below settings as they are*
@@ -53,33 +54,6 @@ setwd(this.path::here())
 ## ---------------------------
 ##' [Original: downloadipeds.R content]
 ## ---------------------------
-
-## PURPOSE ---------------------------------------------------------------------
-##
-## Use this script to batch download IPEDS files. Only those files listed
-## in `ipeds_file_list.txt` will be downloaded. The default behavior is to
-## download each of the following files into their own subdirectories:
-##
-## (1) Data file
-## (2) Dictionary file
-##
-## You can also choose to download other data versions and/or program files:
-##
-## (1) Data file (STATA version)
-## (2) STATA program file (default if you ask for DTA version data)
-## (3) SPSS program file
-## (4) SAS program file
-##
-## The default behavior is download ALL OF IPEDS. If you don't want everything,
-## modify `ipeds_file_list.txt` to only include those files that you want.
-## Simply erase those you don't want, keeping one file name per row, or
-## comment them out using a hash symbol (#).
-##
-## You also have the option of whether you wish to overwrite existing files.
-## If you do, change the -overwrite- option to TRUE. The default behavior is
-## to only download files listed in `ipeds_file_list.txt` that have not already
-## been downloaded.
-## -----------------------------------------------------------------------------
 
 ## ---------------------------------------------------------------------------
 ## CHOOSE WHAT YOU WANT (TRUE == Yes, FALSE == No)
