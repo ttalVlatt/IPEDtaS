@@ -200,33 +200,34 @@ mess('Finished!')
 ##' [New: Prepare Downloaded Content for Stata]
 ## ---------------------------
 
-##'[1: Create folder for labeled data]
-
-dir.create("labeled-data")
-
-
-##'[2: Unzip folders]
-
-## unzip data folder
-dir.create("unzip-stata-data")
-
-sd_files <- list.files("stata-data", recursive = T, full.names = T)
-
-for(i in sd_files) {
-  unzip(i,
-        exdir = "unzip-stata-data")
-}
-
-## unzip .do files folder
-dir.create("unzip-stata-dofiles")
-
-sd_files <- list.files("stata-dofiles", recursive = T, full.names = T)
-
-for(i in sd_files) {
-  unzip(i,
-        exdir = "unzip-stata-dofiles")
-}
-
+# 
+# ##'[1: Create folder for labeled data]
+# 
+# dir.create("labeled-data")
+# 
+# 
+# ##'[2: Unzip folders]
+# 
+# ## unzip data folder
+# dir.create("unzip-stata-data")
+# 
+# sd_files <- list.files("stata-data", recursive = T, full.names = T)
+# 
+# for(i in sd_files) {
+#   unzip(i,
+#         exdir = "unzip-stata-data")
+# }
+# 
+# ## unzip .do files folder
+# dir.create("unzip-stata-dofiles")
+# 
+# sd_files <- list.files("stata-dofiles", recursive = T, full.names = T)
+# 
+# for(i in sd_files) {
+#   unzip(i,
+#         exdir = "unzip-stata-dofiles")
+# }
+# 
 
 ##'[3: Correct the .do files to use path to downloaded data]
 
@@ -295,6 +296,8 @@ for(i in rv_files) {
 
 do_fix <- function(do_file_name, line_to_replace, replacement) {
   
+  setwd("unzip-stata-dofiles")
+  
   if(file.exists(do_file_name)) {
     
     suppressWarnings(
@@ -311,37 +314,52 @@ do_fix <- function(do_file_name, line_to_replace, replacement) {
     
   }
   
+  setwd("..")
+  
 }
 
-do_fix("unzip-stata-dofiles/gr2021_pell_ssl.do", 81, 'label define label_psgrtype 1 "Total 2015 cohort (Bachelor^s and other degree/certificate seeking) - four-year institutions",add')
-do_fix("unzip-stata-dofiles/gr2021_pell_ssl.do", 82, '')
-do_fix("unzip-stata-dofiles/gr2021_pell_ssl.do", 83, 'label define label_psgrtype 2 "Bachelor^s degree seeking 2015 cohort - four-year institutions",add')
-do_fix("unzip-stata-dofiles/gr2021_pell_ssl.do", 84, '')
-do_fix("unzip-stata-dofiles/gr2021_pell_ssl.do", 85, 'label define label_psgrtype 3 "Other degree/certificate seeking 2015 cohort - four-year institutions",add')
-do_fix("unzip-stata-dofiles/gr2021_pell_ssl.do", 86, '')
-do_fix("unzip-stata-dofiles/gr2021_pell_ssl.do", 87, 'label define label_psgrtype 4 "Degree/certificate seeking 2018 cohort (less than four-year institutions)",add')
-do_fix("unzip-stata-dofiles/gr2021_pell_ssl.do", 88, '')
+## ,add was mistakenly on new line
+do_fix("gr2021_pell_ssl.do", 81, 'label define label_psgrtype 1 "Total 2015 cohort (Bachelor^s and other degree/certificate seeking) - four-year institutions",add')
+do_fix("gr2021_pell_ssl.do", 82, '')
+do_fix("gr2021_pell_ssl.do", 83, 'label define label_psgrtype 2 "Bachelor^s degree seeking 2015 cohort - four-year institutions",add')
+do_fix("gr2021_pell_ssl.do", 84, '')
+do_fix("gr2021_pell_ssl.do", 85, 'label define label_psgrtype 3 "Other degree/certificate seeking 2015 cohort - four-year institutions",add')
+do_fix("gr2021_pell_ssl.do", 86, '')
+do_fix("gr2021_pell_ssl.do", 87, 'label define label_psgrtype 4 "Degree/certificate seeking 2018 cohort (less than four-year institutions)",add')
+do_fix("gr2021_pell_ssl.do", 88, '')
 
-do_fix("unzip-stata-dofiles/hd2020.do", 104, '/*label define label_stabbr AL "Alabama"')
+## Trying to label string
+do_fix("hd2020.do", 104, '/*')
+do_fix("hd2020.do", 162, '*/')
 
 ## In earlier years GR2017 and GR2014 this section is entirely commented out
 ## so apply same treatment
-do_fix("unzip-stata-dofiles/gr2021.do", 166, '')
-do_fix("unzip-stata-dofiles/gr2021.do", 167, '')
-do_fix("unzip-stata-dofiles/gr2021.do", 168, '')
-do_fix("unzip-stata-dofiles/gr2021.do", 169, '')
+do_fix("gr2021.do", 166, '/*')
+do_fix("gr2021.do", 169, '*/')
 
-do_fix("unzip-stata-dofiles/gr2022.do", 165, '/*')
-do_fix("unzip-stata-dofiles/gr2022.do", 182, '*/')
+do_fix("gr2022.do", 165, '/*')
+do_fix("gr2022.do", 182, '*/')
 
-do_fix("unzip-stata-dofiles/GR2020.do", 166, '/*')
-do_fix("unzip-stata-dofiles/GR2020.do", 168, '*/')
+do_fix("GR2020.do", 166, '/*')
+do_fix("GR2020.do", 168, '*/')
 
+## Imputation variable names had extra character than in data
+do_fix("ef2022a.do", 96, 'label variable xefgndru "Imputation field for efgndrun - Gender unknown"')
+do_fix("ef2022a.do", 98, 'label variable xefgndra "Imputation field for efgndran - Another gender"')
+do_fix("ef2022a.do", 100, 'label variable xefgndru "Imputation field for efgndrua - Total of gender unknown and another gender"')
+do_fix("ef2022a.do", 102, 'label variable xefgndrk "Imputation field for efgndrkn - Total gender reported as one of the mutually exclusive binary categories (Men/Women)"')
 
-do_fix("unzip-stata-dofiles/ef2022a.do", 96, 'label variable xefgndru "Imputation field for efgndrun - Gender unknown"')
-do_fix("unzip-stata-dofiles/ef2022a.do", 98, 'label variable xefgndra "Imputation field for efgndran - Another gender"')
-do_fix("unzip-stata-dofiles/ef2022a.do", 100, 'label variable xefgndru "Imputation field for efgndrua - Total of gender unknown and another gender"')
-do_fix("unzip-stata-dofiles/ef2022a.do", 102, 'label variable xefgndrk "Imputation field for efgndrkn - Total gender reported as one of the mutually exclusive binary categories (Men/Women)"')
+## String
+do_fix("f1993_ic.do", 52, '/*')
+do_fix("f1993_ic.do", 54, '*/')
+
+## String
+do_fix("ef98_acp.do", 101, '/*')
+do_fix("ef98_acp.do", 105, '*/')
+
+## String
+do_fix("ef1988_a.do", 81, '/*')
+do_fix("ef1988_a.do", 85, '*/')
 
 ## To fix, some files such as ef_2022cp are writing .dta files 
 

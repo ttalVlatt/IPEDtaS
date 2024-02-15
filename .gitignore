@@ -7,4 +7,5 @@ unzip-stata-data/
 unzip-stata-dofiles/
 labeled-data/
 *.do.stswp
+*.stswp
 *.Rproj
