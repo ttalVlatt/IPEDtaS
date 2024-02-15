@@ -19,8 +19,9 @@ If you are not running a version of Stata locally installed on your computer, it
 will be easier to first run DWI.R separately to download and set up the files,
 then run this script with lines 40 and 42 commented out
 
-Second, this script loops through these prepared files running .do scripts to 
-make labeled .dta copies of the data in the labeled-data sub-folder
+Second, this script loops through these prepared files running (modified) .do 
+scripts from IPEDS to make labeled .dta copies of the data in the 
+labeled-data sub-folder
 
 Note: Part of this process replaces original data files with _rv revised
 versions if available, the resulting file uses the original name without _rv
