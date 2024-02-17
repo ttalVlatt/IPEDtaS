@@ -218,16 +218,16 @@ mess('Finished!')
 #         exdir = "unzip-stata-data")
 # }
 # 
-# ## unzip .do files folder
-# dir.create("unzip-stata-dofiles")
-# 
-# sd_files <- list.files("stata-dofiles", recursive = T, full.names = T)
-# 
-# for(i in sd_files) {
-#   unzip(i,
-#         exdir = "unzip-stata-dofiles")
-# }
-# 
+## unzip .do files folder
+dir.create("unzip-stata-dofiles")
+
+sd_files <- list.files("stata-dofiles", recursive = T, full.names = T)
+
+for(i in sd_files) {
+  unzip(i,
+        exdir = "unzip-stata-dofiles")
+}
+
 
 ##'[3: Correct the .do files to use path to downloaded data]
 
@@ -255,6 +255,7 @@ for(i in do_files) {
   suppressWarnings(
     do_file[grep("^\\s?insheet", do_file)] <- new_read_line
   )
+  
   ## Also remove the line they wrote that saves the data
   suppressWarnings(
     do_file[grep("^\\s?save", do_file)] <- ""
@@ -269,6 +270,82 @@ for(i in do_files) {
   suppressWarnings(
     do_file[grep("^\\s?summarize", do_file)] <- ""
   )
+  
+  # ##' [Remove any attempt to label string variables as Stata doesn't allow it
+  # 
+  # ##. Pattern that matches label define any_thing non-numeric or - sign
+  # pattern <- "^label define\\s+\\w+\\s+[^0-9-].*"
+  # ## Indicies of do_file that match pattern
+  # ## e.g., label define label_stabbr AL \"Alabama\", add 
+  # suppressWarnings(
+  #   matching_indicies <- grep(pattern, do_file)
+  # )
+  # ## Indicies of do_file immediately follow pattern (also throw errors)
+  # ## e.g., label values stabbr label_stabbr
+  # following_indicies <- matching_indicies + 1
+  # ## Get list of indicies to blank out
+  # indicies <- unique(c(matching_indicies, following_indicies))
+  # ## Blank them out
+  # suppressWarnings(
+  #   do_file[indicies] <- ""
+  # )
+  # 
+  # ## Same thing but to capture something like 11A
+  # pattern <- "^label define\\s+\\w+\\s+\\b-?\\d+[A-Za-z]\\b.*"
+  # suppressWarnings(
+  #   matching_indicies <- grep(pattern, do_file)
+  # )
+  # following_indicies <- matching_indicies + 1
+  # indicies <- unique(c(matching_indicies, following_indicies))
+  # suppressWarnings(
+  #   do_file[indicies] <- ""
+  # )
+  
+  
+  ##'[Remove any lines trying to label string vars, as Stata does not allow it
+  
+  ## Get line indexes that...
+  
+  ## Start "label define" space any_thing space not a digit or -
+  pattern <- "^label define\\s+\\w+\\s+[^0-9-].*"
+  line_index_1 <- grep(pattern, do_file)
+  
+  ## As above, but start with number and include a non-digit before next word
+  pattern <- "^label define\\s+\\w+\\s+\\b-?\\d+[A-Za-z]\\b.*"
+  line_index_2 <- grep(pattern, do_file)
+  
+  ## Get the index of any line meeting either pattern
+  line_index <- unique(c(line_index_1, line_index_2))
+  
+  ## Get the actual text of the lines
+  lines <- do_file[line_index]
+  
+  ## Start a blank list for problematic variables
+  prob_vars <- c()
+  
+  ## For each line deemed problematic
+  for(j in lines) {
+    ## Take the third word of problematic lines, which is the variable
+    prob_var <- strsplit(j, "\\s+")[[1]][3]
+    ## Add to list
+    prob_vars <- c(prob_vars, prob_var)
+  }
+  
+  ## Get a list of unique problematic variables
+  prob_vars <- unique(prob_vars)
+  
+  if(length(prob_vars >= 1)) {
+    
+    ## Create a regex pattern of prob_vars separated by "|" for "or"
+    prob_vars_pattern <- paste(prob_vars, collapse = "|")
+    
+    ## Get index of any lines containing a problematic variable
+    lines_index_prob_vars <- grep(prob_vars_pattern, do_file)
+    
+    ## Blank out those lines
+    do_file[lines_index_prob_vars] <- ""
+    
+  }
   
   ## Write the updated do_file back out as i to overwrite
   writeLines(do_file, i)
@@ -328,20 +405,20 @@ do_fix("gr2021_pell_ssl.do", 86, '')
 do_fix("gr2021_pell_ssl.do", 87, 'label define label_psgrtype 4 "Degree/certificate seeking 2018 cohort (less than four-year institutions)",add')
 do_fix("gr2021_pell_ssl.do", 88, '')
 
-## Trying to label string
-do_fix("hd2020.do", 104, '/*')
-do_fix("hd2020.do", 162, '*/')
+# ## Trying to label string
+# do_fix("hd2020.do", 104, '/*')
+# do_fix("hd2020.do", 162, '*/')
 
 ## In earlier years GR2017 and GR2014 this section is entirely commented out
 ## so apply same treatment
-do_fix("gr2021.do", 166, '/*')
-do_fix("gr2021.do", 169, '*/')
-
-do_fix("gr2022.do", 165, '/*')
-do_fix("gr2022.do", 182, '*/')
-
-do_fix("GR2020.do", 166, '/*')
-do_fix("GR2020.do", 168, '*/')
+# do_fix("gr2021.do", 166, '/*')
+# do_fix("gr2021.do", 169, '*/')
+# 
+# do_fix("gr2022.do", 165, '/*')
+# do_fix("gr2022.do", 182, '*/')
+# 
+# do_fix("GR2020.do", 166, '/*')
+# do_fix("GR2020.do", 168, '*/')
 
 ## Imputation variable names had extra character than in data
 do_fix("ef2022a.do", 96, 'label variable xefgndru "Imputation field for efgndrun - Gender unknown"')
@@ -349,17 +426,43 @@ do_fix("ef2022a.do", 98, 'label variable xefgndra "Imputation field for efgndran
 do_fix("ef2022a.do", 100, 'label variable xefgndru "Imputation field for efgndrua - Total of gender unknown and another gender"')
 do_fix("ef2022a.do", 102, 'label variable xefgndrk "Imputation field for efgndrkn - Total gender reported as one of the mutually exclusive binary categories (Men/Women)"')
 
-## String
-do_fix("f1993_ic.do", 52, '/*')
-do_fix("f1993_ic.do", 54, '*/')
+## Similar issue to gr_2021_pell_ssl of broken lines
+do_fix("gr2000_l2.do", 36, 'label variable xline_50 "Imputation field for LINE_50 - Adjusted cohort (revised cohort minus exclusions)"')
+do_fix("gr2000_l2.do", 37, '')
+do_fix("gr2000_l2.do", 38, 'label variable line_50 "Adjusted cohort (revised cohort minus exclusions)"')
+do_fix("gr2000_l2.do", 39, '')
+do_fix("gr2000_l2.do", 40, 'label variable xline_11 "Imputation field for LINE_11 - Completers within 150% of normal time"')
+do_fix("gr2000_l2.do", 41, '')
+do_fix("gr2000_l2.do", 42, 'label variable line_11 "Completers within 150% of normal time"')
+do_fix("gr2000_l2.do", 43, '')
 
-## String
-do_fix("ef98_acp.do", 101, '/*')
-do_fix("ef98_acp.do", 105, '*/')
+## Broken lines
+do_fix("ic2002.do", 408, 'label define label_regaccrd 7 "Northwest Assoc. of Schools and of Colleges and Univ.", add ')
+do_fix("ic2002.do", 409, '')
+do_fix("ic2002.do", 410, 'label define label_regaccrd 8 "Southern Association of Colleges and Schools, Comm. on Colleges", add ')
+do_fix("ic2002.do", 411, '')
+do_fix("ic2002.do", 412, '')
 
-## String
-do_fix("ef1988_a.do", 81, '/*')
-do_fix("ef1988_a.do", 85, '*/')
+
+# ## String
+# do_fix("f1993_ic.do", 52, '/*')
+# do_fix("f1993_ic.do", 54, '*/')
+# 
+# ## String
+# do_fix("ef98_acp.do", 101, '/*')
+# do_fix("ef98_acp.do", 105, '*/')
+# 
+# ## String
+# do_fix("ef1988_a.do", 81, '/*')
+# do_fix("ef1988_a.do", 85, '*/')
+# 
+# ## String
+# do_fix("s1993_ic.do", 56, '/*')
+# do_fix("s1993_ic.do", 58, '*/')
+# 
+# ## String
+# do_fix("ef1986_ic.do", 38, '/*')
+# do_fix("ef1986_ic.do", 40, '*/')
 
 ## To fix, some files such as ef_2022cp are writing .dta files 
 
