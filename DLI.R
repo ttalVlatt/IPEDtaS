@@ -369,7 +369,7 @@ for(i in rv_files) {
   
 }
 
-##'[5: Fix IPEDS .do Mistakes...]
+##'[5: Fix Misc. IPEDS .do Mistakes...]
 
 do_fix <- function(do_file_name, line_to_replace, replacement) {
   
@@ -443,6 +443,148 @@ do_fix("ic2002.do", 410, 'label define label_regaccrd 8 "Southern Association of
 do_fix("ic2002.do", 411, '')
 do_fix("ic2002.do", 412, '')
 
+## Attempts to apply labels, about the imputation status, to the imputation variable,
+## but using number from the actual value... Beyond repair
+do_fix("c9798_b.do", 92, '/*')
+do_fix("c9798_b.do", 541, '*/')
+
+## Data is formatted with ' and ; around the numbers, making Stata think it's a string
+## Beyond repiar
+do_fix("ic99_actot.do", 33, '/*')
+do_fix("ic99_actot.do", 117, '*/')
+
+## Imputation variable mixup
+do_fix("s97_cn.do", 76, 'label values staff15 label_xstaff15')
+do_fix("s97_cn.do", 92, 'label values staff16 label_xstaff16')
+
+## Imputation variable mixup
+do_fix("ef98_anr.do", 119, 'label values efrace01 label_xef01')
+do_fix("ef98_anr.do", 134, 'label values efrace02 label_xef02')
+do_fix("ef98_anr.do", 149, 'label values efrace03 label_xef03')
+do_fix("ef98_anr.do", 164, 'label values efrace04 label_xef04')
+do_fix("ef98_anr.do", 179, 'label values efrace05 label_xef05')
+do_fix("ef98_anr.do", 194, 'label values efrace06 label_xef06')
+do_fix("ef98_anr.do", 209, 'label values efrace07 label_xef07')
+do_fix("ef98_anr.do", 224, 'label values efrace08 label_xef08')
+do_fix("ef98_anr.do", 239, 'label values efrace09 label_xef09')
+do_fix("ef98_anr.do", 254, 'label values efrace10 label_xef10')
+do_fix("ef98_anr.do", 269, 'label values efrace11 label_xef11')
+do_fix("ef98_anr.do", 284, 'label values efrace12 label_xef12')
+do_fix("ef98_anr.do", 299, 'label values efrace13 label_xef13')
+do_fix("ef98_anr.do", 314, 'label values efrace14 label_xef14')
+do_fix("ef98_anr.do", 329, 'label values efrace15 label_xef15')
+do_fix("ef98_anr.do", 344, 'label values efrace16 label_xef16')
+
+## Broken lines
+do_fix("ic2003.do", 406, 'label define label_regaccrd 7 "Northwest Assoc. of Schools and of Colleges and Univ.", add')
+do_fix("ic2003.do", 407, '')
+do_fix("ic2003.do", 408, 'label define label_regaccrd 8 "Southern Association of Colleges and Schools, Comm. on Colleges", add ')
+do_fix("ic2003.do", 409, '')
+do_fix("ic2003.do", 410, '')
+
+## Broken Line
+do_fix("fa2000hd.do", 412, 'label define label_pseflag 2 "not primarily postsec or open to public", add ')
+do_fix("fa2000hd.do", 413, '')
+
+## Broken Line
+do_fix("gr1997_l2.do", 36, 'label variable xline_50 "Imputation field for LINE_50 - Adjusted cohort (revised cohort minus exclusions)"')
+do_fix("gr1997_l2.do", 37, '')
+do_fix("gr1997_l2.do", 38, 'label variable line_50 "Adjusted cohort (revised cohort minus exclusions)"')
+do_fix("gr1997_l2.do", 39, '')
+do_fix("gr1997_l2.do", 40, 'label variable xline_11 "Imputation field for LINE_11 - Completers within 150% of normal time"')
+do_fix("gr1997_l2.do", 41, '')
+do_fix("gr1997_l2.do", 42, 'label variable line_11 "Completers within 150% of normal time"')
+do_fix("gr1997_l2.do", 43, '')
+
+## Two labels for same value, combine
+do_fix("ef1986_acp.do", 36, '')
+do_fix("ef1986_acp.do", 37, '')
+do_fix("ef1986_acp.do", 116, 'label define label_xefrac01 12 "Adjusted/Generated data", add ')
+do_fix("ef1986_acp.do", 117, '')
+do_fix("ef1986_acp.do", 123, 'label define label_xefrac02 12 "Adjusted/Generated data", add ')
+do_fix("ef1986_acp.do", 124, '')
+do_fix("ef1986_acp.do", 130, 'label define label_xefrac03 12 "Adjusted/Generated data", add ')
+do_fix("ef1986_acp.do", 131, '')
+do_fix("ef1986_acp.do", 137, 'label define label_xefrac04 12 "Adjusted/Generated data", add ')
+do_fix("ef1986_acp.do", 138, '')
+do_fix("ef1986_acp.do", 144, 'label define label_xefrac05 12 "Adjusted/Generated data", add ')
+do_fix("ef1986_acp.do", 145, '')
+do_fix("ef1986_acp.do", 151, 'label define label_xefrac06 12 "Adjusted/Generated data", add ')
+do_fix("ef1986_acp.do", 152, '')
+do_fix("ef1986_acp.do", 158, 'label define label_xefrac07 12 "Adjusted/Generated data", add ')
+do_fix("ef1986_acp.do", 159, '')
+do_fix("ef1986_acp.do", 165, 'label define label_xefrac08 12 "Adjusted/Generated data", add ')
+do_fix("ef1986_acp.do", 166, '')
+do_fix("ef1986_acp.do", 172, 'label define label_xefrac09 12 "Adjusted/Generated data", add ')
+do_fix("ef1986_acp.do", 173, '')
+do_fix("ef1986_acp.do", 179, 'label define label_xefrac10 12 "Adjusted/Generated data", add ')
+do_fix("ef1986_acp.do", 180, '')
+do_fix("ef1986_acp.do", 186, 'label define label_xefrac11 12 "Adjusted/Generated data", add ')
+do_fix("ef1986_acp.do", 187, '')
+do_fix("ef1986_acp.do", 193, 'label define label_xefrac12 12 "Adjusted/Generated data", add ')
+do_fix("ef1986_acp.do", 194, '')
+do_fix("ef1986_acp.do", 200, 'label define label_xefrac15 12 "Adjusted/Generated data", add ')
+do_fix("ef1986_acp.do", 201, '')
+do_fix("ef1986_acp.do", 207, 'label define label_xefrac16 12 "Adjusted/Generated data", add ')
+do_fix("ef1986_acp.do", 208, '')
+
+## Broken Line
+do_fix("sal1985_a.do", 66, 'label define label_line 8 "12-month contracts professors", add ')
+do_fix("sal1985_a.do", 67, '')
+
+
+## Broken Line
+do_fix("gr2001_l2.do", 36, 'label variable xline_50 "Imputation field for LINE_50 - Adjusted cohort (revised cohort minus exclusions)"')
+do_fix("gr2001_l2.do", 37, '')
+do_fix("gr2001_l2.do", 38, 'label variable line_50 "Adjusted cohort (revised cohort minus exclusions)"')
+do_fix("gr2001_l2.do", 39, '')
+do_fix("gr2001_l2.do", 40, 'label variable xline_11 "Imputation field for LINE_11 - Completers within 150% of normal time"')
+do_fix("gr2001_l2.do", 41, '')
+do_fix("gr2001_l2.do", 42, 'label variable line_11 "Completers within 150% of normal time"')
+do_fix("gr2001_l2.do", 43, '')
+
+
+## Broken Line
+do_fix("sal2002_a.do", 55, 'label define label_contract 4 "Equated 9-month contract", add ')
+do_fix("sal2002_a.do", 56, '')
+do_fix("sal2002_a.do", 57, '')
+
+## Broken Line
+do_fix("ic1989_b.do", 75, 'label variable avgamt1 "Average books/supplieds cost Books and supplies"')
+do_fix("ic1989_b.do", 76, '')
+do_fix("ic1989_b.do", 77, 'label variable avgamt2 "Average transpotation cost Books and supplies"')
+do_fix("ic1989_b.do", 78, '')
+do_fix("ic1989_b.do", 79, 'label variable avgamt3 "Average room and board cost (non-dorm) Books and supplies"')
+do_fix("ic1989_b.do", 80, '')
+do_fix("ic1989_b.do", 81, 'label variable avgamt4 "Average miscellaneous expenses Books and supplies"')
+do_fix("ic1989_b.do", 82, '')
+
+do_fix_imp <- function(do_file_name) {
+  
+  setwd("unzip-stata-dofiles")
+  
+  if(file.exists(do_file_name)) {
+    
+    suppressWarnings(
+      do_file <- readLines(do_file_name)
+    )
+    
+    line_index <- grep("label values x.*", do_file)
+    
+    ## sub() replaces the first x with nothing, fixing the var name
+    do_file[line_index] <- sub("x", "", do_file[line_index], fixed = T)
+    
+    #writeLines(do_file, do_file_name)
+    
+  } else {
+    
+    paste("File", do_file_name, "not found")
+    
+  }
+  
+  setwd("..")
+  
+}
 
 # ## String
 # do_fix("f1993_ic.do", 52, '/*')
