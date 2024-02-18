@@ -195,7 +195,7 @@ foreach file in `files_list' {
 cd ..
 
 **----------------------------------------------------------------------------**
-** Correct the .do files Using pystata
+** Fix the .do files Using pystata
 **----------------------------------------------------------------------------**
 
 cd unzip-dofiles
@@ -222,11 +222,11 @@ for index, line in enumerate(do_file):
 		do_file[index] = new_insheet
 
 		
-## Remove lines
+## Remove problematic lines by index
 		
 index_to_delete = []		
 
-## Remove lines that save data
+## Index lines that save data
 pattern = re.compile("^\s?save")
 
 for index, line in enumerate(do_file):
@@ -234,7 +234,7 @@ for index, line in enumerate(do_file):
 		index_to_delete.append(index)		
 
 		
-## Remove lines that tab data
+## Index lines that tab data
 pattern = re.compile("^\s?tab")
 
 for index, line in enumerate(do_file):
@@ -242,43 +242,85 @@ for index, line in enumerate(do_file):
 		index_to_delete.append(index)
 		
 		
-## Remove lines that summarize data
+## Index lines that summarize data
 pattern = re.compile("^\s?summarize")
 
 for index, line in enumerate(do_file):
 	if re.match(pattern, line):
 		index_to_delete.append(index)
 	
+print(len(index_to_delete))
+	
+## Identify problematic attempts to label strings	
+
+label_string_vars = []
+
+## Variable that start with anything but a digit or - sign
+pattern = re.compile("^label define\s+\w+\s+[^0-9-].*")	
+	
+for index, line in enumerate(do_file):
+	if re.match(pattern, line):
+		label_string_vars.append(line.split(" ")[2])
+
+## Variables that start with a digit or minus sign, but end in letter (e.g., 11A)
+pattern = re.compile("^label define\s+\w+\s+\b-?\d+[A-Za-z]\b.*")	
+	
+for index, line in enumerate(do_file):
+	if re.match(pattern, line):
+		label_string_vars.append(line.split(" ")[2])
+
+print(label_string_vars)
+
+## Get unique list of vars
+label_string_vars = list(set(label_string_vars))
+
+print(label_string_vars)
+
+# python
+# label_string_vars = ["a", "c", "b"]
+
+## Create regex pattern from the list of variables
+pattern = "|".join(label_string_vars)
+## h/t https://stackoverflow.com/questions/21292552/equivalent-of-paste-r-to-python
+pattern = ".*" + pattern
+pattern = re.compile(pattern)
+print(pattern)
+	
+
+for index, line in enumerate(do_file):
+	if re.match(pattern, line):
+		index_to_delete.append(index)
+
+print(len(index_to_delete))
+
+print(len(do_file))	
+
+## Delete problematic lines by index
+for index in sorted(index_to_delete, reverse = True):
+	del do_file[index]
+	
+print(len(do_file))	
+
+
+## Write the updated .do file
+
+fixed_file = open("../fixed-dofiles/ic2022_campuses.do", "w", encoding='latin-1')
+file.seek(0) # Move lines editor back to start, h/t ChatGPT
+fixed_file.writelines(do_file)
+
+end
+
 print(max(index_to_delete))
 		
 print(len(do_file))		
 
 print(sorted(index_to_delete, reverse = True))
 
-for index in sorted(index_to_delete, reverse = True):
-	del do_file[index]
-	
-print(len(do_file))	
-
-## Write the updated .do file
-fixed_file = open("../fixed-dofiles/ic2022_campuses.do", "w", encoding='latin-1')
-file.seek(0) # Move lines edutor back to start, h/t ChatGPT
-fixed_file.writelines(do_file)	
-
-
-	
-	
-	
 ## Write the updated .do file
 ##fixed_file = open("../fixed-dofiles/ic2022_campuses.do", "w", encoding='latin-1')
 ##file.seek(0) # Move lines edutor back to start, h/t ChatGPT
 #file.truncate() ## Remove old content, h/t ChatGPT
 ##fixed_file.writelines(do_file)
-
-end
-
-
-
 
 
 
