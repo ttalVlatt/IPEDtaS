@@ -200,113 +200,163 @@ cd ..
 
 cd unzip-dofiles
 
-local files_list: dir . files "*.do"
-
 python
 
 import re
+import os
 
-file = open("ic2022_campuses.do", "r", encoding='latin-1')
-do_file = file.readlines()
+files_list = os.listdir()
 
-file_name = re.sub(".do", "", "ic2022_campuses.do")
+for i in files_list:
+
+	print("Fixing " + i)
+	
+	file = open(i, "r", encoding='latin-1')
+	do_file = file.readlines()
+	
+	file_name = re.sub(".do", "", i)
+	
+	## Replace insheet line with updated file path
+
+	pattern = re.compile("^\s?insheet")
+	new_insheet = "".join(['insheet using "../unzip-data/', file_name, '_data_stata.csv", comma clear \n'])
+
+	for index, line in enumerate(do_file):
+		if re.match(pattern, line):
+			do_file[index] = new_insheet
+	
+	
+	## Remove problematic lines by index
+		
+	index_to_delete = []
+	
+	## Index lines that save data
+	pattern = re.compile("^\s?save")
+
+	for index, line in enumerate(do_file):
+		if re.match(pattern, line):
+			index_to_delete.append(index)
+	
+	## Index lines that tab data
+	pattern = re.compile("^\s?tab")
+
+	for index, line in enumerate(do_file):
+		if re.match(pattern, line):
+			index_to_delete.append(index)
+			
+	## Index lines that summarize data
+	pattern = re.compile("^\s?summarize")
+
+	for index, line in enumerate(do_file):
+		if re.match(pattern, line):
+			index_to_delete.append(index)
+			
+	## Identify problematic attempts to label strings
+	
+	label_string_vars = []
+
+	## Variable that start with anything but a digit or - sign
+	pattern = re.compile("^label define\s+\w+\s+[^0-9-].*")	
+	
+	for index, line in enumerate(do_file):
+		if re.match(pattern, line):
+			label_string_vars.append(line.split(" ")[2])
+
+	## Variables that start with a digit or minus sign, but end in letter (e.g., 11A)
+	pattern = re.compile("^label define\s+\w+\s+\b-?\d+[A-Za-z]\b.*")	
+	
+	for index, line in enumerate(do_file):
+		if re.match(pattern, line):
+			label_string_vars.append(line.split(" ")[2])
+			
+	## Get unique list of vars
+	label_string_vars = list(set(label_string_vars))
+	
+	print(len(set(label_string_vars)))
+	
+	## Prevents loop activating when no problematic vars, as regex becomes ".*"
+	if len(set(label_string_vars)) > 0:
+	
+		## Create regex pattern from the list of variables
+		pattern = "|".join(label_string_vars)
+		## h/t https://stackoverflow.com/questions/21292552/equivalent-of-paste-r-to-python
+		pattern = ".*" + pattern
+		pattern = re.compile(pattern)
+	
+		for index, line in enumerate(do_file):
+			if re.match(pattern, line):
+				index_to_delete.append(index)
+				
+		print("String var loop activated for " + i)
+	
+	
+	## Get unique indexes
+	index_to_delete = list(set(index_to_delete))
+	
+	print("# Lines to Delete: " + str(len(index_to_delete)))
+
+	print("# Lines in .do file: " + str(len(do_file)))	
+
+	## Delete problematic lines by index
+	for index in sorted(index_to_delete, reverse = True):
+		del do_file[index]
+	
+	print("# Lines in cut .do file: " + str(len(do_file)))
+	
+	## Write the updated .do file
+	
+	fixed_file_name = "../fixed-dofiles/" + i
+	fixed_file = open(fixed_file_name, "w", encoding='latin-1')
+	file.seek(0) ## Move lines editor back to start, h/t ChatGPT
+	fixed_file.writelines(do_file)
+	
+end
+	
+
+	
+	
+	
+
+end
 
 
-## Replace insheet line with updated file path
-
-pattern = re.compile("^\\s?insheet")
-new_insheet = "".join(['insheet using "../unzip-data/', file_name, '_data_stata.csv", comma clear \n'])
-
-for index, line in enumerate(do_file):
-	if re.match(pattern, line):
-		do_file[index] = new_insheet
 
 		
-## Remove problematic lines by index
 		
-index_to_delete = []		
-
-## Index lines that save data
-pattern = re.compile("^\s?save")
-
-for index, line in enumerate(do_file):
-	if re.match(pattern, line):
-		index_to_delete.append(index)		
 
 		
-## Index lines that tab data
-pattern = re.compile("^\s?tab")
 
-for index, line in enumerate(do_file):
-	if re.match(pattern, line):
-		index_to_delete.append(index)
+		
+
 		
 		
-## Index lines that summarize data
-pattern = re.compile("^\s?summarize")
 
-for index, line in enumerate(do_file):
-	if re.match(pattern, line):
-		index_to_delete.append(index)
 	
 print(len(index_to_delete))
 	
-## Identify problematic attempts to label strings	
-
-label_string_vars = []
-
-## Variable that start with anything but a digit or - sign
-pattern = re.compile("^label define\s+\w+\s+[^0-9-].*")	
 	
-for index, line in enumerate(do_file):
-	if re.match(pattern, line):
-		label_string_vars.append(line.split(" ")[2])
 
-## Variables that start with a digit or minus sign, but end in letter (e.g., 11A)
-pattern = re.compile("^label define\s+\w+\s+\b-?\d+[A-Za-z]\b.*")	
-	
-for index, line in enumerate(do_file):
-	if re.match(pattern, line):
-		label_string_vars.append(line.split(" ")[2])
+
 
 print(label_string_vars)
 
-## Get unique list of vars
-label_string_vars = list(set(label_string_vars))
+
 
 print(label_string_vars)
 
 # python
 # label_string_vars = ["a", "c", "b"]
 
-## Create regex pattern from the list of variables
-pattern = "|".join(label_string_vars)
-## h/t https://stackoverflow.com/questions/21292552/equivalent-of-paste-r-to-python
-pattern = ".*" + pattern
-pattern = re.compile(pattern)
+
 print(pattern)
 	
 
-for index, line in enumerate(do_file):
-	if re.match(pattern, line):
-		index_to_delete.append(index)
-
-print(len(index_to_delete))
-
-print(len(do_file))	
-
-## Delete problematic lines by index
-for index in sorted(index_to_delete, reverse = True):
-	del do_file[index]
-	
-print(len(do_file))	
 
 
-## Write the updated .do file
 
-fixed_file = open("../fixed-dofiles/ic2022_campuses.do", "w", encoding='latin-1')
-file.seek(0) # Move lines editor back to start, h/t ChatGPT
-fixed_file.writelines(do_file)
+
+
+
 
 end
 
