@@ -1,6 +1,6 @@
 **----------------------------------------------------------------------------**
 **
-** [PROJ: ipeDTAs: Automagically download .dta IPEDS files]
+** [PROJ: ipeDTAs: Automagically download labeled .dta IPEDS files]
 ** [FILE: ipeDTAs.do]
 ** [INIT: February 14 2024]
 ** [AUTH: Matt Capaldi] @ttalVlatt
@@ -87,8 +87,8 @@ foreach file in "`selected_files'" {
     di "Downloading: `file' .csv File"
     copy "https://nces.ed.gov/ipeds/datacenter/data/`file'_Data_Stata.zip" "raw-data/`file'_Data_Stata.zip"
 	
-	* Wait for one second
-	sleep 1000
+	* Wait for three seconds between files
+	sleep 3000
 	
 	}
 	
@@ -102,8 +102,8 @@ foreach file in "`selected_files'" {
     di "Downloading: `file' .do File"
     copy "https://nces.ed.gov/ipeds/datacenter/data/`file'_Stata.zip" "raw-dofiles/`file'_Stata.zip"
 	
-	* Wait for one second
-	sleep 1000
+	* Wait for three seconds between files
+	sleep 3000
 	
 	}
 	
@@ -117,8 +117,8 @@ foreach file in "`selected_files'" {
     di "Downloading: `file' Dictionary"
     copy "https://nces.ed.gov/ipeds/datacenter/data/`file'_Dict.zip" "raw-dictionary/`file'_Dict.zip"
 	
-	* Wait for one second
-	sleep 1000
+	* Wait for three seconds between files
+	sleep 3000
 	
 	}
 	
@@ -195,7 +195,7 @@ foreach file in `files_list' {
 cd ..
 
 **----------------------------------------------------------------------------**
-** Correct the .do files
+** Correct the .do files Using pystata
 **----------------------------------------------------------------------------**
 
 cd unzip-dofiles
@@ -204,13 +204,76 @@ local files_list: dir . files "*.do"
 
 python
 
-file = open("ic2022.do", "r", encoding='latin-1')
+import re
 
+file = open("ic2022_campuses.do", "r", encoding='latin-1')
 do_file = file.readlines()
 
-do_file[28] = "insheet using ../unzip-data/ic2022.csv, comma clear"
+file_name = re.sub(".do", "", "ic2022_campuses.do")
 
-print(do_file[28])
+
+## Replace insheet line with updated file path
+
+pattern = re.compile("^\\s?insheet")
+new_insheet = "".join(['insheet using "../unzip-data/', file_name, '_data_stata.csv", comma clear \n'])
+
+for index, line in enumerate(do_file):
+	if re.match(pattern, line):
+		do_file[index] = new_insheet
+
+		
+## Remove lines
+		
+index_to_delete = []		
+
+## Remove lines that save data
+pattern = re.compile("^\s?save")
+
+for index, line in enumerate(do_file):
+	if re.match(pattern, line):
+		index_to_delete.append(index)		
+
+		
+## Remove lines that tab data
+pattern = re.compile("^\s?tab")
+
+for index, line in enumerate(do_file):
+	if re.match(pattern, line):
+		index_to_delete.append(index)
+		
+		
+## Remove lines that summarize data
+pattern = re.compile("^\s?summarize")
+
+for index, line in enumerate(do_file):
+	if re.match(pattern, line):
+		index_to_delete.append(index)
+	
+print(max(index_to_delete))
+		
+print(len(do_file))		
+
+print(sorted(index_to_delete, reverse = True))
+
+for index in sorted(index_to_delete, reverse = True):
+	del do_file[index]
+	
+print(len(do_file))	
+
+## Write the updated .do file
+fixed_file = open("../fixed-dofiles/ic2022_campuses.do", "w", encoding='latin-1')
+file.seek(0) # Move lines edutor back to start, h/t ChatGPT
+fixed_file.writelines(do_file)	
+
+
+	
+	
+	
+## Write the updated .do file
+##fixed_file = open("../fixed-dofiles/ic2022_campuses.do", "w", encoding='latin-1')
+##file.seek(0) # Move lines edutor back to start, h/t ChatGPT
+#file.truncate() ## Remove old content, h/t ChatGPT
+##fixed_file.writelines(do_file)
 
 end
 
