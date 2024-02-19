@@ -41,16 +41,36 @@ To Run
 */
 
 **----------------------------------------------------------------------------**
-** Select the Files to Download
+** Select Which Files to Download
 **----------------------------------------------------------------------------**
 
-local selected_files2 ///
-"HD2022" ///
-"IC2022" ///
-"IC2022_AY" ///
-"IC2022_PY" ///
-"IC2022_CAMPUSES" ///
-"EFFY2018"
+/*
+
+Below is a list of all IPEDS files available
+
+This is the only part of the script that should be edited
+
+The process is realtively simple
+	- If the file name is not commented, it will be downloaded
+	- If the file name is commented, it will not be downloaded
+
+By default the most recent year, and the HD file of the preceeding year are downloaded
+
+Use multiline comments (start "/*", end "*/") to comment files (single line *s don't work)
+	- For ease, there is already a comment end "* /" at the bottom of the list
+	- To not download anything below line x, simply
+		- add /// as a new line above x (already there for new years)
+		- add "/*" at the start of line x
+
+Important: The line before the start of a comment MUST be "///" only
+
+Hint: The error "var list not allowed" means the comment formatting got off
+
+Hint: You can also delete lines if you prefer
+
+*/
+
+*/
 
 **-------------------------------
 ** LAST UPDATED: 14 February 2024
@@ -101,7 +121,7 @@ local selected_files ///
 ///
 /// 2021
 ///
-/*"HD2021" ///
+"HD2021" ///
 "IC2021" ///
 "IC2021_AY" ///
 "IC2021_PY" ///
@@ -1399,7 +1419,7 @@ foreach file in `files_list' {
 cd ..
 
 **----------------------------------------------------------------------------**
-** If _rv file exists replace original data with it
+** If _rv File Exists Replace Original Data With It
 **----------------------------------------------------------------------------**
 
 cd unzip-data
@@ -1424,7 +1444,7 @@ foreach file in `files_list' {
 cd ..
 
 **----------------------------------------------------------------------------**
-** Fix the .do files Using pystata: Common Issues
+** Fix the .do Files Using PyStata: Consistent Issues
 **----------------------------------------------------------------------------**
 
 cd unzip-dofiles
@@ -1548,7 +1568,7 @@ for i in files_list:
 end
 	
 **----------------------------------------------------------------------------**
-** Fix the .do files Using pystata: Misc. Issues
+** Fix the .do Files Using PyStata: Misc. Issues
 **----------------------------------------------------------------------------**
 
 cd ../fixed-dofiles
@@ -1995,7 +2015,7 @@ do_fix("ic1980.do", 3738, '')
 end
 
 **----------------------------------------------------------------------------**
-** Run the .do files to create labeled .dta files
+** Run the .do Files to Create Labeled .dta Files
 **----------------------------------------------------------------------------**
 
 ** Clear any data currently stored
@@ -2035,6 +2055,10 @@ cd ..
 
 ** Clear any data currently stored
 clear
+
+**----------------------------------------------------------------------------**
+** Optional: Remove Unzipped and Raw Data Files
+**----------------------------------------------------------------------------**
 
 ** Delete downloaded files (optional: un-comment to run and save storage space)
 *shell rm -r stata-data
