@@ -76,6 +76,7 @@ Hint: You can also delete lines if you prefer
 ** LAST UPDATED: 14 February 2024
 **-------------------------------
 
+{
 local selected_files ///
 ///
 /// 2022
@@ -214,7 +215,7 @@ local selected_files ///
 "EF2019C" ///
 "EF2019D" ///
 "EF2019A_DIST" ///
-"019_A" ///
+"C2019_A" ///
 "C2019_B" ///
 "C2019_C" ///
 "C2019DEP" ///
@@ -1300,6 +1301,7 @@ local selected_files ///
 
 */
 
+}
 
 **----------------------------------------------------------------------------**
 ** Create Folders
@@ -1500,7 +1502,8 @@ for i in files_list:
 		if re.match(pattern, line):
 			index_to_delete.append(index)
 					
-			
+	print("Before string var: " + str(len(index_to_delete)))
+	
 	## Identify problematic attempts to label strings
 	
 	label_string_vars = []
@@ -1511,7 +1514,7 @@ for i in files_list:
 	for index, line in enumerate(do_file):
 		if re.match(pattern, line):
 			label_string_vars.append(line.split(" ")[2])
-			
+		
 
 	## Variables that start with a digit or minus sign, but end in letter (e.g., 11A)
 	pattern = re.compile(r"^label define\s+\w+\s+\b-?\d+[A-Za-z]\b.*")	
@@ -1523,8 +1526,11 @@ for i in files_list:
 	
 	## Get unique list of vars
 	label_string_vars = list(set(label_string_vars))
-	
+
+
 	print(len(set(label_string_vars)))
+	
+	print(set(label_string_vars))
 	
 	## Prevents loop activating when no problematic vars, as regex becomes ".*"
 	if len(set(label_string_vars)) > 0:
@@ -1532,17 +1538,25 @@ for i in files_list:
 		## Create regex pattern from the list of variables
 		pattern = "|".join(label_string_vars)
 		## h/t https://stackoverflow.com/questions/21292552/equivalent-of-paste-r-to-python
-		pattern = ".*" + pattern
+		pattern = r".* (" + pattern + ")"
 		pattern = re.compile(pattern)
+		
+		print(pattern)
 	
 		for index, line in enumerate(do_file):
 			if re.match(pattern, line):
 				index_to_delete.append(index)
 				
 		print("String var loop activated for " + i)
+
 	
 	## Get unique indexes
 	index_to_delete = list(set(index_to_delete))
+	
+	print("After string var: " + str(len(index_to_delete)))
+	
+	# for k in index_to_delete:
+		# print(do_file[k])
 	
 	print("# Lines to Delete: " + str(len(index_to_delete)))
 
@@ -1551,12 +1565,16 @@ for i in files_list:
 	## Delete problematic lines by index
 	for index in sorted(index_to_delete, reverse = True):
 		do_file[index] = "*/ \n"
+		print(do_file)
 	
 	print("# Lines in cut .do file: " + str(len(do_file)))
+	
 	
 	## Write the updated .do file
 	
 	fixed_file_name = "../fixed-dofiles/" + i
+	if os.path.exists(fixed_file_name):
+		os.unlink(fixed_file_name) ## Delete fixed do file if already exists
 	fixed_file = open(fixed_file_name, "w", encoding='latin-1')
 	fixed_file.writelines(do_file)
 	
@@ -1597,7 +1615,6 @@ def do_fix(do_file_name, line_to_replace, replacement):
 		
 		print("Not in fixed-dofiles : " + do_file_name) 
 
-# /* Still runs: stop Stata syntax highlighting endless do_fix python code below
 
 ## Broken Line
 do_fix("gr2021_pell_ssl.do", 81, 'label define label_psgrtype 1 "Total 2015 cohort (Bachelor^s and other degree/certificate seeking) - four-year institutions",add')
@@ -2009,8 +2026,6 @@ do_fix("ic1980.do", 3041, '/*')
 do_fix("ic1980.do", 3043, '*/')
 do_fix("ic1980.do", 3737, '')
 do_fix("ic1980.do", 3738, '')
-
-# */
 	
 end
 
