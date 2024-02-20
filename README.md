@@ -4,6 +4,26 @@
 - It then processes the `.csv` data and `.do` files to create labeled `.dta` files ready of analysis in Stata or R via `haven`
 - To select which files are downloaded, comment out and/or delete lines from the list at the top of the script (instructions are provided)
 
+## To Download
+
+Option One: Download as .zip (easy)
+- Click the green `Code` button
+- Select "download as .zip" beneath the URLs
+- Open .zip file on your computer
+- Open `ipeDTAs.do`, follow instructions, and run!
+
+Option Two: Clone (or fork) this GitHub Repo (if familiar with git)
+- Click the green `Code` button
+- Copy the https or ssh link
+- Clone using terminal or your git client
+- Open `ipeDTAs.do`, follow instructions, and run! 
+
+Option Three: Copy and paste code (easy, but error prone)
+- Click on `ipeDTAs.do` and copy the code
+- Open a blank `.do` file in Stata
+- Paste the code
+- Follow instructions and run!
+
 ## System Requirements
 
 - Stata `version 16.0` or higher
