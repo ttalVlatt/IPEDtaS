@@ -16,6 +16,12 @@
     - `~14gb` to download (raw zippped and raw unzipped copies of data are kept during processing, optional lines to delete at end of `.do` file)
     - `~4.5gb` to store (keeping only the labeled `.dta` files and dictionaries)
 
+## Note on Time to Download
+
+- If you wish to download the entirity of IPEDS, it can take 2-3 hours
+- To avoid overwhelming IPEDS servers there is a 3 second delay between each file download, which at over 3000 files, becomes a significant amount of time
+- If you wish, at your own risk of being rejected by NCES servers, you can reduce (or remove) `sleep 3000` on lines 1362, 1377, and 1392
+
 ## Acknowledgement
 
 - This project builds off Dr. Ben Skinner's [`downloadipeds.R` project](https://github.com/btskinner/downloadipeds) and wouldn't have been possible without it
