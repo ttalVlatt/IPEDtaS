@@ -28,8 +28,8 @@
     - See [python.org's installation page](https://www.python.org/downloads/) to download if not installed
 - Storage space requirement depends on how much you download
     - **All of IPEDS**
-    - `~14gb` to download (raw zippped and raw unzipped copies of data are kept during processing, optional lines to delete at end of `.do` file)
-    - `~4.5gb` to store (keeping only the labeled `.dta` files and dictionaries)
+    - `~12gb` to download (raw zippped and raw unzipped copies of data are kept during processing, optional lines to delete at end of `.do` file)
+    - `~4gb` to store (keeping only the labeled `.dta` files and dictionaries)
 	
 ## Note on Time to Download
 
@@ -99,7 +99,7 @@ Important: All lines in this block MUST end "///"
 Important: The line before the start of a comment MUST be ONLY "///"
 
 Hint: The error "var list not allowed" means the comment formatting got off
-Hint' The error "<Name> is not a valid command name" means you missed a "///"
+Hint: The error "<Name> is not a valid command name" means you missed a "///"
 Hint: You can also delete unwanted lines if you prefer
 
 */
@@ -1426,7 +1426,7 @@ cd ../unzip-data
 
 foreach file in `files_list' {
 	
-	unzipfile ../raw-data/`file'
+	unzipfile ../raw-data/`file', replace
 	
 }
 
@@ -1439,7 +1439,7 @@ cd ../unzip-dofiles
 
 foreach file in `files_list' {
 	
-	unzipfile ../raw-dofiles/`file'
+	unzipfile ../raw-dofiles/`file', replace
 	
 }
 
@@ -1452,7 +1452,7 @@ cd ../unzip-dictionary
 
 foreach file in `files_list' {
 	
-	unzipfile ../raw-dictionary/`file'
+	unzipfile ../raw-dictionary/`file', replace
 	
 }
 
@@ -1470,6 +1470,21 @@ foreach file in `files_list' {
 	
 	local rv_name: di "`file'"
 	local og_name: subinstr local rv_name "_rv" ""
+	
+	di "Replacing `og_name' with `rv_name'"
+	
+	erase "`og_name'"
+	
+	_renamefile "`rv_name'" "`og_name'"
+	
+}
+
+local files_list: dir . files "*_RV*.csv"
+
+foreach file in `files_list' {
+	
+	local rv_name: di "`file'"
+	local og_name: subinstr local rv_name "_RV" ""
 	
 	di "Replacing `og_name' with `rv_name'"
 	
