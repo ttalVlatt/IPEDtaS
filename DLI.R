@@ -61,7 +61,7 @@ setwd(this.path::here())
 
 ## default
 primary_data = FALSE
-dictionary = FALSE
+dictionary = TRUE
 
 ## STATA version
 ## (NB: downloading Stata version of data will also get Stata program files)
@@ -200,24 +200,24 @@ mess('Finished!')
 ##' [New: Prepare Downloaded Content for Stata]
 ## ---------------------------
 
-# 
-# ##'[1: Create folder for labeled data]
-# 
-# dir.create("labeled-data")
-# 
-# 
-# ##'[2: Unzip folders]
-# 
-# ## unzip data folder
-# dir.create("unzip-stata-data")
-# 
-# sd_files <- list.files("stata-data", recursive = T, full.names = T)
-# 
-# for(i in sd_files) {
-#   unzip(i,
-#         exdir = "unzip-stata-data")
-# }
-# 
+
+##'[1: Create folder for labeled data]
+
+dir.create("labeled-data")
+
+
+##'[2: Unzip folders]
+
+## unzip data folder
+dir.create("unzip-stata-data")
+
+sd_files <- list.files("stata-data", recursive = T, full.names = T)
+
+for(i in sd_files) {
+  unzip(i,
+        exdir = "unzip-stata-data")
+}
+
 ## unzip .do files folder
 dir.create("unzip-stata-dofiles")
 
@@ -270,36 +270,6 @@ for(i in do_files) {
   suppressWarnings(
     do_file[grep("^\\s?summarize", do_file)] <- ""
   )
-  
-  # ##' [Remove any attempt to label string variables as Stata doesn't allow it
-  # 
-  # ##. Pattern that matches label define any_thing non-numeric or - sign
-  # pattern <- "^label define\\s+\\w+\\s+[^0-9-].*"
-  # ## Indicies of do_file that match pattern
-  # ## e.g., label define label_stabbr AL \"Alabama\", add 
-  # suppressWarnings(
-  #   matching_indicies <- grep(pattern, do_file)
-  # )
-  # ## Indicies of do_file immediately follow pattern (also throw errors)
-  # ## e.g., label values stabbr label_stabbr
-  # following_indicies <- matching_indicies + 1
-  # ## Get list of indicies to blank out
-  # indicies <- unique(c(matching_indicies, following_indicies))
-  # ## Blank them out
-  # suppressWarnings(
-  #   do_file[indicies] <- ""
-  # )
-  # 
-  # ## Same thing but to capture something like 11A
-  # pattern <- "^label define\\s+\\w+\\s+\\b-?\\d+[A-Za-z]\\b.*"
-  # suppressWarnings(
-  #   matching_indicies <- grep(pattern, do_file)
-  # )
-  # following_indicies <- matching_indicies + 1
-  # indicies <- unique(c(matching_indicies, following_indicies))
-  # suppressWarnings(
-  #   do_file[indicies] <- ""
-  # )
   
   
   ##'[Remove any lines trying to label string vars, as Stata does not allow it
@@ -404,21 +374,6 @@ do_fix("gr2021_pell_ssl.do", 85, 'label define label_psgrtype 3 "Other degree/ce
 do_fix("gr2021_pell_ssl.do", 86, '')
 do_fix("gr2021_pell_ssl.do", 87, 'label define label_psgrtype 4 "Degree/certificate seeking 2018 cohort (less than four-year institutions)",add')
 do_fix("gr2021_pell_ssl.do", 88, '')
-
-# ## Trying to label string
-# do_fix("hd2020.do", 104, '/*')
-# do_fix("hd2020.do", 162, '*/')
-
-## In earlier years GR2017 and GR2014 this section is entirely commented out
-## so apply same treatment
-# do_fix("gr2021.do", 166, '/*')
-# do_fix("gr2021.do", 169, '*/')
-# 
-# do_fix("gr2022.do", 165, '/*')
-# do_fix("gr2022.do", 182, '*/')
-# 
-# do_fix("GR2020.do", 166, '/*')
-# do_fix("GR2020.do", 168, '*/')
 
 ## Imputation variable names had extra character than in data
 do_fix("ef2022a.do", 96, 'label variable xefgndru "Imputation field for efgndrun - Gender unknown"')
@@ -589,9 +544,9 @@ do_fix("sal2003_a.do", 57, '')
 do_fix("ef99_b.do", 33, 'label variable lstudy "Level of student"')
 do_fix("ef99_b.do", 34, '')
 
-## Broken Line
-do_fix("ef98_c.do", 66, 'label define label_line 8 "12-month contract professors", add')
-do_fix("ef98_c.do", 67, '')
+## Invalid values
+do_fix("ef98_c.do", 101, '/*')
+do_fix("ef98_c.do", 130, '*/')
 
 ## Broken Line
 do_fix("sal1984_a.do", 33, 'label variable line "Faculty Line Type"')
@@ -820,55 +775,6 @@ do_fix("ic1980.do", 3041, '/*')
 do_fix("ic1980.do", 3043, '*/')
 do_fix("ic1980.do", 3737, '')
 do_fix("ic1980.do", 3738, '')
-
-do_fix_imp <- function(do_file_name) {
-  
-  setwd("unzip-stata-dofiles")
-  
-  if(file.exists(do_file_name)) {
-    
-    suppressWarnings(
-      do_file <- readLines(do_file_name)
-    )
-    
-    line_index <- grep("label values x.*", do_file)
-    
-    ## sub() replaces the first x with nothing, fixing the var name
-    do_file[line_index] <- sub("x", "", do_file[line_index], fixed = T)
-    
-    #writeLines(do_file, do_file_name)
-    
-  } else {
-    
-    paste("File", do_file_name, "not found")
-    
-  }
-  
-  setwd("..")
-  
-}
-
-# ## String
-# do_fix("f1993_ic.do", 52, '/*')
-# do_fix("f1993_ic.do", 54, '*/')
-# 
-# ## String
-# do_fix("ef98_acp.do", 101, '/*')
-# do_fix("ef98_acp.do", 105, '*/')
-# 
-# ## String
-# do_fix("ef1988_a.do", 81, '/*')
-# do_fix("ef1988_a.do", 85, '*/')
-# 
-# ## String
-# do_fix("s1993_ic.do", 56, '/*')
-# do_fix("s1993_ic.do", 58, '*/')
-# 
-# ## String
-# do_fix("ef1986_ic.do", 38, '/*')
-# do_fix("ef1986_ic.do", 40, '*/')
-
-## To fix, some files such as ef_2022cp are writing .dta files 
 
 ## -----------------------------------------------------------------------------
 ##' *END SCRIPT*
