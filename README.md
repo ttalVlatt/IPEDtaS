@@ -18,4 +18,4 @@
 
 # Acknowledgements
 
-- This project builds off [@btskinner's `downloadipeds.R` project](https://github.com/btskinner/downloadipeds) and wouldn't have been possible without it
+- This project builds off Dr. Ben Skinner's [`downloadipeds.R` project](https://github.com/btskinner/downloadipeds) and wouldn't have been possible without it
