@@ -1,13 +1,13 @@
 .Rhistory
 .DS_Store
 .Rproj.user
-raw-data/
+zip-data/
 unzip-data/
 dta-data/
-raw-dofiles/
+zip-dofiles/
 unzip-dofiles/
 fixed-dofiles/
-raw-dictionary/
+zip-dictionary/
 unzip-dictionary/
 *.do.stswp
 *.stswp

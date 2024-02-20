@@ -3,7 +3,7 @@
 ** [PROJ: ipeDTAs: Automagically download labeled .dta IPEDS files]
 ** [FILE: ipeDTAs.do]
 ** [INIT: February 14 2024]
-** [EDIT: February 19 2024]
+** [EDIT: February 20 2024]
 ** [AUTH: Matt Capaldi] @ttalVlatt
 ** [CRED: Benjamin T. Skinner] @btskinner
 **
@@ -28,7 +28,7 @@
     - See [python.org's installation page](https://www.python.org/downloads/) to download if not installed
 - Storage space requirement depends on how much you download
     - **All of IPEDS**
-    - `~12gb` to download (raw zippped and raw unzipped copies of data are kept during processing, optional lines to delete at end of `.do` file)
+    - `~12gb` to download (zip zippped and zip unzipped copies of data are kept during processing, optional lines to delete at end of `.do` file)
     - `~4gb` to store (keeping only the labeled `.dta` files and dictionaries)
 	
 ## Note on Time to Download
@@ -1345,22 +1345,22 @@ local selected_files ///
 **----------------------------------------------------------------------------**
 
 * Make folders if they don't exist
-capture confirm file "raw-data"
-if _rc mkdir "raw-data"
+capture confirm file "zip-data"
+if _rc mkdir "zip-data"
 capture confirm file "unzip-data"
 if _rc mkdir "unzip-data"
 capture confirm file "dta-data"
 if _rc mkdir "dta-data"
-capture confirm file "raw-dofiles"
-if _rc mkdir "raw-dofiles"
+capture confirm file "zip-dofiles"
+if _rc mkdir "zip-dofiles"
 capture confirm file "unzip-dofiles"
 if _rc mkdir "unzip-dofiles"
 capture confirm file "fixed-dofiles"
 if _rc mkdir "fixed-dofiles"
-capture confirm file "raw-dictionary"
-if _rc mkdir "raw-dictionary"
-capture confirm file "dictionary"
-if _rc mkdir "dictionary"
+capture confirm file "zip-dictionary"
+if _rc mkdir "zip-dictionary"
+capture confirm file "unzip-dictionary"
+if _rc mkdir "unzip-dictionary"
 
 * h/t https://www.statalist.org/forums/forum/general-stata-discussion/general/1344241-check-if-directory-exists-before-running-mkdir
 
@@ -1371,10 +1371,10 @@ if _rc mkdir "dictionary"
 * Loop through getting the .csv files
 foreach file in "`selected_files'" {
 
-	if(!fileexists("raw-data/`file'_Data_Stata.zip")) {
+	if(!fileexists("zip-data/`file'_Data_Stata.zip")) {
 	
     di "Downloading: `file' .csv File"
-    copy "https://nces.ed.gov/ipeds/datacenter/data/`file'_Data_Stata.zip" "raw-data/`file'_Data_Stata.zip"
+    copy "https://nces.ed.gov/ipeds/datacenter/data/`file'_Data_Stata.zip" "zip-data/`file'_Data_Stata.zip"
 	
 	* Wait for three seconds between files
 	sleep 3000
@@ -1386,10 +1386,10 @@ foreach file in "`selected_files'" {
 * Loop through getting the .do files
 foreach file in "`selected_files'" {
 
-	if(!fileexists("raw-dofiles/`file'_Stata.zip")) {
+	if(!fileexists("zip-dofiles/`file'_Stata.zip")) {
 	
     di "Downloading: `file' .do File"
-    copy "https://nces.ed.gov/ipeds/datacenter/data/`file'_Stata.zip" "raw-dofiles/`file'_Stata.zip"
+    copy "https://nces.ed.gov/ipeds/datacenter/data/`file'_Stata.zip" "zip-dofiles/`file'_Stata.zip"
 	
 	* Wait for three seconds between files
 	sleep 3000
@@ -1401,10 +1401,10 @@ foreach file in "`selected_files'" {
 * Loop through getting the dictionary files
 foreach file in "`selected_files'" {
 
-	if(!fileexists("raw-dictionary/`file'_Dict.zip")) {
+	if(!fileexists("zip-dictionary/`file'_Dict.zip")) {
 	
     di "Downloading: `file' Dictionary"
-    copy "https://nces.ed.gov/ipeds/datacenter/data/`file'_Dict.zip" "raw-dictionary/`file'_Dict.zip"
+    copy "https://nces.ed.gov/ipeds/datacenter/data/`file'_Dict.zip" "zip-dictionary/`file'_Dict.zip"
 	
 	* Wait for three seconds between files
 	sleep 3000
@@ -1418,7 +1418,7 @@ foreach file in "`selected_files'" {
 **----------------------------------------------------------------------------**
 
 * .csv Files
-cd raw-data
+cd zip-data
 
 local files_list: dir . files "*.zip"
 
@@ -1426,12 +1426,12 @@ cd ../unzip-data
 
 foreach file in `files_list' {
 	
-	unzipfile ../raw-data/`file', replace
+	unzipfile ../zip-data/`file', replace
 	
 }
 
 * .do Files
-cd ../raw-dofiles
+cd ../zip-dofiles
 
 local files_list: dir . files "*.zip"
 
@@ -1439,20 +1439,20 @@ cd ../unzip-dofiles
 
 foreach file in `files_list' {
 	
-	unzipfile ../raw-dofiles/`file', replace
+	unzipfile ../zip-dofiles/`file', replace
 	
 }
 
 * Dictionary Files
-cd ../raw-dictionary
+cd ../zip-dictionary
 
 local files_list: dir . files "*.zip"
 
-cd ../dictionary
+cd ../unzip-dictionary
 
 foreach file in `files_list' {
 	
-	unzipfile ../raw-dictionary/`file', replace
+	unzipfile ../zip-dictionary/`file', replace
 	
 }
 
@@ -2105,7 +2105,7 @@ cd ..
 clear
 
 **----------------------------------------------------------------------------**
-** Optional: Remove Unzipped and Raw Data Files
+** Optional: Remove Unzipped and zip Data Files
 **----------------------------------------------------------------------------**
 
 ** Delete un-needed files (optional: remove # to run and save storage space)
@@ -2114,9 +2114,9 @@ python
 
 import shutil
 
-#shutil.rmtree("raw-data", ignore_errors = True)
-#shutil.rmtree("raw-dofiles", ignore_errors = True)
-#shutil.rmtree("raw-dictionary", ignore_errors = True)
+#shutil.rmtree("zip-data", ignore_errors = True)
+#shutil.rmtree("zip-dofiles", ignore_errors = True)
+#shutil.rmtree("zip-dictionary", ignore_errors = True)
 #shutil.rmtree("unzip-data", ignore_errors = True)
 #shutil.rmtree("unzip-dofiles", ignore_errors = True)
 #shutil.rmtree("fixed-dofiles", ignore_errors = True)
