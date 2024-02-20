@@ -1359,8 +1359,8 @@ capture confirm file "fixed-dofiles"
 if _rc mkdir "fixed-dofiles"
 capture confirm file "raw-dictionary"
 if _rc mkdir "raw-dictionary"
-capture confirm file "unzip-dictionary"
-if _rc mkdir "unzip-dictionary"
+capture confirm file "dictionary"
+if _rc mkdir "dictionary"
 
 * h/t https://www.statalist.org/forums/forum/general-stata-discussion/general/1344241-check-if-directory-exists-before-running-mkdir
 
@@ -1448,7 +1448,7 @@ cd ../raw-dictionary
 
 local files_list: dir . files "*.zip"
 
-cd ../unzip-dictionary
+cd ../dictionary
 
 foreach file in `files_list' {
 	
