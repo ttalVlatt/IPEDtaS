@@ -1553,22 +1553,14 @@ for i in files_list:
 	## Get unique indexes
 	index_to_delete = list(set(index_to_delete))
 	
-	print("After string var: " + str(len(index_to_delete)))
-	
-	# for k in index_to_delete:
-		# print(do_file[k])
-	
-	print("# Lines to Delete: " + str(len(index_to_delete)))
+	print("# Lines to Cmment: " + str(len(index_to_delete)))
 
 	print("# Lines in .do file: " + str(len(do_file)))	
 
 	## Delete problematic lines by index
 	for index in sorted(index_to_delete, reverse = True):
 		do_file[index] = "*/ \n"
-		print(do_file)
-	
-	print("# Lines in cut .do file: " + str(len(do_file)))
-	
+
 	
 	## Write the updated .do file
 	
@@ -2075,10 +2067,17 @@ clear
 ** Optional: Remove Unzipped and Raw Data Files
 **----------------------------------------------------------------------------**
 
-** Delete downloaded files (optional: un-comment to run and save storage space)
-*shell rm -r stata-data
-*shell rm -r stata-dofiles
-*shell rm -r unzip-stata-data
-*shell rm -r unzip-stata-dofiles
+** Delete un-needed files (optional: un-comment to run and save storage space)
 
-** If on Windows without Unix shell, use "shell rmdir stata-data" etc.
+python
+
+import shutil
+
+# shutil.rmtree("raw-data", ignore_errors = True)
+# shutil.rmtree("raw-dofiles", ignore_errors = True)
+shutil.rmtree("raw-dictionary", ignore_errors = True)
+# shutil.rmtree("unzip-data", ignore_errors = True)
+# shutil.rmtree("unzip-dofiles", ignore_errors = True)
+# shutil.rmtree("fixed-dofiles", ignore_errors = True)
+
+end
