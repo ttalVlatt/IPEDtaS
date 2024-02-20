@@ -33,8 +33,8 @@ Option Three: Copy and paste code (easy, but error prone)
     - See [python.org's installation page](https://www.python.org/downloads/) to download if not installed
 - Storage space requirement depends on how much you download
     - **All of IPEDS**
-    - `~14gb` to download (raw zippped and raw unzipped copies of data are kept during processing, optional lines to delete at end of `.do` file)
-    - `~4.5gb` to store (keeping only the labeled `.dta` files and dictionaries)
+    - `~12gb` to download (raw zippped and raw unzipped copies of data are kept during processing, optional lines to delete at end of `.do` file)
+    - `~4gb` to store (keeping only the labeled `.dta` files and dictionaries)
  
 ## Note on Time to Download
 
