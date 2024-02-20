@@ -2099,11 +2099,11 @@ python
 
 import shutil
 
-shutil.rmtree("raw-data", ignore_errors = True)
-shutil.rmtree("raw-dofiles", ignore_errors = True)
-shutil.rmtree("raw-dictionary", ignore_errors = True)
-shutil.rmtree("unzip-data", ignore_errors = True)
-shutil.rmtree("unzip-dofiles", ignore_errors = True)
-shutil.rmtree("fixed-dofiles", ignore_errors = True)
+#shutil.rmtree("raw-data", ignore_errors = True)
+#shutil.rmtree("raw-dofiles", ignore_errors = True)
+#shutil.rmtree("raw-dictionary", ignore_errors = True)
+#shutil.rmtree("unzip-data", ignore_errors = True)
+#shutil.rmtree("unzip-dofiles", ignore_errors = True)
+#shutil.rmtree("fixed-dofiles", ignore_errors = True)
 
 end
