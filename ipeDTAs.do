@@ -83,8 +83,8 @@ The process is realtively simple
 	- If the file name is not commented, it will be downloaded
 	- If the file name is commented, it will not be downloaded
 
-By default only selected files from the most recent year are downloaded
-	- Follow the demostrated pattern for comments
+By default selected files from the most recent survey year will be downloaded
+	- Follow the demonstrated pattern for comments
 
 Use multiline comments (start "/*", end "*/") to comment files (single line *s don't work)
 	- For ease, there is already a comment end "* /" at the bottom of the list
@@ -120,6 +120,8 @@ local selected_files ///
 "IC2022_PY" ///
 "IC2022_CAMPUSES" ///
 "EFFY2022" ///
+///
+/* ///
 "EFFY2022_DIST" ///
 "EFIA2022" ///
 "ADM2022" ///
@@ -140,6 +142,7 @@ local selected_files ///
 "S2022_IS" ///
 "S2022_NH" ///
 "EAP2022" ///
+*/ ///
 "F2122_F1A" ///
 "F2122_F2" ///
 "F2122_F3" ///
@@ -148,6 +151,8 @@ local selected_files ///
 "GR2022" ///
 "GR2022_L2" ///
 "GR2022_PELL_SSL" ///
+///
+/*
 "GR200_22" ///
 "OM2022" ///
 "AL2022" ///
