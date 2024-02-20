@@ -22,7 +22,7 @@
 ## System Requirements
 
 - Stata `version 16.0` or higher
-- Python for `PyStata` (often already installed)
+- Python for `PyStata` (often already installed will stop immediately if not)
     - Run `python search` in Stata to check python is installed  
     - See [Stata's `PyStata` documentation](https://www.stata.com/manuals/ppystataintegration.pdf) for more info
     - See [python.org's installation page](https://www.python.org/downloads/) to download if not installed
@@ -50,11 +50,24 @@
 /*
 
 1. Ensure python is installed on your computer for PyStata
-2. Select which files to download (see next section)
+2. Select which files to download (see below section)
 3. Ensure working directory is where you want the files to be stored
 4. Hit "Do"
 
 */
+
+**----------------------------------------------------------------------------**
+** Check Python Installation for PyStata
+**----------------------------------------------------------------------------**
+
+* Will stop if python is not installed, install before continuing
+
+capture python search
+
+if _rc != 0 {
+	di "Python (required for PyStata) is not installed visit https://www.python.org/downloads/"
+	exit
+}
 
 **----------------------------------------------------------------------------**
 ** Select Which Files to Download
@@ -103,14 +116,10 @@ local selected_files ///
 ///
 "HD2022" ///
 "IC2022" ///
-/* ///
 "IC2022_AY" ///
 "IC2022_PY" ///
 "IC2022_CAMPUSES" ///
-*/ ///
 "EFFY2022" ///
-///
-/* ///
 "EFFY2022_DIST" ///
 "EFIA2022" ///
 "ADM2022" ///
@@ -131,22 +140,14 @@ local selected_files ///
 "S2022_IS" ///
 "S2022_NH" ///
 "EAP2022" ///
-*/ ///
 "F2122_F1A" ///
 "F2122_F2" ///
 "F2122_F3" ///
 "SFA2122" ///
-///
-/* ///
 "SFAV2122" ///
-*/ ///
 "GR2022" ///
-///
-/* ///
 "GR2022_L2" ///
-*/ ///
 "GR2022_PELL_SSL" ///
-/* ///
 "GR200_22" ///
 "OM2022" ///
 "AL2022" ///
@@ -2093,11 +2094,11 @@ python
 
 import shutil
 
-#shutil.rmtree("raw-data", ignore_errors = True)
-#shutil.rmtree("raw-dofiles", ignore_errors = True)
-#shutil.rmtree("raw-dictionary", ignore_errors = True)
-#shutil.rmtree("unzip-data", ignore_errors = True)
-#shutil.rmtree("unzip-dofiles", ignore_errors = True)
-#shutil.rmtree("fixed-dofiles", ignore_errors = True)
+shutil.rmtree("raw-data", ignore_errors = True)
+shutil.rmtree("raw-dofiles", ignore_errors = True)
+shutil.rmtree("raw-dictionary", ignore_errors = True)
+shutil.rmtree("unzip-data", ignore_errors = True)
+shutil.rmtree("unzip-dofiles", ignore_errors = True)
+shutil.rmtree("fixed-dofiles", ignore_errors = True)
 
 end
