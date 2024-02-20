@@ -4,7 +4,7 @@
 - It then processes the `.csv` data and `.do` files to create labeled `.dta` files ready of analysis in Stata or R via `haven`
 - To select which files are downloaded, comment out and/or delete lines from the list at the top of the script (instructions are provided)
 
-## To Use Code
+## To Use
 
 Option One: Download as .zip (easy)
 - Click the green `Code` button
