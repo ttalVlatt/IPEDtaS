@@ -8,35 +8,50 @@
 **
 **----------------------------------------------------------------------------**
 
+**----------------------------------------------------------------------------**
+** README
+**----------------------------------------------------------------------------**
+
 /* 
 
-This project is an extension of @btskinner's downloadipeds.R to automagically
-download labeled .dta versions of IPEDS data files, which can then be used for
-analysis in Stata or R (via haven)
+- This `.do` file automates downloading IPEDS complete `.csv` data files, `.do` labeling files, and dictionaries
+- It then processes the `.csv` data and `.do` files to create labeled `.dta` files ready of analysis in Stata or R via `haven`
+- To select which files are downloaded, comment out and/or delete lines from the list at the top of the script (instructions are provided)
 
-First, this script first calls DWI.R, which downloads and prepares IPEDS data.
-If you are not running a version of Stata locally installed on your computer, it
-will be easier to first run DWI.R separately to download and set up the files,
-then run this script with lines 40 and 42 commented out
+## System Requirements
 
-Second, this script loops through these prepared files running (modified) .do 
-scripts from IPEDS to make labeled .dta copies of the data in the 
-labeled-data sub-folder
+- Stata `version 16.0` or higher
+- Python for `PyStata` (often already installed)
+    - Run `python search` in Stata to check python is installed  
+    - See [Stata's `PyStata` documentation](https://www.stata.com/manuals/ppystataintegration.pdf) for more info
+    - See [python.org's installation page](https://www.python.org/downloads/) to download if not installed
+- Storage space requirement depends on how much you download
+    - **All of IPEDS**
+    - `~14gb` to download (raw zippped and raw unzipped copies of data are kept during processing, optional lines to delete at end of `.do` file)
+    - `~4.5gb` to store (keeping only the labeled `.dta` files and dictionaries)
+	
+## Note on Time to Download
 
-Note: Part of this process replaces original data files with _rv revised
-versions if available, the resulting file uses the original name without _rv
+- If you wish to download the entirity of IPEDS, it can take 2-3 hours
+- To avoid overwhelming IPEDS servers there is a 3 second delay between each file download, which at over 3000 files, becomes a significant amount of time
+- If you wish, at your own risk of being rejected by NCES servers, you can reduce (or remove) `sleep 3000` on lines 1362, 1377, and 1392
 
-To Run
+## Acknowledgement
 
-0. You will need an installation of R which can be downloaded from https://cran.rstudio.com
+- This project builds off Dr. Ben Skinner's [`downloadipeds.R` project](https://github.com/btskinner/downloadipeds) and wouldn't have been possible without it
 
-1. Un-comment the files you want from ipeds-file-list.txt (remove ## from name)
-	Hint: in many text editors you can hold alt to drag a cursor to multiple
-	lines at once, so you can comment/un-comment many lines at once
+*/
 
-2. Ensure the working directory is set to the main DLI folder
+**----------------------------------------------------------------------------**
+** Instruction Manual
+**----------------------------------------------------------------------------**
 
-3. Hit "Do"
+/*
+
+1. Ensure python is installed on your computer for PyStata
+2. Select which files to download (see next section)
+3. Ensure working directory is where you want the files to be stored
+4. Hit "Do"
 
 */
 
@@ -54,19 +69,24 @@ The process is realtively simple
 	- If the file name is not commented, it will be downloaded
 	- If the file name is commented, it will not be downloaded
 
-By default the most recent year, and the HD file of the preceeding year are downloaded
+By default only selected files from the most recent year are downloaded
+	- Follow the demostrated pattern for comments
 
 Use multiline comments (start "/*", end "*/") to comment files (single line *s don't work)
 	- For ease, there is already a comment end "* /" at the bottom of the list
 	- To not download anything below line x, simply
 		- add /// as a new line above x (already there for new years)
 		- add "/*" at the start of line x
+		- add "*/" to end a multi-line comment
+			- There is already one at the bottom of the list, add "/*" to not
+			  download anything below that line
 
-Important: The line before the start of a comment MUST be "///" only
+Important: All lines in this block MUST end "///"
+Important: The line before the start of a comment MUST be ONLY "///"
 
 Hint: The error "var list not allowed" means the comment formatting got off
-
-Hint: You can also delete lines if you prefer
+Hint' The error "<Name> is not a valid command name" means you missed a "///"
+Hint: You can also delete unwanted lines if you prefer
 
 */
 
@@ -76,17 +96,20 @@ Hint: You can also delete lines if you prefer
 ** LAST UPDATED: 14 February 2024
 **-------------------------------
 
-{
 local selected_files ///
 ///
 /// 2022
 ///
 "HD2022" ///
 "IC2022" ///
+/* ///
 "IC2022_AY" ///
 "IC2022_PY" ///
 "IC2022_CAMPUSES" ///
+*/ ///
 "EFFY2022" ///
+///
+/* ///
 "EFFY2022_DIST" ///
 "EFIA2022" ///
 "ADM2022" ///
@@ -107,14 +130,22 @@ local selected_files ///
 "S2022_IS" ///
 "S2022_NH" ///
 "EAP2022" ///
+*/ ///
 "F2122_F1A" ///
 "F2122_F2" ///
 "F2122_F3" ///
 "SFA2122" ///
+///
+/* ///
 "SFAV2122" ///
+*/ ///
 "GR2022" ///
+///
+/* ///
 "GR2022_L2" ///
+*/ ///
 "GR2022_PELL_SSL" ///
+/* ///
 "GR200_22" ///
 "OM2022" ///
 "AL2022" ///
@@ -1285,6 +1316,7 @@ local selected_files ///
 "SAL1984_IC" ///
 "SAL1984_A" ///
 "SAL1984_B" ///
+"F1984" ///
 ///
 /// 1980
 ///
@@ -1300,8 +1332,6 @@ local selected_files ///
 "F1980"
 
 */
-
-}
 
 **----------------------------------------------------------------------------**
 ** Create Folders
@@ -1324,6 +1354,7 @@ capture confirm file "raw-dictionary"
 if _rc mkdir "raw-dictionary"
 capture confirm file "unzip-dictionary"
 if _rc mkdir "unzip-dictionary"
+
 * h/t https://www.statalist.org/forums/forum/general-stata-discussion/general/1344241-check-if-directory-exists-before-running-mkdir
 
 **----------------------------------------------------------------------------**
@@ -1441,7 +1472,7 @@ foreach file in `files_list' {
 	
 }
 
-* https://www.statalist.org/forums/forum/general-stata-discussion/general/1422353-trouble-renaming-files-using-renfiles-command
+* h/t https://www.statalist.org/forums/forum/general-stata-discussion/general/1422353-trouble-renaming-files-using-renfiles-command
 
 cd ..
 
@@ -1526,11 +1557,6 @@ for i in files_list:
 	
 	## Get unique list of vars
 	label_string_vars = list(set(label_string_vars))
-
-
-	print(len(set(label_string_vars)))
-	
-	print(set(label_string_vars))
 	
 	## Prevents loop activating when no problematic vars, as regex becomes ".*"
 	if len(set(label_string_vars)) > 0:
@@ -1540,20 +1566,18 @@ for i in files_list:
 		## h/t https://stackoverflow.com/questions/21292552/equivalent-of-paste-r-to-python
 		pattern = r".* (" + pattern + ")"
 		pattern = re.compile(pattern)
-		
-		print(pattern)
 	
 		for index, line in enumerate(do_file):
 			if re.match(pattern, line):
 				index_to_delete.append(index)
 				
-		print("String var loop activated for " + i)
+		print("Problematic var loop activated for " + i)
 
 	
 	## Get unique indexes
 	index_to_delete = list(set(index_to_delete))
 	
-	print("# Lines to Cmment: " + str(len(index_to_delete)))
+	print("# Lines to Comment: " + str(len(index_to_delete)))
 
 	print("# Lines in .do file: " + str(len(do_file)))	
 
@@ -1572,8 +1596,6 @@ for i in files_list:
 	
 	file.close()
 	fixed_file.close()
-	
-	#file.seek(0) ## Move lines editor back to start, h/t ChatGPT
 	
 end
 	
@@ -2031,15 +2053,12 @@ clear
 ** List the fixed .do files
 local files_list: dir . files "*.do"
 
-di `files_list'
-
 foreach file in `files_list' {
 	
     ** Take file name as a "string" as convert .do to .dta
     local do_name: di "`file'"
-	di "`do_name'"
 	local dta_name : subinstr local do_name ".do" ".dta"
-	di "`dta_name'"
+	di "Running `do_name' to create `dta_name'"
 	** h/t https://stackoverflow.com/questions/17388874/how-to-get-rid-of-the-extensions-in-stata-loop
 	
 	** Only run .do file to label if the file doesn't exist
@@ -2067,17 +2086,17 @@ clear
 ** Optional: Remove Unzipped and Raw Data Files
 **----------------------------------------------------------------------------**
 
-** Delete un-needed files (optional: un-comment to run and save storage space)
+** Delete un-needed files (optional: remove # to run and save storage space)
 
 python
 
 import shutil
 
-# shutil.rmtree("raw-data", ignore_errors = True)
-# shutil.rmtree("raw-dofiles", ignore_errors = True)
-shutil.rmtree("raw-dictionary", ignore_errors = True)
-# shutil.rmtree("unzip-data", ignore_errors = True)
-# shutil.rmtree("unzip-dofiles", ignore_errors = True)
-# shutil.rmtree("fixed-dofiles", ignore_errors = True)
+#shutil.rmtree("raw-data", ignore_errors = True)
+#shutil.rmtree("raw-dofiles", ignore_errors = True)
+#shutil.rmtree("raw-dictionary", ignore_errors = True)
+#shutil.rmtree("unzip-data", ignore_errors = True)
+#shutil.rmtree("unzip-dofiles", ignore_errors = True)
+#shutil.rmtree("fixed-dofiles", ignore_errors = True)
 
 end
