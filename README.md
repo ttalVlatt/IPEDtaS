@@ -16,6 +16,6 @@
     - `~14gb` to download (raw zippped and raw unzipped copies of data are kept during processing, optional lines to delete at end of `.do` file)
     - `~4.5gb` to store (keeping only the labeled `.dta` files and dictionaries)
 
-# Acknowledgements
+## Acknowledgement
 
 - This project builds off Dr. Ben Skinner's [`downloadipeds.R` project](https://github.com/btskinner/downloadipeds) and wouldn't have been possible without it
