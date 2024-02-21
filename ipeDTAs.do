@@ -2123,7 +2123,7 @@ import shutil
 
 end
 
-di "Done! Labeled data is in dta-data folder"
+di "Done! Labeled data is in the dta-data/ folder"
 
 **----------------------------------------------------------------------------**
 **----------------------------------------------------------------------------**
