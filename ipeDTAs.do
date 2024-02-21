@@ -22,8 +22,7 @@
 ## System Requirements
 
 - Stata `version 16.0` or higher
-- Python for `PyStata` (often already installed will stop immediately if not)
-    - Run `python search` in Stata to check python is installed  
+- Python for `PyStata` (often already installed will stop immediately if not) 
     - See [Stata's `PyStata` documentation](https://www.stata.com/manuals/ppystataintegration.pdf) for more info
     - See [python.org's installation page](https://www.python.org/downloads/) to download if not installed
 - Storage space requirement depends on how much you download
@@ -33,7 +32,7 @@
 	
 ## Note on Time to Download
 
-- If you wish to download the entirity of IPEDS, it can take 2-3 hours
+- If you wish to download the entirity of IPEDS, it can take several hours
 - To avoid overwhelming IPEDS servers there is a 3 second delay between each file download, which at over 3000 files, becomes a significant amount of time
 - If you wish, at your own risk of being rejected by NCES servers, you can reduce (or remove) `sleep 3000` on lines 1380, 1395, and 1410
 
@@ -49,10 +48,9 @@
 
 /*
 
-1. Ensure python is installed on your computer for PyStata
-2. Select which files to download (see below section)
-3. Ensure working directory is where you want the files to be stored
-4. Hit "Do"
+1. Select which files to download (see below section)
+2. Ensure working directory is where you want the files to be stored
+3. Hit "Do"
 
 */
 
