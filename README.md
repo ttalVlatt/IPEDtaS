@@ -28,7 +28,6 @@ Option Three: Copy and paste code (easy, but error prone)
 
 - Stata `version 16.0` or higher
 - Python for `PyStata` (often already installed)
-    - Run `python search` in Stata to check python is installed  
     - See [Stata's `PyStata` documentation](https://www.stata.com/manuals/ppystataintegration.pdf) for more info
     - See [python.org's installation page](https://www.python.org/downloads/) to download if not installed
 - Storage space requirement depends on how much you download
