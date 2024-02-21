@@ -2103,7 +2103,7 @@ cd ..
 clear
 
 **----------------------------------------------------------------------------**
-** Optional: Remove Unzipped and zip Data Files
+** Optional: Remove Unnecessary Files
 **----------------------------------------------------------------------------**
 
 ** Delete un-needed files (optional: remove # to run and save storage space)
