@@ -37,7 +37,7 @@ Option Three: Copy and paste code (easy, but error prone)
  
 ## Note on Time to Download
 
-- If you wish to download the entirity of IPEDS, it can take 2-3 hours
+- If you wish to download the entirity of IPEDS, it can take several hours
 - To avoid overwhelming IPEDS servers there is a 3 second delay between each file download, which at over 3000 files, becomes a significant amount of time
 - If you wish, at your own risk of being rejected by NCES servers, you can reduce (or remove) `sleep 3000` on lines 1380, 1395, and 1410
 
