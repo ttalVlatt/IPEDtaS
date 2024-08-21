@@ -1,7 +1,7 @@
 ## -----------------------------------------------------------------------------
 ##
 ##' [PROJ: ipeRds]
-##' [FILE: Automagically Download Labelled .rds IPEDS Files]
+##' [FILE: Automagically Download Labelled .Rds IPEDS Files]
 ##' [INIT: March 25th 2024]
 ##' [AUTH: Matt Capaldi] @ttalVlatt
 ##' [CRED: Benjamin T. Skinner] @btskinner
@@ -28,45 +28,45 @@
 # means you need to delete a comma after your final file
 
 selected_files <- c(
-
+  
   "HD2022",
-  # "IC2022",
-  # "IC2022_AY",
-  # "IC2022_PY",
-  # "IC2022_CAMPUSES",
-  "EFFY2022"
-  # "EFFY2022_DIST",
-  # "EFIA2022",
-  # "ADM2022",
-  # "EF2022A",
-  # "EF2022CP",
-  # "EF2022B",
-  # "EF2022C",
-  # "EF2022D",
-  # "EF2022A_DIST",
-  # "C2022_A",
-  # "C2022_B",
-  # "C2022_C",
-  # "C2022DEP",
-  # "SAL2022_IS",
-  # "SAL2022_NIS",
-  # "S2022_OC",
-  # "S2022_SIS",
-  # "S2022_IS",
-  # "S2022_NH",
-  # "EAP2022",
-  # "F2122_F1A",
-  # "F2122_F2",
-  # "F2122_F3",
-  # "SFA2122",
-  # "SFAV2122"
-  # "GR2022",
-  # "GR2022_L2",
-  # "GR2022_PELL_SSL",
-  # "GR200_22",
-  # "OM2022",
-  # "AL2022",
-  # "FLAGS2022",
+  "IC2022",
+  "IC2022_AY",
+  "IC2022_PY",
+  "IC2022_CAMPUSES",
+  "EFFY2022",
+  "EFFY2022_DIST",
+  "EFIA2022",
+  "ADM2022",
+  "EF2022A",
+  "EF2022CP",
+  "EF2022B",
+  "EF2022C",
+  "EF2022D",
+  "EF2022A_DIST",
+  "C2022_A",
+  "C2022_B",
+  "C2022_C",
+  "C2022DEP",
+  "SAL2022_IS",
+  "SAL2022_NIS",
+  "S2022_OC",
+  "S2022_SIS",
+  "S2022_IS",
+  "S2022_NH",
+  "EAP2022",
+  "F2122_F1A",
+  "F2122_F2",
+  "F2122_F3",
+  "SFA2122",
+  "SFAV2122",
+  "GR2022",
+  "GR2022_L2",
+  "GR2022_PELL_SSL",
+  "GR200_22",
+  "OM2022",
+  "AL2022",
+  "FLAGS2022"
   # 
   # # 2021
   # 
@@ -1266,7 +1266,7 @@ selected_files <- c(
 
 folders <- c("zip-data", "zip-do-files", "zip-dictionaries",
              "unzip-data", "unzip-do-files", "unzip-dictionaries",
-             "rds-data")
+             "data")
 
 for(i in folders) {
   if(!dir.exists(i)) {
@@ -1279,21 +1279,22 @@ for(i in folders) {
 zip_folders <- c("zip-data", "zip-do-files", "zip-dictionaries")
 
 for(i in selected_files) {
-
+  
   for(j in zip_folders) {
-
-    if(!file.exists(paste0(j, "/", i, ".zip"))) {
-
+    
+    if(!file.exists(paste0("data/", i, ".Rds")) & 
+       !file.exists(paste0(j, "/", i, ".zip"))) {
+      
       extension <- dplyr::case_when(j == "zip-data" ~ "_Data_Stata.zip",
                                     j == "zip-do-files" ~ "_Stata.zip",
                                     j == "zip-dictionaries" ~ "_Dict.zip")
-
+      
       print(paste("Downloading", i, "to", j))
       url <- paste0("https://nces.ed.gov/ipeds/datacenter/data/", i, extension)
       destination <- paste0(j, "/", i, ".zip")
       download.file(url, destination)
       Sys.sleep(3)
-
+      
     }
   }
 }
@@ -1302,12 +1303,12 @@ for(i in selected_files) {
 ##'[Unzip all downloaded files]
 
 for(i in zip_folders) {
-
+  
   zip_files <- list.files(i, full.names = TRUE)
-
+  
   for(j in zip_files) {
     unzip(j, exdir = paste0("un", i))
-
+    
   }
 }
 
@@ -1318,11 +1319,11 @@ rv_data <- list.files("unzip-data",
                       full.names = TRUE)
 
 for(i in rv_data) {
-
+  
   og_name <- stringr::str_remove(i, "_rv|_RV")
   file.remove(og_name)
   file.rename(i, og_name)
-
+  
 }
 
 ##'[do_labeler]
@@ -1331,66 +1332,114 @@ do_files <- list.files("unzip-do-files", full.names = TRUE)
 
 for(i in do_files) {
   
-  data_file_name <- stringr::str_remove_all(i, "unzip-do-files/|\\.do")
-  data_file_name <- paste0("unzip-data/", data_file_name, "_data_stata.csv")
+  do_file <- readLines(i)
+  
+  file_name <- stringr::str_remove_all(i, "unzip-do-files/|\\.do")
+  data_file_name <- paste0("unzip-data/", file_name, "_data_stata.csv")
   data_file <- readr::read_csv(data_file_name, show_col_types = FALSE) |>
     dplyr::rename_all(stringr::str_to_lower)
   
-  variable_labels <- c()
+  variables <- colnames(data_file)
   
-  do_file <- readLines(i)
-  
-  for(line in do_file) {
-  
-    # If it's a variable label
-    if(stringr::str_detect(line, "^label variable")) {
+  for(var in variables) {
+    
+    var_values <- c()
+    var_value_labels <- c()
+    
+    for(line in do_file) {
       
-      variable <- stringr::str_split(line, "\\s+")[[1]][3]
-      label <- stringr::str_extract(line, "\"(.*?)\"")
-      label <- stringr::str_remove_all(label, "\"")
+      # If it's a variable label
+      if(stringr::str_detect(line, paste("^label variable", var))) {
+        
+        var_label <- stringr::str_extract(line, "\"(.*?)\"")
+        var_label <- stringr::str_remove_all(var_label, "\"")
+        var_label <- stringr::str_replace_all(var_label, "\\^", "'") # fixes ' showing up as ^
+        
+      }
       
-      data_file[[variable]] <- haven::labelled(data_file[[variable]],
-                                               label = label)
-      
+      # If it's value label
+      if(stringr::str_detect(line, paste0("^label define label_", var))) {
+        
+        value <- stringr::str_split(line, "\\s+")[[1]][4]
+        ## If the value is a number, make it numeric
+        if(stringr::str_detect(value, "^-?\\d+$")) {
+          value <- as.numeric(value)
+        }
+        
+        var_values <- c(var_values, value)
+        
+        label <- stringr::str_extract(line, "\"(.*?)\"")
+        label <- stringr::str_remove_all(label, "\"")
+        label <- stringr::str_replace_all(label, "\\^", "'") # fixes ' showing up as ^
+        
+        var_value_labels <- c(var_value_labels, label)
+        
+      }
     }
     
-    # If it's value label
-    if(stringr::str_detect(line, "^label define")) {
+    var_value_labels <- setNames(var_values, var_value_labels)
+    
+    # Don't apply any labels all NA values as it errors
+    if(all(is.na(data_file[[var]]))) {
       
-      variable <- stringr::str_split(line, "\\s+")[[1]][3]
-      variable <- stringr::str_remove(variable, "^label_")
-      print(variable)
-      value <- stringr::str_split(line, "\\s+")[[1]][4]
-      ## If the value is a number, make it numeric
-      if(stringr::str_detect(value, "^-?\\d+$")) {
-        value <- as.numeric(value)
-      }
-      print(value)
-      label <- stringr::str_extract(line, "\"(.*?)\"")
-      label <- stringr::str_remove_all(label, "\"")
-      print(label)
+      # Let us know what vars this happened with
+      print(paste("FYI: No labels applied for", file_name,
+                  "variable", var, "due to all NAs"))
       
-     # data_file[[variable]] <- haven::labelled(data_file[[variable]],
-     #                                          labels = c(label = value))
+    } else
       
-    }
+      if(is.numeric(var_values) & !is.numeric(data_file[[var]])) {
+        
+        data_file[[var]] <- haven::labelled(data_file[[var]],
+                                            label = var_label)
+        
+        # Let us know what vars this happened with
+        print(paste("FYI: Only applied variable label for", file_name,
+                    "variable", var, "due to characters in data but numeric labels"))
+        
+      } else
+        
+        # Only apply variable labels if there are any duplicate labels as it errors
+         
+        if(any(duplicated(var_value_labels))) {
+          
+          data_file[[var]] <- haven::labelled(data_file[[var]],
+                                              label = var_label)
+          
+          # Also let us know what vars this happened with (not common)
+          print(paste("FYI: Only applied variable label for", file_name,
+                      "variable", var, "due to duplicate labels in do file"))
+          
+        } else {
+          
+          data_file[[var]] <- haven::labelled(data_file[[var]],
+                                              label = var_label,
+                                              labels = var_value_labels)
+          
+        }
   }
+  
+  Rds_name <- paste0("data/", file_name, ".Rds")
+  print(paste("Saving", Rds_name))
+  
+  readr::write_rds(data_file, Rds_name)
+  
 }
 
-unzip_data <- list.files("unzip-data",
-                         full.names = TRUE)
+# Clean up folders made in the process 
 
-for(i in unzip_data) {
-
-  data <- readr::read_csv(i, show_col_types = F)
-
-  name <- stringr::str_remove_all(i, "unzip-data/|_data_stata.csv")
-  rds_name <- paste0("rds-data/", name, ".Rds")
-
-  print(paste("Saving", rds_name))
-  readr::write_rds(data, rds_name)
-
+dir.create("dictionaries", showWarnings = FALSE)
+new_dictionaries <- list.files("unzip-dictionaries")
+for(file in new_dictionaries) {
+  file.copy(paste0("unzip-dictionaries/", file),
+            paste0("dictionaries/", file))
 }
+unlink("zip-data", recursive = TRUE)
+unlink("zip-do-files", recursive = TRUE)
+unlink("zip-dictionaries", recursive = TRUE)
+unlink("unzip-data", recursive = TRUE)
+unlink("unzip-do-files", recursive = TRUE)
+unlink("unzip-dictionaries", recursive = TRUE)
 
 ## -----------------------------------------------------------------------------
 ##' *END SCRIPT*
