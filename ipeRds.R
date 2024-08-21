@@ -1327,6 +1327,56 @@ for(i in rv_data) {
 
 ##'[do_labeler]
 
+do_files <- list.files("unzip-do-files", full.names = TRUE)
+
+for(i in do_files) {
+  
+  data_file_name <- stringr::str_remove_all(i, "unzip-do-files/|\\.do")
+  data_file_name <- paste0("unzip-data/", data_file_name, "_data_stata.csv")
+  data_file <- readr::read_csv(data_file_name, show_col_types = FALSE) |>
+    dplyr::rename_all(stringr::str_to_lower)
+  
+  variable_labels <- c()
+  
+  do_file <- readLines(i)
+  
+  for(line in do_file) {
+  
+    # If it's a variable label
+    if(stringr::str_detect(line, "^label variable")) {
+      
+      variable <- stringr::str_split(line, "\\s+")[[1]][3]
+      label <- stringr::str_extract(line, "\"(.*?)\"")
+      label <- stringr::str_remove_all(label, "\"")
+      
+      data_file[[variable]] <- haven::labelled(data_file[[variable]],
+                                               label = label)
+      
+    }
+    
+    # If it's value label
+    if(stringr::str_detect(line, "^label define")) {
+      
+      variable <- stringr::str_split(line, "\\s+")[[1]][3]
+      variable <- stringr::str_remove(variable, "^label_")
+      print(variable)
+      value <- stringr::str_split(line, "\\s+")[[1]][4]
+      ## If the value is a number, make it numeric
+      if(stringr::str_detect(value, "^-?\\d+$")) {
+        value <- as.numeric(value)
+      }
+      print(value)
+      label <- stringr::str_extract(line, "\"(.*?)\"")
+      label <- stringr::str_remove_all(label, "\"")
+      print(label)
+      
+     # data_file[[variable]] <- haven::labelled(data_file[[variable]],
+     #                                          labels = c(label = value))
+      
+    }
+  }
+}
+
 unzip_data <- list.files("unzip-data",
                          full.names = TRUE)
 
