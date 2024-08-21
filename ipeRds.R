@@ -13,7 +13,7 @@
 ## ---------------------------
 
 ## ---------------------------
-##' [Temp file list (will be created by file_selector eventually)]
+##' [File Selection]
 ## ---------------------------
 
 # file_selector <- function(files = files, years = years) { }
@@ -26,6 +26,10 @@
 
 # Hint: "Error ... argument x is empty"
 # means you need to delete a comma after your final file
+
+# Hint: "Unexpected string constant"
+# means you need to add a comma between those variables
+
 
 selected_files <- c(
   
@@ -66,48 +70,48 @@ selected_files <- c(
   "GR200_22",
   "OM2022",
   "AL2022",
-  "FLAGS2022"
+  "FLAGS2022",
   # 
   # # 2021
   # 
-  # "HD2021",
-  # "IC2021",
-  # "IC2021_AY",
-  # "IC2021_PY",
-  # "ic2021_campuses",
-  # "FLAGS2021",
-  # "EFFY2021",
-  # "EFFY2021_DIST",
-  # "EFIA2021",
-  # "ADM2021",
-  # "EF2021A",
-  # "EF2021B",
-  # "EF2021C",
-  # "EF2021D",
-  # "EF2021A_DIST",
-  # "C2021_A",
-  # "C2021_B",
-  # "C2021_C",
-  # "C2021DEP",
-  # "SAL2021_IS",
-  # "SAL2021_NIS",
-  # "S2021_OC",
-  # "S2021_SIS",
-  # "S2021_IS",
-  # "S2021_NH",
-  # "EAP2021",
-  # "F2021_F1A",
-  # "F2021_F2",
-  # "F2021_F3",
-  # "SFA2021",
-  # "SFAV2021",
-  # "GR2021",
-  # "GR2021_L2",
-  # "GR2021_PELL_SSL",
-  # "GR200_21",
-  # "OM2021",
-  # "AL2021",
-  # "FLAGS2021",
+  "HD2021",
+  "IC2021",
+  "IC2021_AY",
+  "IC2021_PY",
+  "ic2021_campuses",
+  "FLAGS2021",
+  "EFFY2021",
+  "EFFY2021_DIST",
+  "EFIA2021",
+  "ADM2021",
+  "EF2021A",
+  "EF2021B",
+  "EF2021C",
+  "EF2021D",
+  "EF2021A_DIST",
+  "C2021_A",
+  "C2021_B",
+  "C2021_C",
+  "C2021DEP",
+  "SAL2021_IS",
+  "SAL2021_NIS",
+  "S2021_OC",
+  "S2021_SIS",
+  "S2021_IS",
+  "S2021_NH",
+  "EAP2021",
+  "F2021_F1A",
+  "F2021_F2",
+  "F2021_F3",
+  "SFA2021",
+  "SFAV2021",
+  "GR2021",
+  "GR2021_L2",
+  "GR2021_PELL_SSL",
+  "GR200_21",
+  "OM2021",
+  "AL2021",
+  "FLAGS2021"
   # 
   # # 2020
   # 
