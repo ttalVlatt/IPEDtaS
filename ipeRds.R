@@ -1,8 +1,9 @@
 ## -----------------------------------------------------------------------------
 ##
-##' [PROJ: ipeRds]
-##' [FILE: Automagically Download Labelled .Rds IPEDS Files]
+##' [PROJ: IPEDtaS-R]
+##' [FILE: Automagically Download Labelled .dta IPEDS Files]
 ##' [INIT: March 25th 2024]
+##' [UPDT: Aug 22nd 2024]
 ##' [AUTH: Matt Capaldi] @ttalVlatt
 ##' [CRED: Benjamin T. Skinner] @btskinner
 ##
@@ -12,17 +13,28 @@
 ##' [README]
 ## ---------------------------
 
+##' This R script automates downloading IPEDS complete data files and applying
+##' labels using the information from IPEDS Stata .do files
+##' 
+##' To select which files are downloaded, delete or comment-out file names in
+##' selected_files list at the top of the script
+##' 
+##' The resulting files with be a Stata .dta files in the data/ folder
+##' 
+##' For example, to read in HD2022
+##' 
+##' library(haven)
+##' data <- read_dta("data/hd2022.dta")
+##' 
+##' If the required packages readr, haven, dplyr, and stringr are not installed,
+##'  the script auto-installs them for you
+##' 
+##' Note: This does not require Stata or a Stata license, the long loop at the end of
+##' the script reads the .do files and applies Haven style labels all within R
+
 ## ---------------------------
 ##' [File Selection]
 ## ---------------------------
-
-# file_selector <- function(files = files, years = years) { }
-
-# idea: have .rds list of valid file names for IPEDS
-# create all combinations of file type and year (plus 1819 year)
-# but then keep only those that match the valid list
-
-# valid_files <- readr::read_rds(valid-files.rds)
 
 # Hint: "Error ... argument x is empty"
 # means you need to delete a comma after your final file
@@ -30,8 +42,9 @@
 # Hint: "Unexpected string constant"
 # means you need to add a comma between those variables
 
-
 selected_files <- c(
+  
+  # 2022
   
   "HD2022",
   "IC2022",
@@ -71,9 +84,9 @@ selected_files <- c(
   "OM2022",
   "AL2022",
   "FLAGS2022",
-  # 
-  # # 2021
-  # 
+
+  # 2021
+
   "HD2021",
   "IC2021",
   "IC2021_AY",
@@ -112,9 +125,9 @@ selected_files <- c(
   "OM2021",
   "AL2021",
   "FLAGS2021",
-  # 
-  # # 2020
-  # 
+
+  # 2020
+
   "HD2020",
   "IC2020",
   "IC2020_AY",
@@ -152,9 +165,9 @@ selected_files <- c(
   "OM2020",
   "AL2020",
   "FLAGS2020",
-  
+
   # 2019
-  
+
   "HD2019",
   "IC2019",
   "IC2019_AY",
@@ -190,9 +203,9 @@ selected_files <- c(
   "OM2019",
   "AL2019",
   "FLAGS2019",
-  
+
   # 2018
-  
+
   "HD2018",
   "IC2018",
   "IC2018_AY",
@@ -229,9 +242,9 @@ selected_files <- c(
   "OM2018",
   "AL2018",
   "FLAGS2018",
-  
+
   # 2017
-  
+
   "HD2017",
   "IC2017",
   "IC2017_AY",
@@ -267,9 +280,9 @@ selected_files <- c(
   "OM2017",
   "AL2017",
   "FLAGS2017",
-  
+
   # 2016
-  
+
   "HD2016",
   "IC2016",
   "IC2016_AY",
@@ -306,9 +319,9 @@ selected_files <- c(
   "OM2016",
   "AL2016",
   "FLAGS2016",
-  
+
   # 2015
-  
+
   "HD2015",
   "IC2015",
   "IC2015_AY",
@@ -343,9 +356,9 @@ selected_files <- c(
   "OM2015",
   "AL2015",
   "FLAGS2015",
-  
+
   # 2014
-  
+
   "HD2014",
   "IC2014",
   "IC2014_AY",
@@ -380,9 +393,9 @@ selected_files <- c(
   "GR200_14",
   "AL2014",
   "FLAGS2014",
-  
+
   # 2013
-  
+
   "HD2013",
   "IC2013",
   "IC2013_AY",
@@ -414,9 +427,9 @@ selected_files <- c(
   "GR2013_L2",
   "GR200_13",
   "FLAGS2013",
-  
+
   # 2012
-  
+
   "HD2012",
   "IC2012",
   "IC2012_AY",
@@ -449,9 +462,9 @@ selected_files <- c(
   "GR2012_L2",
   "GR200_12",
   "FLAGS2012",
-  
+
   # 2011
-  
+
   "HD2011",
   "IC2011",
   "IC2011_AY",
@@ -480,9 +493,9 @@ selected_files <- c(
   "GR2011_L2",
   "GR200_11",
   "FLAGS2011",
-  
+
   # 2010
-  
+
   "HD2010",
   "IC2010",
   "IC2010_AY",
@@ -513,9 +526,9 @@ selected_files <- c(
   "GR2010_L2",
   "GR200_10",
   "FLAGS2010",
-  
+
   # 2009
-  
+
   "HD2009",
   "IC2009",
   "IC2009_AY",
@@ -546,9 +559,9 @@ selected_files <- c(
   "GR2009_L2",
   "GR200_09",
   "FLAGS2009",
-  
+
   # 2008
-  
+
   "HD2008",
   "IC2008",
   "IC2008_AY",
@@ -580,9 +593,9 @@ selected_files <- c(
   "GR2008_L2",
   "GR200_08",
   "FLAGS2008",
-  
+
   # 2007
-  
+
   "HD2007",
   "IC2007",
   "IC2007_AY",
@@ -615,9 +628,9 @@ selected_files <- c(
   "GR2007",
   "GR2007_L2",
   "FLAGS2007",
-  
+
   # 2006
-  
+
   "HD2006",
   "IC2006",
   "IC2006_AY",
@@ -653,9 +666,9 @@ selected_files <- c(
   "GR2006_ATH_AID",
   "GR2006_L2",
   "FLAGS2006",
-  
+
   # 2005
-  
+
   "HD2005",
   "IC2005",
   "IC2005_AY",
@@ -689,9 +702,9 @@ selected_files <- c(
   "GR2005_ATH_AID",
   "FLAGS2005",
   "DFR2005",
-  
+
   # 2004
-  
+
   "HD2004",
   "FLAGS2004",
   "IC2004",
@@ -725,9 +738,9 @@ selected_files <- c(
   "GR2004ATH",
   "GR2004_ATH_AID",
   "FLAGS2004",
-  
+
   # 2003
-  
+
   "HD2003",
   "IC2003",
   "IC2003_AY",
@@ -757,9 +770,9 @@ selected_files <- c(
   "GR2003",
   "GR2003ATH",
   "GR2003_ATH_AID",
-  
+
   # 2002
-  
+
   "HD2002",
   "IC2002",
   "IC2002_AY",
@@ -790,9 +803,9 @@ selected_files <- c(
   "GR2002",
   "GR2002ATH",
   "GR2002_ATH_AID",
-  
+
   # 2001
-  
+
   "FA2001HD",
   "IC2001",
   "IC2001_AY",
@@ -821,9 +834,9 @@ selected_files <- c(
   "GR2001_L2",
   "GR2001ATH",
   "GR2001_ATH_AID",
-  
+
   # 2000
-  
+
   "FA2000HD",
   "IC2000",
   "IC2000_ACTOT",
@@ -844,9 +857,9 @@ selected_files <- c(
   "GR2000_L2",
   "GR2000ATH",
   "GR2000_ATH_AID",
-  
+
   # 1999
-  
+
   "IC99_HD",
   "IC99ABCF",
   "IP1999AY",
@@ -877,9 +890,9 @@ selected_files <- c(
   "GR1999_L2",
   "GR1999ATH",
   "GR1999_ATH_AID",
-  
+
   # 1998
-  
+
   "IC98hdac",
   "IC98_AB",
   "IC98_C",
@@ -914,9 +927,9 @@ selected_files <- c(
   "ic9798_D",
   "ic9798_F",
   "ic9798_E",
-  
+
   # 1997
-  
+
   "EF97_HDR",
   "EF97_ANR",
   "EF97_ARK",
@@ -942,9 +955,9 @@ selected_files <- c(
   "ic9697_A",
   "ic9697_B",
   "ic9697_C",
-  
+
   # 1996
-  
+
   "EF96_IC",
   "EF96_ANR",
   "EF96_ACP",
@@ -974,9 +987,9 @@ selected_files <- c(
   "F9596_CN",
   "ic9596_A",
   "ic9596_B",
-  
+
   # 1995
-  
+
   "EF95_IC",
   "EF95_ANR",
   "EF95_ARK",
@@ -1006,9 +1019,9 @@ selected_files <- c(
   "F9495_I",
   "F9495_J",
   "F9495_K",
-  
+
   # 1994
-  
+
   "IC1994_A",
   "IC1994_B",
   "EF1994_IC",
@@ -1034,9 +1047,9 @@ selected_files <- c(
   "F1994_I",
   "F1994_J",
   "F1994_K",
-  
+
   # 1993
-  
+
   "IC1993_A",
   "IC1993_B",
   "EF1993_IC",
@@ -1063,9 +1076,9 @@ selected_files <- c(
   "F1993_I",
   "F1993_J",
   "F1993_K",
-  
+
   # 1992
-  
+
   "IC1992_A",
   "IC1992_B",
   "EF1992_IC",
@@ -1088,9 +1101,9 @@ selected_files <- c(
   "F1992_I",
   "F1992_J",
   "F1992_K",
-  
+
   # 1991
-  
+
   "ic1991_ab",
   "ic1991_c",
   "ic1991_d",
@@ -1122,9 +1135,9 @@ selected_files <- c(
   "F1991_I",
   "F1991_J",
   "F1991_K",
-  
+
   # 1990
-  
+
   "IC90HD",
   "IC90ABCE",
   "IC90D",
@@ -1140,9 +1153,9 @@ selected_files <- c(
   "F8990_A",
   "F8990_B",
   "F8990_E",
-  
+
   # 1989
-  
+
   "IC1989_A",
   "IC1989_B",
   "EF1989_IC",
@@ -1167,9 +1180,9 @@ selected_files <- c(
   "F1989_I",
   "F1989_J",
   "F1989_K",
-  
+
   # 1988
-  
+
   "IC1988_A",
   "IC1988_B",
   "EF1988_IC",
@@ -1180,9 +1193,9 @@ selected_files <- c(
   "C1988_CIP",
   "C1988_A2DIG",
   "F1988",
-  
+
   # 1987
-  
+
   "IC1987_A",
   "IC1987_B",
   "EF1987_IC",
@@ -1201,9 +1214,9 @@ selected_files <- c(
   "F1987_B",
   "F1987_E",
   "F1987_IC",
-  
+
   # 1986
-  
+
   "IC1986_A",
   "IC1986_B",
   "EF1986_IC",
@@ -1215,9 +1228,9 @@ selected_files <- c(
   "C1986_CIP",
   "C1986_A2dig",
   "F1986",
-  
+
   # 1985
-  
+
   "IC1985",
   "EF1985",
   "C1985_CIP",
@@ -1227,9 +1240,9 @@ selected_files <- c(
   "SAL1985_A",
   "SAL1985_B",
   "F1985",
-  
+
   # 1984
-  
+
   "IC1984",
   "EF1984",
   "C1984_CIP",
@@ -1238,9 +1251,9 @@ selected_files <- c(
   "SAL1984_A",
   "SAL1984_B",
   "F1984",
-  
+
   # 1980
-  
+
   "IC1980",
   "EF1980_A",
   "EF1980_ACP",
@@ -1259,6 +1272,14 @@ selected_files <- c(
 ##' [Download, Unzip, and Sort Files]
 ## ---------------------------
 
+needed_packages <- c("readr", "haven", "dplyr", "stringr")
+
+for(i in needed_packages) {
+  if(! i %in% installed.packages()) {
+    install.packages(i)
+  }
+}
+
 ##'[Create folders if they don't exist]
 
 folders <- c("zip-data", "zip-do-files", "zip-dictionaries",
@@ -1274,13 +1295,15 @@ for(i in folders) {
 
 ##'[Download files from IPEDS if they don't exist]
 
+options(timeout=180)
+
 zip_folders <- c("zip-data", "zip-do-files", "zip-dictionaries")
 
 for(i in selected_files) {
   
   for(j in zip_folders) {
     
-    if(!file.exists(paste0("data/", i, ".Rds"))) { 
+    if(!file.exists(paste0("data/", i, ".dta"))) { 
       if(!file.exists(paste0(j, "/", i, ".zip"))) {
         
         extension <- dplyr::case_when(j == "zip-data" ~ "_Data_Stata.zip",
@@ -1347,12 +1370,14 @@ suppressWarnings(
     
     file_name <- stringr::str_remove_all(i, "unzip-do-files/|\\.do")
     
-    if(!file.exists(paste0("data/", file_name, ".Rds"))) {
+    if(!file.exists(paste0("data/", file_name, ".dta"))) {
       
       do_file <- readLines(i)
       
       data_file_name <- paste0("unzip-data/", file_name, "_data_stata.csv")
-      data_file <- readr::read_csv(data_file_name, show_col_types = FALSE) |>
+      data_file <- readr::read_csv(data_file_name,
+                                   show_col_types = FALSE,
+                                   name_repair = "minimal") |>
         dplyr::rename_all(stringr::str_to_lower)
       
       variables <- colnames(data_file)
@@ -1444,10 +1469,10 @@ suppressWarnings(
             }
       }
       
-      Rds_name <- paste0("data/", file_name, ".Rds")
-      print(paste("Saving", Rds_name))
+      dta_name <- paste0("data/", file_name, ".dta")
+      print(paste("Saving", dta_name))
       
-      readr::write_rds(data_file, Rds_name)
+      haven::write_dta(data_file, dta_name)
       
     }
   }
