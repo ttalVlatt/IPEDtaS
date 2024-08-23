@@ -9,6 +9,15 @@ unzip-dofiles/
 fixed-dofiles/
 zip-dictionary/
 unzip-dictionary/
+zip-data/
+unzip-data/
+data/
+zip-do-files/
+unzip-do-files/
+fixed-do-files/
+zip-dictionaries/
+unzip-dictionaries/
+dictionaries/
 *.do.stswp
 *.stswp
 *.Rproj
