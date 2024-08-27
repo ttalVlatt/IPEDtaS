@@ -15,8 +15,10 @@
   3. Hit "do" or "run"
   4. After it's completed, both result in a `data/` folder containing labeled `.dta` files and a `dictionaries/` folder with the matching dictionaries
   
-- The project is intended to both make IPEDS easier to work with and also enhance reproducibility of research using IPEDS
+- The project is intended to both make IPEDS data files easier to work with and also enhance reproducibility of research using IPEDS
   - I encourage you to include a copy of the `IPEDtaS` script you use in your analyses in any code you share for reproduction
+    - If you do so, please cite the repository so others can easily find it:
+    Capaldi, M. J. (2024). IPEDtaS: Automagically Download Labeled .dta IPEDS Files in Stata and R (Version 0.1) [Computer software]. https://github.com/ttalVlatt/IPEDtaS
   
 Hints
 - In R, use `as_factor()` from `haven` library to convert a labeled column to a factor which uses the labels as the levels
