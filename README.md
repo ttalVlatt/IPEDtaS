@@ -14,3 +14,6 @@
     - You can either delete or comment out any files you don't want. Simply download the script from here again if you need the full list back.
   3. Hit "do" or "run"
   4. After it's completed, both result in a `data/` folder containing labeled `.dta` files and a `dictionaries/` folder with the matching dictionaries
+  
+- The project is intended to both make IPEDS easier to work with and also enhance reproducibility of research using IPEDS
+  - I encourage you to include a copy of the `IPEDtaS` script you use in your analyses in any code you share for reproduction
