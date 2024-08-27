@@ -9,7 +9,7 @@
 
 - The logic of using both scripts is very similar
   1. Place either `IPEDtaS.do` (for Stata projects) or `IPEDtaS.R` (for R projects) in your main project folder
-  2. Edit the selected files list to the [IPEDS complete data files](https://nces.ed.gov/ipeds/datacenter/DataFiles.aspx) you need
+  2. Edit the `selected_files` list to the [IPEDS complete data files](https://nces.ed.gov/ipeds/datacenter/DataFiles.aspx) you need
     - By default the script will download the entirity of IPEDS, which takes multiple hours and around 10gb
     - You can either delete or comment out any files you don't want. Simply download the script from here again if you need the full list back.
   3. Hit "do" or "run"
