@@ -17,3 +17,6 @@
   
 - The project is intended to both make IPEDS easier to work with and also enhance reproducibility of research using IPEDS
   - I encourage you to include a copy of the `IPEDtaS` script you use in your analyses in any code you share for reproduction
+  
+Hints
+- In R, use `as_factor()` from `haven` library to convert a labeled column to a factor which uses the labels as the levels
