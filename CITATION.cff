@@ -1,0 +1,42 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: >-
+  IPEDtaS: Automagically Download Labeled `.dta` IPEDS Files
+  in Stata and R
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Matthew J.
+    family-names: Capaldi
+    email: m.capaldi@ufl.edu
+    affiliation: University of Florida
+    orcid: 'https://orcid.org/0000-0002-5664-3414'
+repository-code: 'https://github.com/ttalVlatt/IPEDtaS'
+url: 'https://capaldi.info/IPEDtaS'
+abstract: >-
+  This project contains Stata and R scripts that
+  'automagically' download labeled versions of [IPEDS
+  complete data
+  files](https://nces.ed.gov/ipeds/datacenter/DataFiles.aspx).
+  In the Stata implementation it simply downloads the data,
+  .do file, and dictionary and after cleaning up any issues,
+  uses the .do file IPEDS provide to add data labels. In the
+  R implementation the .do file is read as text into R then
+  converted to labeling instructions passed to the `haven` R
+  package. The project is intended to both make IPEDS data
+  files easier to work with and also enhance reproducibility
+  of research using IPEDS.
+keywords:
+  - IPEDS
+  - Stata
+  - R
+  - Haven
+  - Labeled Data
+license: MIT
+commit: 1601e6d
+version: '0.1'
+date-released: '2024-08-21'
