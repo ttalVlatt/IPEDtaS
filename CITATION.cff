@@ -3,7 +3,7 @@
 
 cff-version: 1.2.0
 title: >-
-  IPEDtaS: Automagically Download Labeled `.dta` IPEDS Files
+  IPEDtaS: Automagically Download Labeled .dta IPEDS Files
   in Stata and R
 message: >-
   If you use this software, please cite it using the

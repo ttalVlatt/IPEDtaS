@@ -22,7 +22,7 @@
     - If you do so, please cite the repository so others can easily find and use it:
 <br/>
   
-  > Capaldi, M. J. (2024). IPEDtaS: Automagically Download Labeled .dta IPEDS Files in Stata and R (Version 0.1) [Computer software]. https://github.com/ttalVlatt/IPEDtaS
+  > Capaldi, M. J. (2024). IPEDtaS: Automagically Download Labeled .dta IPEDS Files in Stata and R (Version 0.1) [Computer software]. https://doi.org/10.5281/zenodo.13388846
   
 Hints
 - In R, use `as_factor()` from `haven` library to convert a labeled column to a factor which uses the labels as the levels
