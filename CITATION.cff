@@ -19,9 +19,8 @@ repository-code: 'https://github.com/ttalVlatt/IPEDtaS'
 url: 'https://capaldi.info/IPEDtaS'
 abstract: >-
   This project contains Stata and R scripts that
-  'automagically' download labeled versions of [IPEDS
-  complete data
-  files](https://nces.ed.gov/ipeds/datacenter/DataFiles.aspx).
+  'automagically' download labeled versions of IPEDS
+  complete data files.
   In the Stata implementation it simply downloads the data,
   .do file, and dictionary and after cleaning up any issues,
   uses the .do file IPEDS provide to add data labels. In the
