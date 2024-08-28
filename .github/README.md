@@ -2,6 +2,8 @@
 
 # `IPEDtaS`: Automagically Download Labeled `.dta` IPEDS Files in Stata and R
 
+[](https://zenodo.org/badge/DOI/10.5281/zenodo.13388847.svg)
+
 - This project contains Stata and R scripts that 'automagically' download labeled versions of [IPEDS complete data files](https://nces.ed.gov/ipeds/datacenter/DataFiles.aspx)
   - In the Stata implementation it simply downloads the data, .do file, and dictionary and after cleaning up any issues, uses the .do file IPEDS provide to add data labels
   - In the R implementation the .do file is read as text into R then converted to labeling instructions passed to the `haven` R package

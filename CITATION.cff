@@ -17,6 +17,7 @@ authors:
     orcid: 'https://orcid.org/0000-0002-5664-3414'
 repository-code: 'https://github.com/ttalVlatt/IPEDtaS'
 url: 'https://capaldi.info/IPEDtaS'
+doi: 'https://zenodo.org/doi/10.5281/zenodo.13388846'
 abstract: >-
   This project contains Stata and R scripts that
   'automagically' download labeled versions of IPEDS
