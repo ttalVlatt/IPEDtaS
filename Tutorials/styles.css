@@ -1,0 +1,22 @@
+.custom-icon {
+  width: 20px; /* Width similar to Font Awesome icons */
+  height: 20px; /* Height similar to Font Awesome icons */
+  display: inline-block;
+  vertical-align: middle;
+  color: #666666;
+  /* If you want to add color overlay, use a CSS filter */
+  filter: grayscale(100%) brightness(0) invert(0.4);
+}
+
+.navbar-brand > img {
+  max-height: 50px;
+}
+
+.orcid {
+  font-size: 16px;
+  color: #A6CE39;
+  /* margins are required by official ORCID trademark and display guidelines */
+  margin-left:4px;
+  margin-right:4px;
+  vertical-align: middle;
+}

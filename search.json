@@ -1,0 +1,23 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "IPEDtaS: Automagically Download Labeled .dta IPEDS Files in Stata and R",
+    "section": "",
+    "text": "IPEDtaS: Automagically Download Labeled .dta IPEDS Files in Stata and R\n\nThis project contains Stata and R scripts that ‘automagically’ download labeled versions of IPEDS complete data files\n\nIn the Stata implementation it simply downloads the data, .do file, and dictionary and after cleaning up any issues, uses the .do file IPEDS provide to add data labels\nIn the R implementation the .do file is read as text into R then converted to labeling instructions passed to the haven R package\n\nThe logic of using both scripts is very similar\n\nPlace either IPEDtaS.do (for Stata projects) or IPEDtaS.R (for R projects) in your main project folder\nEdit the selected_files list to the IPEDS complete data files you need\n\n\nBy default the script will download the entirity of IPEDS, which takes multiple hours and around 10gb\nYou can either delete or comment out any files you don’t want. Simply download the script from here again if you need the full list back.\n\n\nHit “do” or “run”\nAfter it’s completed, both result in a data/ folder containing labeled .dta files and a dictionaries/ folder with the matching dictionaries\n\nThe project is intended to both make IPEDS data files easier to work with and also enhance reproducibility of research using IPEDS\n\nI encourage you to include a copy of the IPEDtaS script you use in your analyses in any code you share for reproduction\n\nIf you do so, please cite the repository so others can easily find and use it: \n\n\n\nCapaldi, M. J. (2024). IPEDtaS: Automagically Download Labeled .dta IPEDS Files in Stata and R (Version 0.1) [Computer software]. https://doi.org/10.5281/zenodo.13388846\n\n\nHints - In R, use as_factor() from haven library to convert a labeled column to a factor which uses the labels as the levels"
+  },
+  {
+    "objectID": "Tutorials/R.html",
+    "href": "Tutorials/R.html",
+    "title": "IPEDtaS",
+    "section": "",
+    "text": "R Script"
+  },
+  {
+    "objectID": "Tutorials/Stata.html",
+    "href": "Tutorials/Stata.html",
+    "title": "IPEDtaS",
+    "section": "",
+    "text": "Stata .do File"
+  }
+]
