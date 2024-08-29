@@ -22,3 +22,11 @@ dictionaries/
 *.stswp
 *.Rproj
 ipeDTAs-test.do
+/.quarto/
+_site/
+_extensions/
+_quarto.yml
+index.qmd
+Tutorials/*
+!Tutorials/R.qmd
+!Tutorials/Stata.qmd
