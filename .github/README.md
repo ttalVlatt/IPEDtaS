@@ -1,4 +1,4 @@
-<img src="https://github.com/ttalVlatt/IPEDtaS/blob/74547b5543ab58edb4362a995c59fc9d609472d8/Tutorials/Icon.png" width="200" height="200" />
+<img src="https://github.com/ttalVlatt/IPEDtaS/blob/main/.github/Icon.png?raw=true" width="200" height="200" />
 
 [![](https://zenodo.org/badge/DOI/10.5281/zenodo.13388846.svg)](https://doi.org/10.5281/zenodo.13388846)
 
