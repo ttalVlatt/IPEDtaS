@@ -1,4 +1,4 @@
-<img src="Tutorials/Icon.png" width="200" height="200" />
+<img src=".github/Icon.png" width="200" height="200" />
 
 [![](https://zenodo.org/badge/DOI/10.5281/zenodo.13388846.svg)](https://doi.org/10.5281/zenodo.13388846)
 
