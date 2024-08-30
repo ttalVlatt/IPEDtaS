@@ -1382,6 +1382,9 @@ if _rc mkdir "dictionaries"
 ** Loops to Download the .zip Files
 **----------------------------------------------------------------------------**
 
+set timeout1 300
+set timeout2 300
+
 * Loop through getting the .csv files
 foreach file in "`selected_files'" {
 
@@ -1416,8 +1419,8 @@ foreach file in "`selected_files'" {
 
 * Loop through getting the dictionary files
 foreach file in "`selected_files'" {
-
-	if(!fileexists("dictionaries/`file'.xlsx")) {
+	
+	if(!fileexists("dictionaries/`file'.xlsx") & !fileexists("dictionaries/`file'.html") & !fileexists("dictionaries/`file'.xls")) {
 		if(!fileexists("zip-dictionaries/`file'_DICT.zip")) {
 	
     di "Downloading: `file' Dictionary"
