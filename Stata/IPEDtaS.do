@@ -3,7 +3,7 @@
 ** [PROJ: ipeDTAs: Automagically download labeled .dta IPEDS files]
 ** [FILE: ipeDTAs.do]
 ** [INIT: February 14 2024]
-** [EDIT: February 20 2024]
+** [UPDT: August 29 2024]
 ** [AUTH: Matt Capaldi] @ttalVlatt
 ** [CRED: Benjamin T. Skinner] @btskinner
 **
@@ -110,6 +110,27 @@ Hint: You can also delete unwanted lines if you prefer
 
 local selected_files ///
 ///
+/// 2023
+///
+"HD2023" ///
+"IC2023" ///
+"IC2023_AY" ///
+"IC2023_PY" ///
+"IC2023_CAMPUSES" ///
+"FLAGS2023" ///
+"EFFY2023" ///
+"EFFY2023_DIST" ///
+"EFFY2023_HS" ///
+"EFIA2023" ///
+"FLAGS2023" ///
+"C2023_A" ///
+"C2023_B" ///
+"C2023_C" ///
+"C2023DEP" ///
+"DRVIC2023" ///
+"DRVEF122023" ///
+"DRVC2023" ///
+///
 /// 2022
 ///
 "HD2022" ///
@@ -118,8 +139,6 @@ local selected_files ///
 "IC2022_PY" ///
 "IC2022_CAMPUSES" ///
 "EFFY2022" ///
-///
-/* ///
 "EFFY2022_DIST" ///
 "EFIA2022" ///
 "ADM2022" ///
@@ -140,7 +159,6 @@ local selected_files ///
 "S2022_IS" ///
 "S2022_NH" ///
 "EAP2022" ///
-*/ ///
 "F2122_F1A" ///
 "F2122_F2" ///
 "F2122_F3" ///
@@ -149,8 +167,6 @@ local selected_files ///
 "GR2022" ///
 "GR2022_L2" ///
 "GR2022_PELL_SSL" ///
-///
-/*
 "GR200_22" ///
 "OM2022" ///
 "AL2022" ///
@@ -1347,18 +1363,18 @@ capture confirm file "zip-data"
 if _rc mkdir "zip-data"
 capture confirm file "unzip-data"
 if _rc mkdir "unzip-data"
-capture confirm file "dta-data"
-if _rc mkdir "dta-data"
-capture confirm file "zip-dofiles"
-if _rc mkdir "zip-dofiles"
-capture confirm file "unzip-dofiles"
-if _rc mkdir "unzip-dofiles"
-capture confirm file "fixed-dofiles"
-if _rc mkdir "fixed-dofiles"
-capture confirm file "zip-dictionary"
-if _rc mkdir "zip-dictionary"
-capture confirm file "unzip-dictionary"
-if _rc mkdir "unzip-dictionary"
+capture confirm file "data"
+if _rc mkdir "data"
+capture confirm file "zip-do-files"
+if _rc mkdir "zip-do-files"
+capture confirm file "unzip-do-files"
+if _rc mkdir "unzip-do-files"
+capture confirm file "fixed-do-files"
+if _rc mkdir "fixed-do-files"
+capture confirm file "zip-dictionaries"
+if _rc mkdir "zip-dictionaries"
+capture confirm file "dictionaries"
+if _rc mkdir "dictionaries"
 
 * h/t https://www.statalist.org/forums/forum/general-stata-discussion/general/1344241-check-if-directory-exists-before-running-mkdir
 
@@ -1369,7 +1385,8 @@ if _rc mkdir "unzip-dictionary"
 * Loop through getting the .csv files
 foreach file in "`selected_files'" {
 
-	if(!fileexists("zip-data/`file'_Data_Stata.zip")) {
+	if(!fileexists("data/`file'.dta")) {
+		if(!fileexists("zip-data/`file'_Data_Stata.zip")) {
 	
     di "Downloading: `file' .csv File"
     copy "https://nces.ed.gov/ipeds/datacenter/data/`file'_Data_Stata.zip" "zip-data/`file'_Data_Stata.zip"
@@ -1377,38 +1394,40 @@ foreach file in "`selected_files'" {
 	* Wait for three seconds between files
 	sleep 3000
 	
+		}
 	}
-	
 }
 
 * Loop through getting the .do files
 foreach file in "`selected_files'" {
 
-	if(!fileexists("zip-dofiles/`file'_Stata.zip")) {
+	if(!fileexists("data/`file'.dta")) {
+		if(!fileexists("zip-do-files/`file'_Stata.zip")) {
 	
     di "Downloading: `file' .do File"
-    copy "https://nces.ed.gov/ipeds/datacenter/data/`file'_Stata.zip" "zip-dofiles/`file'_Stata.zip"
+    copy "https://nces.ed.gov/ipeds/datacenter/data/`file'_Stata.zip" "zip-do-files/`file'_Stata.zip"
 	
 	* Wait for three seconds between files
 	sleep 3000
 	
+		}
 	}
-	
 }
 
 * Loop through getting the dictionary files
 foreach file in "`selected_files'" {
 
-	if(!fileexists("zip-dictionary/`file'_Dict.zip")) {
+	if(!fileexists("dictionaries/`file'.xlsx")) {
+		if(!fileexists("zip-dictionaries/`file'_DICT.zip")) {
 	
     di "Downloading: `file' Dictionary"
-    copy "https://nces.ed.gov/ipeds/datacenter/data/`file'_Dict.zip" "zip-dictionary/`file'_Dict.zip"
+    copy "https://nces.ed.gov/ipeds/datacenter/data/`file'_Dict.zip" "zip-dictionaries/`file'_Dict.zip"
 	
 	* Wait for three seconds between files
 	sleep 3000
 	
+		}
 	}
-	
 }
 
 **----------------------------------------------------------------------------**
@@ -1429,28 +1448,28 @@ foreach file in `files_list' {
 }
 
 * .do Files
-cd ../zip-dofiles
+cd ../zip-do-files
 
 local files_list: dir . files "*.zip"
 
-cd ../unzip-dofiles
+cd ../unzip-do-files
 
 foreach file in `files_list' {
 	
-	unzipfile ../zip-dofiles/`file', replace
+	unzipfile ../zip-do-files/`file', replace
 	
 }
 
 * Dictionary Files
-cd ../zip-dictionary
+cd ../zip-dictionaries
 
 local files_list: dir . files "*.zip"
 
-cd ../unzip-dictionary
+cd ../dictionaries
 
 foreach file in `files_list' {
 	
-	unzipfile ../zip-dictionary/`file', replace
+	unzipfile ../zip-dictionaries/`file', replace
 	
 }
 
@@ -1500,7 +1519,7 @@ cd ..
 ** Fix the .do Files Using PyStata: Consistent Issues
 **----------------------------------------------------------------------------**
 
-cd unzip-dofiles
+cd unzip-do-files
 
 python
 
@@ -1608,7 +1627,7 @@ for i in files_list:
 	
 	## Write the updated .do file
 	
-	fixed_file_name = "../fixed-dofiles/" + i
+	fixed_file_name = "../fixed-do-files/" + i
 	if os.path.exists(fixed_file_name):
 		os.unlink(fixed_file_name) ## Delete fixed do file if already exists
 	fixed_file = open(fixed_file_name, "w", encoding='latin-1')
@@ -1623,7 +1642,7 @@ end
 ** Fix the .do Files Using PyStata: Misc. Issues
 **----------------------------------------------------------------------------**
 
-cd ../fixed-dofiles
+cd ../fixed-do-files
 
 /* 
 Create python function that re-writes individual lines of .do files to fix
@@ -1647,7 +1666,7 @@ def do_fix(do_file_name, line_to_replace, replacement):
 		
 	else:
 		
-		print("Not in fixed-dofiles : " + do_file_name) 
+		print("Not in fixed-do-files : " + do_file_name) 
 
 
 ## Broken Line
@@ -2060,7 +2079,28 @@ do_fix("ic1980.do", 3041, '/*')
 do_fix("ic1980.do", 3043, '*/')
 do_fix("ic1980.do", 3737, '')
 do_fix("ic1980.do", 3738, '')
-	
+
+## Broken Line
+do_fix("drvef122023.do", 34, 'label variable e12ft "Full-time 12-month unduplicated headcount"')
+do_fix("drvef122023.do", 35, '')
+do_fix("drvef122023.do", 36, 'label variable e12pt "Part-time 12-month unduplicated headcount"')
+do_fix("drvef122023.do", 37, '')
+do_fix("drvef122023.do", 49, 'label variable e12gradft "Full-time graduate 12-month unduplicated headcount"')
+do_fix("drvef122023.do", 50, '')
+do_fix("drvef122023.do", 56, 'label variable e12gradpt "Part-time graduate 12-month unduplicated headcount"')
+do_fix("drvef122023.do", 57, '')
+
+## Not reading as a comment
+do_fix("ic2023_campuses.do", 1, '')
+
+## Broken Line
+do_fix("ic2023_campuses.do", 481, 'label define label_pcpset4flg 2 "Non-Title IV postsecondary institution",add')
+do_fix("ic2023_campuses.do", 482, '')
+do_fix("ic2023_campuses.do", 483, 'label define label_pcpset4flg 3 "Title IV NOT primarily postsecondary institution",add')
+do_fix("ic2023_campuses.do", 484, '')
+do_fix("ic2023_campuses.do", 485, 'label define label_pcpset4flg 9 "Institution is not active in current universe",add')
+do_fix("ic2023_campuses.do", 486, '')
+
 end
 
 **----------------------------------------------------------------------------**
@@ -2082,13 +2122,13 @@ foreach file in `files_list' {
 	** h/t https://stackoverflow.com/questions/17388874/how-to-get-rid-of-the-extensions-in-stata-loop
 	
 	** Only run .do file to label if the file doesn't exist
-	if(!fileexists("../dta-data/`dta_name'")) {
+	if(!fileexists("../data/`dta_name'")) {
 	
 		** Run the modified .do file from IPEDS
 		do `file'
 	
 		** Write the labaled data file as .dta
-		save ../dta-data/`dta_name'
+		save ../data/`dta_name'
 	
 	}
 	
@@ -2112,16 +2152,16 @@ python
 
 import shutil
 
-#shutil.rmtree("zip-data", ignore_errors = True)
-#shutil.rmtree("zip-dofiles", ignore_errors = True)
-#shutil.rmtree("zip-dictionary", ignore_errors = True)
-#shutil.rmtree("unzip-data", ignore_errors = True)
-#shutil.rmtree("unzip-dofiles", ignore_errors = True)
-#shutil.rmtree("fixed-dofiles", ignore_errors = True)
+shutil.rmtree("zip-data", ignore_errors = True)
+shutil.rmtree("zip-do-files", ignore_errors = True)
+shutil.rmtree("zip-dictionaries", ignore_errors = True)
+shutil.rmtree("unzip-data", ignore_errors = True)
+shutil.rmtree("unzip-do-files", ignore_errors = True)
+shutil.rmtree("fixed-do-files", ignore_errors = True)
 
 end
 
-di "Done! Labeled data is in the dta-data/ folder"
+di "Done! Labeled data is in the data/ folder"
 
 **----------------------------------------------------------------------------**
 **----------------------------------------------------------------------------**
