@@ -44,6 +44,27 @@
 
 selected_files <- c(
   
+  # 2023
+  
+  "HD2023",
+  "IC2023", 
+  "IC2023_AY", 
+  "IC2023_PY", 
+  "IC2023_CAMPUSES",
+  "FLAGS2023",
+  "EFFY2023",
+  "EFFY2023_DIST", 
+  "EFFY2023_HS", 
+  "EFIA2023", 
+  "FLAGS2023", 
+  "C2023_A", 
+  "C2023_B", 
+  "C2023_C", 
+  "C2023DEP", 
+  "DRVIC2023", 
+  "DRVEF122023", 
+  "DRVC2023", 
+  
   # 2022
   
   "HD2022",
@@ -1295,7 +1316,7 @@ for(i in folders) {
 
 ##'[Download files from IPEDS if they don't exist]
 
-options(timeout=180)
+options(timeout=300)
 
 zip_folders <- c("zip-data", "zip-do-files", "zip-dictionaries")
 
@@ -1362,6 +1383,7 @@ for(i in rv_data) {
 ##' [Imitate Stata and use .do files to apply labels]
 ## ---------------------------
 
+
 do_files <- list.files("unzip-do-files", full.names = TRUE)
 
 suppressWarnings(
@@ -1377,7 +1399,12 @@ suppressWarnings(
       data_file_name <- paste0("unzip-data/", file_name, "_data_stata.csv")
       data_file <- readr::read_csv(data_file_name,
                                    show_col_types = FALSE,
-                                   name_repair = "minimal") |>
+                                   name_repair = "minimal") 
+      
+      # Remove single instance of duplicated column name by dropping 2nd ef2022a
+      data_file <- data_file[!duplicated(colnames(data_file))]
+      
+      data_file <- data_file |>
         dplyr::rename_all(stringr::str_to_lower)
       
       variables <- colnames(data_file)
