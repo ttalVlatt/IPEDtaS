@@ -1404,9 +1404,6 @@ suppressWarnings(
       # Remove single instance of duplicated column name by dropping 2nd ef2022a
       data_file <- data_file[!duplicated(colnames(data_file))]
       
-      data_file <- data_file |>
-        dplyr::rename_all(stringr::str_to_lower)
-      
       variables <- colnames(data_file)
       
       for(var in variables) {
@@ -1417,7 +1414,7 @@ suppressWarnings(
         for(line in do_file) {
           
           # If it's a variable label
-          if(stringr::str_detect(line, paste("^label variable", var))) {
+          if(stringr::str_detect(line, paste("^label variable", stringr::str_to_lower(var)))) {
             
             var_label <- stringr::str_extract(line, "\"(.*?)\"")
             var_label <- stringr::str_remove_all(var_label, "\"")
@@ -1426,7 +1423,7 @@ suppressWarnings(
           }
           
           # If it's value label
-          if(stringr::str_detect(line, paste0("^label define label_", var))) {
+          if(stringr::str_detect(line, paste0("^label define label_", stringr::str_to_lower(var)))) {
             
             value <- stringr::str_split(line, "\\s+")[[1]][4]
             ## If the value is a number, make it numeric
