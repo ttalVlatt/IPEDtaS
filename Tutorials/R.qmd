@@ -1,5 +1,0 @@
----
-image: apple-touch-icon.png
----
-
-[{{< fa code >}} R Script](https://raw.githubusercontent.com/ttalVlatt/IPEDtaS/main/R/IPEDtaS.R)

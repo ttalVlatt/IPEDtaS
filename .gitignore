@@ -19,7 +19,4 @@ _site/
 _extensions/
 _quarto.yml
 index.qmd
-Tutorials/*
-!Tutorials/R.qmd
-!Tutorials/Stata.qmd
 apple-touch-icon.png

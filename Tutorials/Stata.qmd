@@ -1,5 +1,0 @@
----
-image: apple-touch-icon.png
----
-
-[{{< fa code >}} Stata .do File ](https://raw.githubusercontent.com/ttalVlatt/IPEDtaS/main/Stata/IPEDtaS.do)
