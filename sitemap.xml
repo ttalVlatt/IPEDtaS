@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://capaldi.info/IPEDtaS/tutorial.html</loc>
+    <lastmod>2024-11-12T07:22:48.629Z</lastmod>
+  </url>
+  <url>
     <loc>https://capaldi.info/IPEDtaS/index.html</loc>
     <lastmod>2024-08-29T04:03:47.586Z</lastmod>
-  </url>
-  <url>
-    <loc>https://capaldi.info/IPEDtaS/Tutorials/R.html</loc>
-    <lastmod>2024-08-29T04:03:58.872Z</lastmod>
-  </url>
-  <url>
-    <loc>https://capaldi.info/IPEDtaS/Tutorials/Stata.html</loc>
-    <lastmod>2024-08-29T04:03:58.872Z</lastmod>
   </url>
 </urlset>
