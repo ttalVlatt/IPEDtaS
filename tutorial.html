@@ -437,14 +437,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>EFFY2022 (enrollment for 2021-2022 school year)</li>
 <li>SFA2022 (financial aid for 2021-2022 school year)</li>
 </ul>
+<p>Two things to note:</p>
+<ol type="1">
+<li>These examples are just meant to illustrate how the labels can help in your work, they are not meant to be ground-breaking informative analyses - If you’re feeling adventurous, play around and swap out different variables as you follow along</li>
+<li>To be able to understand some of the code, you’d a decent understanding of R and the tidyverse, but again, the point is just to see how the labels can help</li>
+</ol>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true"><i class="fa-brands fa-r-project" aria-label="r-project"></i> R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false"><img src="stata-icon.png" class="img-fluid" style="width:0.15in"> Stata</a></li></ul>
 <div class="tab-content">
 <div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
-<ol type="1">
-<li>Start a new project folder, download a copy of <code>IPEDtaS.R</code>, and place it in the folder</li>
-<li>Adjust <code>selected_files &lt;- c()</code> to download the 3 files we want</li>
-</ol>
+<p><strong>1</strong>. Create a new folder on your computer, download a copy of <code>IPEDtaS.R</code>, and place it in the folder</p>
+<p><strong>2</strong>. Adjust <code>selected_files &lt;- c()</code> in <code>IPEDtaS.R</code> to download the 3 files we want like below</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>selected_files <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"HD2021"</span>,</span>
@@ -452,74 +455,86 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SFA2122"</span></span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<ol start="3" type="1">
-<li>Hit “Run”</li>
-<li>Load tidyverse and haven (part of tidyverse, but requires loading separately)</li>
-</ol>
+<p><strong>3</strong>. Select the whole <code>IPEDtaS.R</code> script and hit “Run”</p>
+<p><strong>4</strong>. Start a new R script in that same folder</p>
+<p><strong>5</strong>. Load tidyverse, haven (part of tidyverse, but requires loading separately), labelled (what haven uses behind the scenes), and gtsummary (to easily create output tables)</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(labelled)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtsummary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<ol start="5" type="1">
-<li>Read our data in</li>
-</ol>
+<p><strong>6</strong>. Read our data in</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>data_info <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="st">"data/hd2021.dta"</span>)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>data_enroll <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="st">"data/effy2022.dta"</span>)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>data_aid <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="st">"data/sfa2122.dta"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Okay, now, take a look at the data_info we just read in</p>
+<p>Okay, now, take a look at the enrollment data we just read in (click on <code>data_enroll</code> in the environment in the top right)</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="var-labels.png" class="img-fluid figure-img"></p>
+<figcaption>Screenshot of Enrollment Data Showing Variable Labels</figcaption>
+</figure>
+</div>
+<p>Notice the descriptions under each variable name</p>
 <ul>
-<li>Do you see the descriptions under each variable name?</li>
-<li>If you’re familiar with IPEDS, you won’t be used to seeing those</li>
+<li>If you’re familiar with IPEDS data, you won’t be used to seeing those</li>
 <li>They’re the variable labels we added, super useful for quick questions without having to open the code book!</li>
 </ul>
-<ol start="6" type="1">
-<li>Hmm, data_enroll is much “longer” than our other 2 data frames, we means we probably have a little light data-wrangling to do</li>
-</ol>
+<p><strong>7</strong>. Now we want to join our data together</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">left_join</span>(data_info, data_enroll, <span class="at">by =</span> <span class="st">"unitid"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(data_aid, <span class="at">by =</span> <span class="st">"unitid"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>8</strong>. Some of you may have noticed that our data has become extremely “long”</p>
 <ul>
-<li>I have a hunch that the data might be “long” by the variable EFFYLEV, so, let’s look at how many observations we have for each value of that</li>
+<li>As in, our data now has many more observations than we originally had</li>
+<li>This we means we probably have a little light data-wrangling to do</li>
+<li>Let’s check how many observations our data set now contains</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>data_enroll <span class="sc">|&gt;</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(effylev)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 4 × 2
+<pre><code>[1] 116480</code></pre>
+</div>
+</div>
+<ul>
+<li>I have a hunch that the data might be “long” by the variable <code>effylev</code>, so, let’s look at how many observations we have for each value of <code>effylev</code></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> <span class="fu">count</span>(effylev)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 2
   effylev                                        n
   &lt;dbl+lbl&gt;                                  &lt;int&gt;
-1 -2 [Not applicable, undergraduate detail] 103690
-2  1 [All students total]                     6036
-3  2 [Undergraduate]                          5758
-4  4 [Graduate]                               2059</code></pre>
+1 -2 [Not applicable, undergraduate detail] 102471
+2  1 [All students total]                     5953
+3  2 [Undergraduate]                          5680
+4  4 [Graduate]                               2040
+5 NA                                           336</code></pre>
 </div>
 </div>
-<p>Once again, note how get labels in addition to the effylev values!</p>
+<p>Once again, if you’re used to IPEDS data, you wouldn’t usually see the information in the <code>[square brackets]</code></p>
 <ul>
-<li>This is the best of both worlds,</li>
-<li>We still have the original values to check with the codebook (which you don’t get with some tools we will discuss later)</li>
-<li>The labels help us quickly identify that we want to just keep <code>effylev == 2</code> for undergraduate students</li>
+<li>These are our value labels, again, super useful for quick questions without having to open the code book!</li>
+<li>One thing I really like about using labels is you get the best of both worlds
+<ul>
+<li>We still have the original values to check with the code book (which you don’t get with some tools we will discuss later)</li>
+</ul></li>
 </ul>
+<p>The labels help us quickly identify what the different values of effylev mean and that if we are interested in undergraduate figures (which for now, we are) we want to keep rows that are <code>effylev == 2</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>data_enroll <span class="ot">&lt;-</span> data_enroll <span class="sc">|&gt;</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(effylev <span class="sc">==</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span> <span class="fu">filter</span>(effylev <span class="sc">==</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<ol start="7" type="1">
-<li>Now we want to join our data together</li>
-</ol>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">left_join</span>(data_info, data_enroll, <span class="at">by =</span> <span class="st">"unitid"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(data_aid, <span class="at">by =</span> <span class="st">"unitid"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<ol start="8" type="1">
-<li>Now let’s start exploring some basic trends to illustrate how labels can help</li>
-</ol>
+<p><strong>9</strong>. Now let’s explore some trends in our data to show how labels can help</p>
 <ol type="a">
-<li>How does the percent paying in-state tuition vary by region?</li>
+<li>How does the percent of students paying out-of-state tuition vary by region?</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(obereg) <span class="sc">|&gt;</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">median_perc_out_of_state =</span> <span class="fu">median</span>(scfa13p, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(obereg) <span class="sc">|&gt;</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">median_perc_out_of_state =</span> <span class="fu">median</span>(scfa13p, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 2
    obereg                                                 median_perc_out_of_s…¹
@@ -537,17 +552,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 # ℹ abbreviated name: ¹​median_perc_out_of_state</code></pre>
 </div>
 </div>
+<p>Notice how again the labels make our analysis instantly more informative</p>
 <ul>
-<li>Notice how again the labels make our analysis instantly more informative, we know what obereg 3 actually means without going to the code book</li>
-<li>Now, if we want to just use the labels as the variable in the graph, haven has a handy tool for that as well <code>as_factor()</code>
+<li>We know what obereg 7 means without going to the code book</li>
+<li>Now, if we want to just use the labels the column, <code>haven</code> has a handy tool for that as well <code>as_factor()</code>
 <ul>
 <li>This converts a column with value labels to a factor using the label as the value</li>
 </ul></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="fu">as_factor</span>(obereg)) <span class="sc">|&gt;</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">median_perc_out_of_state =</span> <span class="fu">median</span>(scfa13p, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="fu">as_factor</span>(obereg)) <span class="sc">|&gt;</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">median_perc_out_of_state =</span> <span class="fu">median</span>(scfa13p, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 2
    `as_factor(obereg)`                                    median_perc_out_of_s…¹
@@ -565,56 +581,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 # ℹ abbreviated name: ¹​median_perc_out_of_state</code></pre>
 </div>
 </div>
-<ol start="2" type="a">
-<li>What about the relationship between total enrollment and the percent paying instate tuition? Are bigger schools relying more on out-of-state students?</li>
-</ol>
+<p><strong>10</strong>. What about the relationship between total enrollment and the percent paying instate tuition? Are bigger schools relying more on out-of-state students? Does this trend vary by region?</p>
 <ul>
 <li>This wouldn’t work in a table, so, let’s look at a simple scatter plot</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data <span class="sc">|&gt;</span> <span class="fu">filter</span>(efytotlt <span class="sc">&lt;</span> <span class="dv">50000</span>),</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> efytotlt,</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> scfa13p)) <span class="sc">+</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="fl">0.8</span>)) <span class="sc">+</span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>obereg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="tutorial_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<ul>
-<li><p>Okay… But what do those variables mean?</p></li>
-<li><p>Unfortunately, with continuous variables there isn’t something quite as nice as <code>as_factor()</code> but, we can set our x and y labels using the <code>var_label()</code> from the <code>labelled</code> package (a dependency of haven)</p></li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(labelled)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data <span class="sc">|&gt;</span> <span class="fu">filter</span>(efytotlt <span class="sc">&lt;</span> <span class="dv">50000</span>),</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> efytotlt,</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> scfa13p)) <span class="sc">+</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="fl">0.8</span>)) <span class="sc">+</span></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">var_label</span>(data<span class="sc">$</span>efytotlt),</span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">var_label</span>(data<span class="sc">$</span>scfa13p)) <span class="sc">+</span></span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span><span class="fu">as_factor</span>(obereg))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="tutorial_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<ul>
-<li>With a couple of tweaks to allow longer labels to wrap around, we now have a much better looking plot</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data <span class="sc">|&gt;</span> <span class="fu">filter</span>(efytotlt <span class="sc">&lt;</span> <span class="dv">50000</span>),</span>
@@ -624,10 +593,43 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
 <span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
 <span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="fl">0.8</span>)) <span class="sc">+</span></span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">var_label</span>(data<span class="sc">$</span>efytotlt),</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">str_wrap</span>(<span class="fu">var_label</span>(data<span class="sc">$</span>scfa13p), <span class="dv">40</span>)) <span class="sc">+</span></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span><span class="fu">as_factor</span>(obereg),</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">labeller =</span> <span class="fu">label_wrap_gen</span>(<span class="at">multi_line =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>obereg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tutorial_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Okay… But what do those variables mean? - Without labels, the plot it hard to understand</p>
+<p>So, let’s add labels</p>
+<ul>
+<li>The first step is to change <code>facet_wrap(~obereg)</code> to <code>facet_wrap(~as_factor(obereg))</code>
+<ul>
+<li>This is the same as we did in the table above, using a new version of the column that uses the value labels as the value</li>
+</ul></li>
+<li>The second step involves pulling out the variable labels to go on the x and y axis
+<ul>
+<li>This is a little more manual, but, we can set our x and y labels using the <code>labs()</code> argument as normal
+<ul>
+<li>But instead of putting something like <code>x = "my x axis label"</code>, we use the <code>var_label()</code> from the <code>labelled</code> package (a dependency of haven)</li>
+</ul></li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(labelled)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data <span class="sc">|&gt;</span> <span class="fu">filter</span>(efytotlt <span class="sc">&lt;</span> <span class="dv">50000</span>),</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> efytotlt,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> scfa13p)) <span class="sc">+</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="fl">0.8</span>)) <span class="sc">+</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">var_label</span>(data<span class="sc">$</span>efytotlt),</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">var_label</span>(data<span class="sc">$</span>scfa13p)) <span class="sc">+</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span><span class="fu">as_factor</span>(obereg))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -636,37 +638,61 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<ol start="3" type="a">
-<li>Lastly, let’s look at how labels can show up in modeling</li>
-</ol>
+<p>Well, that’s more informative, but a little messy</p>
 <ul>
-<li>Without using labels, the regression output needs the codebook to interpret</li>
+<li>With a couple of tweaks to allow longer labels to wrap around, we now have a much better looking plot
+<ul>
+<li><code>y = str_wrap(var_label(data$scfa13p), 40)</code> says to make a new line every 40 characters on the y axis</li>
+<li><code>labeller = label_wrap_gen(multi_line = TRUE)</code> inside our <code>facet_wrap()</code> allows the facet labels to wrap onto multiple lines</li>
+</ul></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtsummary)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(scfa13p <span class="sc">~</span> <span class="fu">factor</span>(iclevel),</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> data)</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_regression</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data <span class="sc">|&gt;</span> <span class="fu">filter</span>(efytotlt <span class="sc">&lt;</span> <span class="dv">50000</span>),</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> efytotlt,</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> scfa13p)) <span class="sc">+</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="fl">0.8</span>)) <span class="sc">+</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">var_label</span>(data<span class="sc">$</span>efytotlt),</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">str_wrap</span>(<span class="fu">var_label</span>(data<span class="sc">$</span>scfa13p), <span class="dv">40</span>)) <span class="sc">+</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span><span class="fu">as_factor</span>(obereg),</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">labeller =</span> <span class="fu">label_wrap_gen</span>(<span class="at">multi_line =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="trxkhieuxu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#trxkhieuxu table {
+<div>
+<figure class="figure">
+<p><img src="tutorial_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>11</strong>. Lastly, let’s look at how labels can show up in modeling. Let’s see if the percentage of students paying out of state changes by the level of the institution (4 year, 2 year, Less than 2 year)</p>
+<p>Without using labels, the regression output needs the code book to interpret - What is iclevel 2?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtsummary)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(scfa13p <span class="sc">~</span> <span class="fu">factor</span>(iclevel),</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> data)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_regression</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="yayzbvyxzb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#yayzbvyxzb table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#trxkhieuxu thead, #trxkhieuxu tbody, #trxkhieuxu tfoot, #trxkhieuxu tr, #trxkhieuxu td, #trxkhieuxu th {
+#yayzbvyxzb thead, #yayzbvyxzb tbody, #yayzbvyxzb tfoot, #yayzbvyxzb tr, #yayzbvyxzb td, #yayzbvyxzb th {
   border-style: none;
 }
 
-#trxkhieuxu p {
+#yayzbvyxzb p {
   margin: 0;
   padding: 0;
 }
 
-#trxkhieuxu .gt_table {
+#yayzbvyxzb .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -692,12 +718,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-left-color: #D3D3D3;
 }
 
-#trxkhieuxu .gt_caption {
+#yayzbvyxzb .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#trxkhieuxu .gt_title {
+#yayzbvyxzb .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -709,7 +735,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-width: 0;
 }
 
-#trxkhieuxu .gt_subtitle {
+#yayzbvyxzb .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -721,7 +747,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-width: 0;
 }
 
-#trxkhieuxu .gt_heading {
+#yayzbvyxzb .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -733,13 +759,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#trxkhieuxu .gt_bottom_border {
+#yayzbvyxzb .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#trxkhieuxu .gt_col_headings {
+#yayzbvyxzb .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -754,7 +780,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#trxkhieuxu .gt_col_heading {
+#yayzbvyxzb .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -774,7 +800,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#trxkhieuxu .gt_column_spanner_outer {
+#yayzbvyxzb .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -786,15 +812,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 4px;
 }
 
-#trxkhieuxu .gt_column_spanner_outer:first-child {
+#yayzbvyxzb .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#trxkhieuxu .gt_column_spanner_outer:last-child {
+#yayzbvyxzb .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#trxkhieuxu .gt_column_spanner {
+#yayzbvyxzb .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -806,11 +832,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width: 100%;
 }
 
-#trxkhieuxu .gt_spanner_row {
+#yayzbvyxzb .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#trxkhieuxu .gt_group_heading {
+#yayzbvyxzb .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -836,7 +862,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   text-align: left;
 }
 
-#trxkhieuxu .gt_empty_group_heading {
+#yayzbvyxzb .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -851,15 +877,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: middle;
 }
 
-#trxkhieuxu .gt_from_md > :first-child {
+#yayzbvyxzb .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#trxkhieuxu .gt_from_md > :last-child {
+#yayzbvyxzb .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#trxkhieuxu .gt_row {
+#yayzbvyxzb .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -878,7 +904,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#trxkhieuxu .gt_stub {
+#yayzbvyxzb .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -891,7 +917,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#trxkhieuxu .gt_stub_row_group {
+#yayzbvyxzb .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -905,15 +931,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: top;
 }
 
-#trxkhieuxu .gt_row_group_first td {
+#yayzbvyxzb .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#trxkhieuxu .gt_row_group_first th {
+#yayzbvyxzb .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#trxkhieuxu .gt_summary_row {
+#yayzbvyxzb .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -923,16 +949,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#trxkhieuxu .gt_first_summary_row {
+#yayzbvyxzb .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#trxkhieuxu .gt_first_summary_row.thick {
+#yayzbvyxzb .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#trxkhieuxu .gt_last_summary_row {
+#yayzbvyxzb .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -942,7 +968,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#trxkhieuxu .gt_grand_summary_row {
+#yayzbvyxzb .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -952,7 +978,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#trxkhieuxu .gt_first_grand_summary_row {
+#yayzbvyxzb .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -962,7 +988,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-color: #D3D3D3;
 }
 
-#trxkhieuxu .gt_last_grand_summary_row_top {
+#yayzbvyxzb .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -972,11 +998,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#trxkhieuxu .gt_striped {
+#yayzbvyxzb .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#trxkhieuxu .gt_table_body {
+#yayzbvyxzb .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -985,7 +1011,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#trxkhieuxu .gt_footnotes {
+#yayzbvyxzb .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -999,7 +1025,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#trxkhieuxu .gt_footnote {
+#yayzbvyxzb .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1008,7 +1034,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#trxkhieuxu .gt_sourcenotes {
+#yayzbvyxzb .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1022,7 +1048,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#trxkhieuxu .gt_sourcenote {
+#yayzbvyxzb .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1030,72 +1056,72 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#trxkhieuxu .gt_left {
+#yayzbvyxzb .gt_left {
   text-align: left;
 }
 
-#trxkhieuxu .gt_center {
+#yayzbvyxzb .gt_center {
   text-align: center;
 }
 
-#trxkhieuxu .gt_right {
+#yayzbvyxzb .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#trxkhieuxu .gt_font_normal {
+#yayzbvyxzb .gt_font_normal {
   font-weight: normal;
 }
 
-#trxkhieuxu .gt_font_bold {
+#yayzbvyxzb .gt_font_bold {
   font-weight: bold;
 }
 
-#trxkhieuxu .gt_font_italic {
+#yayzbvyxzb .gt_font_italic {
   font-style: italic;
 }
 
-#trxkhieuxu .gt_super {
+#yayzbvyxzb .gt_super {
   font-size: 65%;
 }
 
-#trxkhieuxu .gt_footnote_marks {
+#yayzbvyxzb .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#trxkhieuxu .gt_asterisk {
+#yayzbvyxzb .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#trxkhieuxu .gt_indent_1 {
+#yayzbvyxzb .gt_indent_1 {
   text-indent: 5px;
 }
 
-#trxkhieuxu .gt_indent_2 {
+#yayzbvyxzb .gt_indent_2 {
   text-indent: 10px;
 }
 
-#trxkhieuxu .gt_indent_3 {
+#yayzbvyxzb .gt_indent_3 {
   text-indent: 15px;
 }
 
-#trxkhieuxu .gt_indent_4 {
+#yayzbvyxzb .gt_indent_4 {
   text-indent: 20px;
 }
 
-#trxkhieuxu .gt_indent_5 {
+#yayzbvyxzb .gt_indent_5 {
   text-indent: 25px;
 }
 
-#trxkhieuxu .katex-display {
+#yayzbvyxzb .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#trxkhieuxu div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#yayzbvyxzb div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1161,32 +1187,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<ul>
-<li>Remember, using <code>as_factor()</code> rather than <code>factor()</code> tells R to use the labels as the levels</li>
-</ul>
+<p>Remember from above, using <code>as_factor()</code> rather than <code>factor()</code> tells R to use the labels as the levels</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(scfa13p <span class="sc">~</span> <span class="fu">as_factor</span>(iclevel),</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> data)</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_regression</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(scfa13p <span class="sc">~</span> <span class="fu">as_factor</span>(iclevel),</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> data)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_regression</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="mltscoqkcg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#mltscoqkcg table {
+<div id="oucxtnftff" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#oucxtnftff table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#mltscoqkcg thead, #mltscoqkcg tbody, #mltscoqkcg tfoot, #mltscoqkcg tr, #mltscoqkcg td, #mltscoqkcg th {
+#oucxtnftff thead, #oucxtnftff tbody, #oucxtnftff tfoot, #oucxtnftff tr, #oucxtnftff td, #oucxtnftff th {
   border-style: none;
 }
 
-#mltscoqkcg p {
+#oucxtnftff p {
   margin: 0;
   padding: 0;
 }
 
-#mltscoqkcg .gt_table {
+#oucxtnftff .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1212,12 +1236,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-left-color: #D3D3D3;
 }
 
-#mltscoqkcg .gt_caption {
+#oucxtnftff .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#mltscoqkcg .gt_title {
+#oucxtnftff .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1229,7 +1253,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-width: 0;
 }
 
-#mltscoqkcg .gt_subtitle {
+#oucxtnftff .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1241,7 +1265,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-width: 0;
 }
 
-#mltscoqkcg .gt_heading {
+#oucxtnftff .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1253,13 +1277,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#mltscoqkcg .gt_bottom_border {
+#oucxtnftff .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#mltscoqkcg .gt_col_headings {
+#oucxtnftff .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1274,7 +1298,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#mltscoqkcg .gt_col_heading {
+#oucxtnftff .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1294,7 +1318,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#mltscoqkcg .gt_column_spanner_outer {
+#oucxtnftff .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1306,15 +1330,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 4px;
 }
 
-#mltscoqkcg .gt_column_spanner_outer:first-child {
+#oucxtnftff .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#mltscoqkcg .gt_column_spanner_outer:last-child {
+#oucxtnftff .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#mltscoqkcg .gt_column_spanner {
+#oucxtnftff .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1326,11 +1350,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width: 100%;
 }
 
-#mltscoqkcg .gt_spanner_row {
+#oucxtnftff .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#mltscoqkcg .gt_group_heading {
+#oucxtnftff .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1356,7 +1380,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   text-align: left;
 }
 
-#mltscoqkcg .gt_empty_group_heading {
+#oucxtnftff .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1371,15 +1395,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: middle;
 }
 
-#mltscoqkcg .gt_from_md > :first-child {
+#oucxtnftff .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#mltscoqkcg .gt_from_md > :last-child {
+#oucxtnftff .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#mltscoqkcg .gt_row {
+#oucxtnftff .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1398,7 +1422,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#mltscoqkcg .gt_stub {
+#oucxtnftff .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1411,7 +1435,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#mltscoqkcg .gt_stub_row_group {
+#oucxtnftff .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1425,15 +1449,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: top;
 }
 
-#mltscoqkcg .gt_row_group_first td {
+#oucxtnftff .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#mltscoqkcg .gt_row_group_first th {
+#oucxtnftff .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#mltscoqkcg .gt_summary_row {
+#oucxtnftff .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1443,16 +1467,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#mltscoqkcg .gt_first_summary_row {
+#oucxtnftff .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#mltscoqkcg .gt_first_summary_row.thick {
+#oucxtnftff .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#mltscoqkcg .gt_last_summary_row {
+#oucxtnftff .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1462,7 +1486,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#mltscoqkcg .gt_grand_summary_row {
+#oucxtnftff .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1472,7 +1496,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#mltscoqkcg .gt_first_grand_summary_row {
+#oucxtnftff .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1482,7 +1506,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-color: #D3D3D3;
 }
 
-#mltscoqkcg .gt_last_grand_summary_row_top {
+#oucxtnftff .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1492,11 +1516,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#mltscoqkcg .gt_striped {
+#oucxtnftff .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#mltscoqkcg .gt_table_body {
+#oucxtnftff .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1505,7 +1529,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#mltscoqkcg .gt_footnotes {
+#oucxtnftff .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1519,7 +1543,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#mltscoqkcg .gt_footnote {
+#oucxtnftff .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1528,7 +1552,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#mltscoqkcg .gt_sourcenotes {
+#oucxtnftff .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1542,7 +1566,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#mltscoqkcg .gt_sourcenote {
+#oucxtnftff .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1550,72 +1574,72 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#mltscoqkcg .gt_left {
+#oucxtnftff .gt_left {
   text-align: left;
 }
 
-#mltscoqkcg .gt_center {
+#oucxtnftff .gt_center {
   text-align: center;
 }
 
-#mltscoqkcg .gt_right {
+#oucxtnftff .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#mltscoqkcg .gt_font_normal {
+#oucxtnftff .gt_font_normal {
   font-weight: normal;
 }
 
-#mltscoqkcg .gt_font_bold {
+#oucxtnftff .gt_font_bold {
   font-weight: bold;
 }
 
-#mltscoqkcg .gt_font_italic {
+#oucxtnftff .gt_font_italic {
   font-style: italic;
 }
 
-#mltscoqkcg .gt_super {
+#oucxtnftff .gt_super {
   font-size: 65%;
 }
 
-#mltscoqkcg .gt_footnote_marks {
+#oucxtnftff .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#mltscoqkcg .gt_asterisk {
+#oucxtnftff .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#mltscoqkcg .gt_indent_1 {
+#oucxtnftff .gt_indent_1 {
   text-indent: 5px;
 }
 
-#mltscoqkcg .gt_indent_2 {
+#oucxtnftff .gt_indent_2 {
   text-indent: 10px;
 }
 
-#mltscoqkcg .gt_indent_3 {
+#oucxtnftff .gt_indent_3 {
   text-indent: 15px;
 }
 
-#mltscoqkcg .gt_indent_4 {
+#oucxtnftff .gt_indent_4 {
   text-indent: 20px;
 }
 
-#mltscoqkcg .gt_indent_5 {
+#oucxtnftff .gt_indent_5 {
   text-indent: 25px;
 }
 
-#mltscoqkcg .katex-display {
+#oucxtnftff .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#mltscoqkcg div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#oucxtnftff div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1681,30 +1705,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<p>Okay that is much clearer what is going on!</p>
 <ul>
-<li>Similarly to the plot, using variable labels is a little more tricky, but, we can do it using the <code>var_label()</code> function again</li>
+<li><code>as_factor(iclevel)</code> is still a bit messy though</li>
+<li>Similarly to the plot above, using variable labels is a little more tricky, but, we can do it using the <code>var_label()</code> function again alongside the <code>label =</code> argument in <code>tbl_regression</code></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_regression</span>(model,</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">label =</span> <span class="fu">list</span>(<span class="st">`</span><span class="at">as_factor(iclevel)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">var_label</span>(data<span class="sc">$</span>iclevel)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_regression</span>(model,</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">label =</span> <span class="fu">list</span>(<span class="st">`</span><span class="at">as_factor(iclevel)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">var_label</span>(data<span class="sc">$</span>iclevel)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="ymmonmrrnw" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#ymmonmrrnw table {
+<div id="emkrfxnbnh" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#emkrfxnbnh table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#ymmonmrrnw thead, #ymmonmrrnw tbody, #ymmonmrrnw tfoot, #ymmonmrrnw tr, #ymmonmrrnw td, #ymmonmrrnw th {
+#emkrfxnbnh thead, #emkrfxnbnh tbody, #emkrfxnbnh tfoot, #emkrfxnbnh tr, #emkrfxnbnh td, #emkrfxnbnh th {
   border-style: none;
 }
 
-#ymmonmrrnw p {
+#emkrfxnbnh p {
   margin: 0;
   padding: 0;
 }
 
-#ymmonmrrnw .gt_table {
+#emkrfxnbnh .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1730,12 +1756,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-left-color: #D3D3D3;
 }
 
-#ymmonmrrnw .gt_caption {
+#emkrfxnbnh .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#ymmonmrrnw .gt_title {
+#emkrfxnbnh .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1747,7 +1773,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-width: 0;
 }
 
-#ymmonmrrnw .gt_subtitle {
+#emkrfxnbnh .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1759,7 +1785,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-width: 0;
 }
 
-#ymmonmrrnw .gt_heading {
+#emkrfxnbnh .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1771,13 +1797,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#ymmonmrrnw .gt_bottom_border {
+#emkrfxnbnh .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ymmonmrrnw .gt_col_headings {
+#emkrfxnbnh .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1792,7 +1818,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#ymmonmrrnw .gt_col_heading {
+#emkrfxnbnh .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1812,7 +1838,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#ymmonmrrnw .gt_column_spanner_outer {
+#emkrfxnbnh .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1824,15 +1850,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 4px;
 }
 
-#ymmonmrrnw .gt_column_spanner_outer:first-child {
+#emkrfxnbnh .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ymmonmrrnw .gt_column_spanner_outer:last-child {
+#emkrfxnbnh .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ymmonmrrnw .gt_column_spanner {
+#emkrfxnbnh .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1844,11 +1870,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width: 100%;
 }
 
-#ymmonmrrnw .gt_spanner_row {
+#emkrfxnbnh .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#ymmonmrrnw .gt_group_heading {
+#emkrfxnbnh .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1874,7 +1900,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   text-align: left;
 }
 
-#ymmonmrrnw .gt_empty_group_heading {
+#emkrfxnbnh .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1889,15 +1915,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: middle;
 }
 
-#ymmonmrrnw .gt_from_md > :first-child {
+#emkrfxnbnh .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ymmonmrrnw .gt_from_md > :last-child {
+#emkrfxnbnh .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ymmonmrrnw .gt_row {
+#emkrfxnbnh .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1916,7 +1942,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#ymmonmrrnw .gt_stub {
+#emkrfxnbnh .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1929,7 +1955,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#ymmonmrrnw .gt_stub_row_group {
+#emkrfxnbnh .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1943,15 +1969,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: top;
 }
 
-#ymmonmrrnw .gt_row_group_first td {
+#emkrfxnbnh .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#ymmonmrrnw .gt_row_group_first th {
+#emkrfxnbnh .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#ymmonmrrnw .gt_summary_row {
+#emkrfxnbnh .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1961,16 +1987,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#ymmonmrrnw .gt_first_summary_row {
+#emkrfxnbnh .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#ymmonmrrnw .gt_first_summary_row.thick {
+#emkrfxnbnh .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#ymmonmrrnw .gt_last_summary_row {
+#emkrfxnbnh .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1980,7 +2006,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#ymmonmrrnw .gt_grand_summary_row {
+#emkrfxnbnh .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1990,7 +2016,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#ymmonmrrnw .gt_first_grand_summary_row {
+#emkrfxnbnh .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2000,7 +2026,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-color: #D3D3D3;
 }
 
-#ymmonmrrnw .gt_last_grand_summary_row_top {
+#emkrfxnbnh .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2010,11 +2036,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#ymmonmrrnw .gt_striped {
+#emkrfxnbnh .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ymmonmrrnw .gt_table_body {
+#emkrfxnbnh .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2023,7 +2049,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#ymmonmrrnw .gt_footnotes {
+#emkrfxnbnh .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2037,7 +2063,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#ymmonmrrnw .gt_footnote {
+#emkrfxnbnh .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2046,7 +2072,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#ymmonmrrnw .gt_sourcenotes {
+#emkrfxnbnh .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2060,7 +2086,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#ymmonmrrnw .gt_sourcenote {
+#emkrfxnbnh .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2068,72 +2094,72 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#ymmonmrrnw .gt_left {
+#emkrfxnbnh .gt_left {
   text-align: left;
 }
 
-#ymmonmrrnw .gt_center {
+#emkrfxnbnh .gt_center {
   text-align: center;
 }
 
-#ymmonmrrnw .gt_right {
+#emkrfxnbnh .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ymmonmrrnw .gt_font_normal {
+#emkrfxnbnh .gt_font_normal {
   font-weight: normal;
 }
 
-#ymmonmrrnw .gt_font_bold {
+#emkrfxnbnh .gt_font_bold {
   font-weight: bold;
 }
 
-#ymmonmrrnw .gt_font_italic {
+#emkrfxnbnh .gt_font_italic {
   font-style: italic;
 }
 
-#ymmonmrrnw .gt_super {
+#emkrfxnbnh .gt_super {
   font-size: 65%;
 }
 
-#ymmonmrrnw .gt_footnote_marks {
+#emkrfxnbnh .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#ymmonmrrnw .gt_asterisk {
+#emkrfxnbnh .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#ymmonmrrnw .gt_indent_1 {
+#emkrfxnbnh .gt_indent_1 {
   text-indent: 5px;
 }
 
-#ymmonmrrnw .gt_indent_2 {
+#emkrfxnbnh .gt_indent_2 {
   text-indent: 10px;
 }
 
-#ymmonmrrnw .gt_indent_3 {
+#emkrfxnbnh .gt_indent_3 {
   text-indent: 15px;
 }
 
-#ymmonmrrnw .gt_indent_4 {
+#emkrfxnbnh .gt_indent_4 {
   text-indent: 20px;
 }
 
-#ymmonmrrnw .gt_indent_5 {
+#emkrfxnbnh .gt_indent_5 {
   text-indent: 25px;
 }
 
-#ymmonmrrnw .katex-display {
+#emkrfxnbnh .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#ymmonmrrnw div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#emkrfxnbnh div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -2201,42 +2227,282 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+<p><strong>1</strong>. Create a new folder on your computer, download a copy of <code>IPEDtaS.do</code>, and place it in the folder</p>
+<p><strong>2</strong>. Adjust <code>local selected_files</code> in <code>IPEDtaS.do</code> to download the 3 files we want like below</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">local</span> selected_files <span class="co">///</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"HD2021"</span> <span class="co">///</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"EFFY2022"</span> <span class="co">///</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SFA2122"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>3</strong>. Select the whole <code>IPEDtaS.do</code> script and hit “Run”</p>
+<p><strong>4</strong>. Start a new Stata do file in that same folder</p>
+<p><strong>5</strong>. Load our first data set, hd2022</p>
+<div class="cell" data-collectcode="true">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="st">"data/hd2021.dta"</span>, <span class="kw">clear</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Okay, now, take a look at the variables panel (by default in right hand panel)</p>
+<ul>
+<li>Each of the variables has a label that describes what the variable means</li>
+<li>If you’re familiar with standard IPEDS data, you won’t be used to seeing those</li>
+<li>They’re the variable labels we added, super useful for quick questions without having to open the code book!</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="stata-var-labels.png" height="450" class="figure-img"></p>
+<figcaption>Screenshot of Showing Variable Labels</figcaption>
+</figure>
+</div>
+<p><strong>6</strong>. Join in our other data sets in a “left join” style (i.e., all observations in the first data set are kept even if they don’t have a match in the second)</p>
+<div class="cell" data-collectcode="true">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="kw">joinby</span> unitid <span class="kw">using</span> <span class="st">"data/sfa2122.dta"</span>, unmatched(master) <span class="dt">_merge</span>(sfa)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="kw">joinby</span> unitid <span class="kw">using</span> <span class="st">"data/effy2022.dta"</span>, unmatched(master) <span class="dt">_merge</span>(effy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>7</strong>. Some of you may have noticed that our data has become extremely “long”</p>
+<ul>
+<li>As in, our data now has many more observations than we originally had</li>
+<li>This we means we probably have a little light data-wrangling to do</li>
+<li>Let’s check how many observations our data set now contains</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  116,480</code></pre>
+</div>
+</div>
+<ul>
+<li>I have a hunch that the data might be “long” by the variable <code>effylev</code>, so, let’s look at how many observations we have for each value of <code>effylev</code></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="kw">tabulate</span> effylev</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Undergraduate or graduate level of |
+                             student |      Freq.     Percent        Cum.
+-------------------------------------+-----------------------------------
+Not applicable, undergraduate detail |    102,471       88.23       88.23
+                  All students total |      5,953        5.13       93.35
+                       Undergraduate |      5,680        4.89       98.24
+                            Graduate |      2,040        1.76      100.00
+-------------------------------------+-----------------------------------
+                               Total |    116,144      100.00</code></pre>
+</div>
+</div>
+<p>Once again, if you’re used to IPEDS data, you would usually see a bunch of numbers in the left-hand column, but now we see informative labels</p>
+<ul>
+<li>These are our value labels, again, super useful for quick questions without having to open the code book!
+<ul>
+<li>If these are ever unclear, the data still contains the original values to check with the code book (which you don’t get with some tools we will discuss later)</li>
+<li>You can use the command <code>labelbook</code> to check these</li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="kw">labelbook</span> label_effylev</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Value label label_effylev 
+---------------------------------------------------------------------------------------------------------------------------
 
+      Values                                    Labels
+       Range:  [-2,4]                    String length:  [8,36]
+           N:  4                 Unique at full length:  yes
+        Gaps:  yes                 Unique at length 12:  yes
+  Missing .*:  0                           Null string:  no
+                               Leading/trailing blanks:  no
+                                    Numeric -&gt; numeric:  no
+  Definition
+          -2   Not applicable, undergraduate detail
+           1   All students total
+           2   Undergraduate
+           4   Graduate
+
+   Variables:  effylev</code></pre>
+</div>
+</div>
+<p>The labels help us quickly identify what the different values of effylev mean and that if we are interested in undergraduate figures (which for now, we are) we want to keep rows that are <code>effylev == 2</code></p>
+<div class="cell" data-collectcode="true">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="kw">keep</span> <span class="kw">if</span> effylev == 2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(110,800 observations deleted)</code></pre>
+</div>
+</div>
+<p><strong>8</strong>. Now let’s explore some trends in our data to show how labels can help. How does the percent of students paying out-of-state tuition vary by region?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="kw">tabstat</span> scfa13p, <span class="fu">s</span>(<span class="kw">median</span>) <span class="kw">by</span>(obereg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Summary for variables: scfa13p
+Group variable: obereg (Bureau of Economic Analysis (BEA) regions)
+
+          obereg |       p50
+-----------------+----------
+U.S. Service sch |         0
+New England (CT, |         5
+Mid East (DE, DC |         5
+Great Lakes (IL, |         2
+Plains (IA, KS,  |         6
+Southeast (AL, A |         5
+Southwest (AZ, N |         4
+Rocky Mountains  |        19
+Far West (AK, CA |         4
+Other U.S. juris |         0
+-----------------+----------
+           Total |         4
+----------------------------</code></pre>
+</div>
+</div>
+<p>Notice how again the labels make our analysis instantly more informative</p>
+<ul>
+<li>We know which region has 19% of students paying out-of-state tuition without going to the code book (it would previously just have said 7)</li>
+</ul>
+<p><strong>9</strong>. What about the relationship between total enrollment and the percent paying instate tuition? Are bigger schools relying more on out-of-state students? Does this trend vary by region?</p>
+<ul>
+<li>This wouldn’t work in a table, so, let’s look at a simple scatter plot</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="kw">scatter</span> scfa13p efytotlt <span class="kw">if</span> efytotlt &lt; 50000, <span class="kw">by</span>(obereg, col(2))</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="kw">quietly</span> <span class="kw">graph</span> <span class="kw">export</span> <span class="kw">scatter</span>.svg, <span class="kw">replace</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="scatter.svg" class="img-fluid"></p>
+<ul>
+<li>See how by default the x, y, and by/facet labels use the labels and not the variable names/values?
+<ul>
+<li>This instantly makes your plots more intuitive</li>
+</ul></li>
+<li>I don’t typically use Stata for plotting, so I’m not sure how to get the longer labels to wrap, but I’m sure there’s a way</li>
+</ul>
+<p><strong>10</strong>. Lastly, let’s look at how labels can show up in modeling. Let’s see if the percentage of students paying out of state changes by the level of the institution (4 year, 2 year, Less than 2 year)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="kw">regress</span> scfa13p i.iclevel</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Source |       SS           df       MS      Number of obs   =     1,572
+-------------+----------------------------------   F(2, 1569)      =     98.14
+       Model |  30433.0627         2  15216.5313   Prob &gt; F        =    0.0000
+    Residual |  243262.532     1,569  155.043041   R-squared       =    0.1112
+-------------+----------------------------------   Adj R-squared   =    0.1101
+       Total |  273695.595     1,571  174.217438   Root MSE        =    12.452
+
+------------------------------------------------------------------------------------------------------
+                             scfa13p | Coefficient  Std. err.      t    P&gt;|t|     [95% conf. interval]
+-------------------------------------+----------------------------------------------------------------
+                             iclevel |
+   At least 2 but less than 4 years  |  -8.666799   .6320687   -13.71   0.000    -9.906587   -7.427011
+Less than 2 years (below associate)  |  -14.21038    3.35951    -4.23   0.000    -20.79999    -7.62078
+                                     |
+                               _cons |   14.21038   .4602254    30.88   0.000     13.30766     15.1131
+------------------------------------------------------------------------------------------------------</code></pre>
+</div>
+</div>
+<p>As you can see, the variable labels automatically show up in our regression output</p>
+<ul>
+<li>Before, you would have seen 2 and 3 in the iclevel column, but now you get informative labels</li>
+<li>With the labels, it’s easier to interpret which makes you work easier to read and also less likely you will get mixed up and report the wrong value!</li>
+</ul>
 </div>
 </div>
 </div>
 </section>
-<section id="getting-rid-of-labels-r-specific" class="level1">
-<h1>Getting Rid of Labels (R-Specific)</h1>
-<p>It’s rare, but if using R, there are occasions where you might need to remove value labels from your data</p>
+<section id="removing-value-labels" class="level1">
+<h1>Removing Value Labels</h1>
+<p>It’s rare, but, there are occasions where you might need to remove value labels from your data</p>
 <ul>
-<li>For instance, certain advanced analysis packages get confused when you have value labels</li>
-<li>Luckily, it’s pretty easy, just use the <code>zap_labels()</code> function from <code>haven</code> to create an unlabelled version of your data</li>
+<li>For instance, in R certain advanced analysis packages get confused when you have value labels</li>
+<li>You may also spot an error in labelling and need to get rid of it</li>
+<li>Luckily, it’s pretty easy!</li>
 </ul>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true"><i class="fa-brands fa-r-project" aria-label="r-project"></i> R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false"><img src="stata-icon.png" class="img-fluid" style="width:0.15in"> Stata</a></li></ul>
+<div class="tab-content">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
+<p>In R, just use the <code>zap_labels()</code> function from <code>haven</code> to create an unlabelled version of your data</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(iclevel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(iclevel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 4 × 2
-  iclevel                                      n
-  &lt;dbl+lbl&gt;                                &lt;int&gt;
-1 -3 [{Not available}]                        16
-2  1 [Four or more years]                   2845
-3  2 [At least 2 but less than 4 years]     1639
-4  3 [Less than 2 years (below associate)]  1789</code></pre>
+<pre><code># A tibble: 3 × 2
+  iclevel                                     n
+  &lt;dbl+lbl&gt;                               &lt;int&gt;
+1 1 [Four or more years]                   2436
+2 2 [At least 2 but less than 4 years]     1575
+3 3 [Less than 2 years (below associate)]  1669</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>data_unlabelled <span class="ot">&lt;-</span> <span class="fu">zap_labels</span>(data)</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>data_unlabelled <span class="sc">|&gt;</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(iclevel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>data_unlabelled <span class="ot">&lt;-</span> <span class="fu">zap_labels</span>(data)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>data_unlabelled <span class="sc">|&gt;</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(iclevel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 4 × 2
+<pre><code># A tibble: 3 × 2
   iclevel     n
     &lt;dbl&gt; &lt;int&gt;
-1      -3    16
-2       1  2845
-3       2  1639
-4       3  1789</code></pre>
+1       1  2436
+2       2  1575
+3       3  1669</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+<p>In Stata, simply type <code>label drop _all</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="kw">tabulate</span> iclevel</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="kw">label</span> <span class="kw">drop</span> <span class="dt">_all</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="kw">tabulate</span> iclevel</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               Level of institution |      Freq.     Percent        Cum.
+------------------------------------+-----------------------------------
+                 Four or more years |      2,436       42.89       42.89
+   At least 2 but less than 4 years |      1,575       27.73       70.62
+Less than 2 years (below associate) |      1,669       29.38      100.00
+------------------------------------+-----------------------------------
+                              Total |      5,680      100.00
+
+
+
+   Level of |
+institution |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |      2,436       42.89       42.89
+          2 |      1,575       27.73       70.62
+          3 |      1,669       29.38      100.00
+------------+-----------------------------------
+      Total |      5,680      100.00</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="getting-capitalized-variable-names" class="level1">
+<h1>Getting Capitalized Variable Names</h1>
+<ul>
+<li>By default, <code>IPEDtaS</code> gives you lower-case variable names (which is the default for Stata-style data)</li>
+<li>Usually, this is going to be easier to work with
+<ul>
+<li>However, sometimes you might need to keep the original upper-case variable names, such as if you’re adding this to an existing project that already uses upper-case variable names</li>
+</ul></li>
+<li>To do this, you just need to add a single line near the end of the <code>IPEDtaS</code> script</li>
+</ul>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true"><i class="fa-brands fa-r-project" aria-label="r-project"></i> R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false"><img src="stata-icon.png" class="img-fluid" style="width:0.15in"> Stata</a></li></ul>
+<div class="tab-content">
+<div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
+<p>Add this line</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>data_file <span class="ot">&lt;-</span> data_file <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">rename_all</span>(stringr<span class="sc">::</span>str_to_upper)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>directly above (near end of script)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>haven<span class="sc">::</span><span class="fu">write_dta</span>(data_file, dta_name)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
+<p>Add this line</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="kw">rename</span> *, <span class="fu">upper</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>directly above (near end of script)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="kw">save</span> ../<span class="kw">data</span>/<span class="ot">`dta_name'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
 </div>
 </div>
 
