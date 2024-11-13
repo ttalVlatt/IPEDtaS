@@ -70,15 +70,12 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="Tutorials/styles.css">
 <meta property="og:title" content="IPEDtaS">
-<meta property="og:description" content="Automagically Download Labeled .dta IPEDS Files in Stata and R">
 <meta property="og:image" content="https://capaldi.info/IPEDtaS/apple-touch-icon.png">
 <meta property="og:site_name" content="IPEDtaS">
 <meta property="og:image:height" content="600">
 <meta property="og:image:width" content="518">
 <meta name="twitter:title" content="IPEDtaS">
-<meta name="twitter:description" content="Automagically Download Labeled .dta IPEDS Files in Stata and R">
 <meta name="twitter:image" content="https://capaldi.info/IPEDtaS/apple-touch-icon.png">
 <meta name="twitter:image-height" content="600">
 <meta name="twitter:image-width" content="518">
@@ -160,7 +157,21 @@ ul.task-list li input[type="checkbox"] {
 <li>In the Stata implementation it simply downloads the data, .do file, and dictionary and after cleaning up any issues, uses the .do file IPEDS provide to add data labels</li>
 <li>In the R implementation the .do file is read as text into R then converted to labeling instructions passed to the <code>haven</code> R package</li>
 </ul></li>
+<li>For detailed instructions on using the package, check out the <a href="https://capaldi.info.IPEDtaS/tutorial">tutorial page</a>
+<ul>
 <li>The logic of using both scripts is very similar
+<ul>
+<li>Downloads from the <a href="https://nces.ed.gov/ipeds/datacenter/DataFiles.aspx">IPEDS complete data files page</a>
+<ul>
+<li>The “Stata Data” .csv file</li>
+<li>The “Stata Program” .do file</li>
+<li>The Data Dictionary (saved to dictionaries folder e.g., <code>dictionaries/hd2021.xlsx</code>)</li>
+</ul></li>
+<li>Corrects the file paths and problematic lines in the program files</li>
+<li>Uses the corrected files to apply labels to the IPEDS data</li>
+<li>Saves result as a .dta file in the data folder e.g.&nbsp;<code>data/hd2021.dta</code></li>
+</ul></li>
+<li>Instructions in brief:
 <ol type="1">
 <li>Place either <code>IPEDtaS.do</code> (for Stata projects) or <code>IPEDtaS.R</code> (for R projects) in your main project folder</li>
 <li>Edit the <code>selected_files</code> list to the <a href="https://nces.ed.gov/ipeds/datacenter/DataFiles.aspx">IPEDS complete data files</a> you need</li>
@@ -173,6 +184,7 @@ ul.task-list li input[type="checkbox"] {
 <li>Hit “do” or “run”</li>
 <li>After it’s completed, both result in a <code>data/</code> folder containing labeled <code>.dta</code> files and a <code>dictionaries/</code> folder with the matching dictionaries</li>
 </ol></li>
+</ul></li>
 <li>The project is intended to both make IPEDS data files easier to work with and also enhance reproducibility of research using IPEDS
 <ul>
 <li>I encourage you to include a copy of the <code>IPEDtaS</code> script you use in your analyses in any code you share for reproduction
@@ -184,7 +196,6 @@ ul.task-list li input[type="checkbox"] {
 <p>Capaldi, M. J. (2024). IPEDtaS: Automagically Download Labeled .dta IPEDS Files in Stata and R (Version 0.1) [Computer software]. https://doi.org/10.5281/zenodo.13388846</p>
 </blockquote></li>
 </ul>
-<p>Hints - In R, use <code>as_factor()</code> from <code>haven</code> library to convert a labeled column to a factor which uses the labels as the levels</p>
 
 
 </section>
