@@ -3,7 +3,7 @@
 ** [PROJ: ipeDTAs: Automagically download labeled .dta IPEDS files]
 ** [FILE: ipeDTAs.do]
 ** [INIT: February 14 2024]
-** [UPDT: August 29 2024]
+** [UPDT: November 21 2024]
 ** [AUTH: Matt Capaldi] @ttalVlatt
 ** [CRED: Benjamin T. Skinner] @btskinner
 **
