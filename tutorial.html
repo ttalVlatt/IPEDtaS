@@ -143,7 +143,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text"><i class="fa-brands fa-r-project" aria-label="r-project"></i> Download R Code</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="https://raw.githubusercontent.com/ttalVlatt/IPEDtaS/main/Stata/IPEDtaS.do"> 
+    <a class="nav-link" href="https://raw.githubusercontent.com/ttalVlatt/IPEDtaS/main/Stata/IPEDtaS.do{download=true}"> 
 <span class="menu-text"><img src="stata-icon.png" class="img-fluid" style="width:0.15in"> Download Stata Code</span></a>
   </li>  
   <li class="nav-item">
@@ -186,43 +186,45 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="ipedtas-tutorial" class="level1">
 <h1><code>IPEDtaS</code> Tutorial</h1>
 <ul>
-<li><p>This page will walk you the basics of how to use <code>IPEDtaS</code> to automagically retrieve labelled IPEDS <code>.dta</code> files</p></li>
-<li><p>NCES provide all the information needed to create labelled IPEDS data, however, it can be cumbersome to put all the pieces together manually</p></li>
-<li><p>If you’ve worked with IPEDS before, you’ve likely seen this screen <img src="IPEDS-data-center.png" class="img-fluid" alt="Screenshot of IPEDS Data Center"></p></li>
-<li><p>When I first started working with IPEDS, I assume the “Stata Data File” would be a nicely labelled data set, like you can get with other NCES data sets</p>
+<li>This page will walk you the basics of how to use <code>IPEDtaS</code> to automagically retrieve labelled IPEDS <code>.dta</code> files</li>
+</ul>
+<section id="what-ipedtas-does" class="level2">
+<h2 data-anchor-id="what-ipedtas-does">What <code>IPEDtaS</code> does</h2>
+<ul>
+<li>NCES provide all the information needed to create labelled IPEDS data
+<ul>
+<li>However, it can be cumbersome to put all the pieces together manually</li>
+</ul></li>
+<li>If you’ve worked with IPEDS before, you’ve likely seen this screen <img src="IPEDS-data-center.jpg" class="img-fluid" alt="Screenshot of IPEDS Data Center"></li>
+<li>When I first started working with IPEDS, I assume the “Stata Data File” would be a nicely labelled data set, like you can get with other NCES data sets
 <ul>
 <li>However, it’s not</li>
 <li>Instead, it’s just a plain .csv data set that is designed to be combined with the “STATA Program File” which applies the labels
 <ul>
-<li>These program files are also full of issues, such as hard coded file paths from the NCES worker who wrote the script’s computer…… and line breaks which cause errors</li>
+<li>These program files are also full of issues
+<ul>
+<li>Such as hard coded file paths from the NCES worker who wrote the script’s computer which you would have to update for each piece of data <img src="hard-file-path.png" class="img-fluid"></li>
+<li>And error-causing line breaks which you’d have to fix before the script would run <img src="broken-line.png" class="img-fluid"></li>
+</ul></li>
 </ul></li>
 <li>Between downloading two files, fixing the issues, then running them together, it’s a lot of work so most people don’t bother</li>
-<li>Plus, they only work in Stata, R users without a Stata license are left out… The R program runs the Stata labeling file entirely in R</li>
+<li>Plus, they only work in Stata, R users without a Stata license are left out…</li>
 </ul></li>
-<li><p>The R and Stata IPEDtaS scripts do all this heavy lifting for you so you can use nicely labelled IPEDS data without the extra effort!</p></li>
+<li>The R and Stata <code>IPEDtaS</code> scripts do all this heavy lifting for you so you can use nicely labelled IPEDS data without the extra effort!</li>
 </ul>
+</section>
 <section id="why-would-i-want-labels-any" class="level2">
 <h2 data-anchor-id="why-would-i-want-labels-any">Why Would I Want Labels Any?</h2>
 <p>You will see more of this in the applied example below, but, in short, they make data analysis much easier and reduce the amount you will have to look at the dictionary/codebook!</p>
 <ul>
-<li>Look at the difference from these simple data checks</li>
+<li>Look at the difference from these simple data checks on the number of colleges in each region</li>
+</ul>
+<ul>
+<li>Without labels, we just get the numeric code for each region which we’d have to look up</li>
 </ul>
 <div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 10 × 2
-   obereg                                                             n
-   &lt;dbl+lbl&gt;                                                      &lt;int&gt;
- 1 0 [U.S. Service schools]                                           7
- 2 1 [New England (CT, ME, MA, NH, RI, VT)]                         337
- 3 2 [Mid East (DE, DC, MD, NJ, NY, PA)]                           1025
- 4 3 [Great Lakes (IL, IN, MI, OH, WI)]                             891
- 5 4 [Plains (IA, KS, MN, MO, NE, ND, SD)]                          491
- 6 5 [Southeast (AL, AR, FL, GA, KY, LA, MS, NC, SC, TN, VA, WV)]  1536
- 7 6 [Southwest (AZ, NM, OK, TX)]                                   665
- 8 7 [Rocky Mountains (CO, ID, MT, UT, WY)]                         236
- 9 8 [Far West (AK, CA, HI, NV, OR, WA)]                            953
-10 9 [Other U.S. jurisdictions (AS, FM, GU, MH, MP, PR, PW, VI)]    148</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>data_without_labels <span class="sc">|&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(obereg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 2
    obereg     n
@@ -239,11 +241,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 10      9   148</code></pre>
 </div>
 </div>
-<p>The instructions are mostly the same, but a few details are specific to each language - Where things differ, you will see it separated into tabs below</p>
+<ul>
+<li>With labels, we get a description of each region too</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>data_with_labels <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(obereg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 2
+   obereg                                                             n
+   &lt;dbl+lbl&gt;                                                      &lt;int&gt;
+ 1 0 [U.S. Service schools]                                           7
+ 2 1 [New England (CT, ME, MA, NH, RI, VT)]                         337
+ 3 2 [Mid East (DE, DC, MD, NJ, NY, PA)]                           1025
+ 4 3 [Great Lakes (IL, IN, MI, OH, WI)]                             891
+ 5 4 [Plains (IA, KS, MN, MO, NE, ND, SD)]                          491
+ 6 5 [Southeast (AL, AR, FL, GA, KY, LA, MS, NC, SC, TN, VA, WV)]  1536
+ 7 6 [Southwest (AZ, NM, OK, TX)]                                   665
+ 8 7 [Rocky Mountains (CO, ID, MT, UT, WY)]                         236
+ 9 8 [Far West (AK, CA, HI, NV, OR, WA)]                            953
+10 9 [Other U.S. jurisdictions (AS, FM, GU, MH, MP, PR, PW, VI)]    148</code></pre>
+</div>
+</div>
+<ul>
+<li>First, this makes life easier reducing the amount we have to look back and forth to the code book</li>
+<li>Second, it makes it easier to spot accidental errors when checking our work, leading to more reliable analyses</li>
+</ul>
 </section>
-</section>
-<section id="system-requirements" class="level1">
-<h1>System Requirements</h1>
+<section id="system-requirements" class="level2">
+<h2 data-anchor-id="system-requirements">System Requirements</h2>
 <p>First things first, let’s consider the what you will need on your computer to get started</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true"><i class="fa-brands fa-r-project" aria-label="r-project"></i> R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false"><img src="stata-icon.png" class="img-fluid" style="width:0.15in"> Stata</a></li></ul>
@@ -258,7 +284,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li>In your R console type <code>install.packages("tidyverse")</code> to get the latest version</li>
 </ul></li>
-<li>Up to 11.58gb of space (if you want to store the whole of IPEDS, most of you won’t)</li>
+<li>If you want to download all of IPEDS, up to 12gb of permanent space and 36gb of temporary space</li>
 </ol>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
@@ -273,28 +299,43 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>You can see if you already have Python by typing <code>python search</code> into your Stata command box</li>
 <li>You can install a copy of Python from <a href="https://www.python.org/downloads/">https://www.python.org/downloads/</a></li>
 </ul></li>
-<li>Up to 4.01gb of space (if you want to store the whole of IPEDS, most of you won’t)</li>
+<li>If you want to download all of IPEDS, up to 4gb of permanent space and 12gb of temporary space</li>
 </ol>
 </div>
 </div>
 </div>
 </section>
+</section>
 <section id="setting-up-your-project-folder" class="level1">
 <h1>Setting up Your Project Folder</h1>
 <p>This part is identical for both Stata and R users, the main points to note are:</p>
 <ol type="1">
-<li>Wherever you place the <code>IPEDtaS.do</code> or <code>IPEDtaS.R</code> file will be treated as “home” or the “working directory” a.k.a. <code>.</code>
+<li>Download either the Stata or R version of the script from the links at the top of this page</li>
+</ol>
 <ul>
-<li>When the script runs it will store output in <code>./data</code> and <code>./dictionaries</code></li>
+<li>Hint: If the file is opening in your browser, use “download linked file” on macOS, or, “save link as” on windows to save the file (you can also just copy and paste)</li>
+</ul>
+<ol type="1">
+<li>The script is designed to treat where ever you place the <code>IPEDtaS.do</code> or <code>IPEDtaS.R</code> file as the “working directory”</li>
+</ol>
+<ul>
+<li><strong>Check the working directory is set to your current project before doing anything else</strong>
+<ul>
+<li>If you download the script, save it in your project folder, then open it, you will often get the correct working directory by default, but it’s always best to check</li>
+<li>When the script runs it will store output in <code>./data</code> and <code>./dictionaries</code> folders
+<ul>
 <li><strong>Caution</strong>: Anything you have in folders with that name will be overwritten</li>
 <li>This also applies to <code>./zip-data</code>, <code>./zip-do-files</code>, <code>./zip-dictionaries</code>, <code>./unzip-data</code>, <code>./unzip-do-files</code>, <code>./unzip-dictionaries</code> which are folders used temporarily behind-the-scenes</li>
 </ul></li>
+</ul></li>
+</ul>
+<ol start="3" type="1">
 <li>Personally, I set up my projects with scripts in the top-level of the project folder (as in, not in a sub-folder), so that is how <code>IPEDtaS</code> was designed
 <ul>
 <li>If you <strong>need</strong> everything in a sub-folder for sanity reasons either:
 <ol type="a">
 <li>Place <code>IPEDtaS</code> in your data folder (e.g <code>./data/IPEDtaS.do</code>) which will place the data in <code>./data/data/hd2022.dta</code></li>
-<li>Place <code>IPEDtaS</code> in your scripts folder and go through adjusting all the relative paths by adding <code>../</code> to back out one level</li>
+<li>Place <code>IPEDtaS</code> in your <code>./scripts</code> folder and go through adjusting all the relative paths by adding <code>../</code> to back out one level</li>
 </ol></li>
 </ul></li>
 </ol>
@@ -303,16 +344,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>File Selection</h1>
 <p>The only real change you have to make in the whole process is to the scripts is selecting which files you want to download</p>
 <ul>
-<li>By default the scripts will download every single file in IPEDS
+<li>By default the scripts are set to download directory information (HD) and enrollment data (EFFY) for the 2023 reporting cycle
 <ul>
-<li>This might be something you want to do once, however, probably not every time you use them</li>
+<li>To change these you need to update the list to the files you want</li>
+<li><strong>Note</strong>: at the bottom of the script there is a list with every single IPEDS file in it, if you want the entire dataset you can just copy and paste that longer list to the top of the script and edit as needed</li>
 </ul></li>
-<li>The basic premise is the same: comment out or delete the file names you don’t want</li>
-<li>In the tabs below, I will outline how the most efficient way of doing this in each language</li>
-<li>Note: While the script has all files listed in chronological order and then by the order they appear at <a href="https://nces.ed.gov/ipeds/datacenter/DataFiles.aspx">https://nces.ed.gov/ipeds/datacenter/DataFiles.aspx</a>, this is arbitrary
-<ul>
-<li>You could list files in any order you like, it’s just the order they will be downloaded in</li>
-</ul></li>
+<li>To edit the list you basically just need to follow the list rules for each language</li>
 </ul>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true"><i class="fa-brands fa-r-project" aria-label="r-project"></i> R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false"><img src="stata-icon.png" class="img-fluid" style="width:0.15in"> Stata</a></li></ul>
@@ -323,94 +360,82 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li>Each line/entry <strong>must end in a comma <code>,</code></strong> except the final one</li>
 </ul></li>
-<li>In R, there is no code for a multi-line comment, you need a <code>#</code> at the start of each line to comment it out</li>
-<li>If you’re using RStudio to run R, you can comment out multiple lines at once by
-<ol type="1">
-<li>Highlight the file names you want to comment or un-comment</li>
-<li>Use the keyboard shortcut<br>
-</li>
-</ol>
-<ul>
-<li>Mac: <kbd>Commmand</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd><br>
-</li>
-<li>Windows: <kbd>Control</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd></li>
-</ul></li>
 </ul>
 <p>Here are some short examples of file selection</p>
 <ol type="1">
-<li>You can delete all the files you don’t want and leave a simple list
-<ul>
-<li>This is probably the easiest if you’re only downloading a small number of files</li>
-</ul></li>
+<li>A simple list</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>selected_files <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"HD2021"</span>,</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"EFFY2022"</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SFA2122"</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>selected_files <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"HD2021"</span>, <span class="st">"EFFY2022"</span>, <span class="st">"SFA2122"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="do">## OR</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>selected_files <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"HD2021"</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"EFFY2022"</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SFA2122"</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="2" type="1">
-<li>You can comment out files you don’t want from list already in the file</li>
+<li>You can also comment out files you don’t want from a longer list</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>selected_files <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"HD2021"</span>,</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># "IC2022",</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># "IC2022_AY",</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"EFFY2022"</span>,</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># "EFFY2022_DIST",</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SFA2122"</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>selected_files <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"HD2021"</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># "IC2022",</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># "IC2022_AY",</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"EFFY2022"</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># "EFFY2022_DIST",</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SFA2122"</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>That’s about it, when you run the script, the files you put in <code>selected_files</code> will be downloaded</p>
 </div>
 <div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
 <ul>
-<li>For the Stata version <code>local selected_files</code> needs to be a valid list, there are a few more rules than in R
+<li>For the Stata version <code>local selected_files</code> needs to be a valid list of IPEDS file names
 <ul>
 <li>Each line in the list <strong>must end in <code>///</code></strong> except the final one</li>
 </ul></li>
-<li>Stata has both single-line comments <code>//</code> or <code>*</code> and multi-line commments which start <code>/*</code> and end <code>*/</code>
-<ul>
-<li>Because of the way the list is structured, we have to use multi-line comments here (even to comment a single line)</li>
-<li>To work in the list, the line before a multi-line comment must be <code>///</code> and nothing else</li>
-<li>Below this start the first line of a multi-line comment with <code>/*</code></li>
-<li>If you don’t want anything below that line, just leave it, there is a <code>*/</code> at the end of the list anyway</li>
-<li>To close out a multi-line comment somewhere else use <code>*/</code></li>
-</ul></li>
-<li>You can also just delete any file names you don’t want</li>
 </ul>
 <p>Here are some short examples of file selection</p>
 <ol type="1">
-<li>You can delete all the files you don’t want and leave a simple list
-<ul>
-<li>This is probably the easiest if you’re only downloading a small number of files</li>
-</ul></li>
+<li>A simple list</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">local</span> selected_files <span class="co">///</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"HD2021"</span> <span class="co">///</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"EFFY2022"</span> <span class="co">///</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SFA2122"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">local</span> selected_files <span class="co">///</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"HD2021"</span> <span class="co">///</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"EFFY2022"</span> <span class="co">///</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SFA2122"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="2" type="1">
 <li>Use multi-line comments to comment out files you don’t want</li>
 </ol>
+<ul>
+<li>Stata has both single-line comments <code>//</code> or <code>*</code> and multi-line commments which start <code>/*</code> and end <code>*/</code>
+<ul>
+<li>Because of the way the list is structured, we have to use multi-line comments here (even to comment a single line) which have 3 rules</li>
+</ul>
+<ol type="1">
+<li>To work in the list, the line before a multi-line comment must be <code>///</code> and nothing else</li>
+<li>Below this start the first line of a multi-line comment with <code>/*</code></li>
+<li>To close out a multi-line comment somewhere else use <code>*/</code></li>
+</ol></li>
+</ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">local</span> selected_files <span class="co">///</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"HD2021"</span> <span class="co">///</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">///</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/*</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">  "IC2022" ///</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">  "IC2022_AY" ///</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">  */</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"EFFY2022"</span> <span class="co">///</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="co">///</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="co">/*</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">  "EFFY2022_DIST" ///</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">  */</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SFA2122"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">local</span> selected_files <span class="co">///</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"HD2021"</span> <span class="co">///</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">///</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">/*</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">  "IC2022" ///</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">  "IC2022_AY" ///</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">  */</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"EFFY2022"</span> <span class="co">///</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="co">///</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="co">/*</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">  "EFFY2022_DIST" ///</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">  */</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SFA2122"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>That’s about it, when you run the script, the files you put in <code>local selected_files</code> will be downloaded</p>
 </div>
@@ -433,12 +458,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="tab-content">
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">file.exists</span>(<span class="st">"data/hd2021.dta"</span>)) { <span class="fu">source</span>(<span class="st">"IPEDtaS.R"</span>) }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">file.exists</span>(<span class="st">"data/hd2021.dta"</span>)) { <span class="fu">source</span>(<span class="st">"IPEDtaS.R"</span>) }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">if</span>(!<span class="kw">fileexists</span>(<span class="st">"data/hd2021.dta"</span>)) { <span class="kw">do</span> <span class="st">"IPEDtaS.do"</span> }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">if</span>(!<span class="kw">fileexists</span>(<span class="st">"data/hd2021.dta"</span>)) { <span class="kw">do</span> <span class="st">"IPEDtaS.do"</span> }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -466,26 +491,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>1</strong>. Create a new folder on your computer, download a copy of <code>IPEDtaS.R</code>, and place it in the folder</p>
 <p><strong>2</strong>. Adjust <code>selected_files &lt;- c()</code> in <code>IPEDtaS.R</code> to download the 3 files we want like below</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>selected_files <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"HD2021"</span>,</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"EFFY2022"</span>,</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SFA2122"</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>selected_files <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"HD2021"</span>,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"EFFY2022"</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SFA2122"</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><strong>3</strong>. Select the whole <code>IPEDtaS.R</code> script and hit “Run”</p>
 <p><strong>4</strong>. Start a new R script in that same folder</p>
 <p><strong>5</strong>. Load tidyverse, haven (part of tidyverse, but requires loading separately), labelled (what haven uses behind the scenes), and gtsummary (to easily create output tables)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(labelled)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtsummary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(labelled)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtsummary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><strong>6</strong>. Read our data in</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>data_info <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="st">"data/hd2021.dta"</span>)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>data_enroll <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="st">"data/effy2022.dta"</span>)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>data_aid <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="st">"data/sfa2122.dta"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>data_info <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="st">"data/hd2021.dta"</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>data_enroll <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="st">"data/effy2022.dta"</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>data_aid <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="st">"data/sfa2122.dta"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Okay, now, take a look at the enrollment data we just read in (click on <code>data_enroll</code> in the environment in the top right)</p>
 <div class="quarto-figure quarto-figure-center">
@@ -501,24 +526,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p><strong>7</strong>. Now we want to join our data together</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">left_join</span>(data_info, data_enroll, <span class="at">by =</span> <span class="st">"unitid"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(data_aid, <span class="at">by =</span> <span class="st">"unitid"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">left_join</span>(data_info, data_enroll, <span class="at">by =</span> <span class="st">"unitid"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(data_aid, <span class="at">by =</span> <span class="st">"unitid"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
 <p><strong>1</strong>. Create a new folder on your computer, download a copy of <code>IPEDtaS.do</code>, and place it in the folder</p>
 <p><strong>2</strong>. Adjust <code>local selected_files</code> in <code>IPEDtaS.do</code> to download the 3 files we want like below</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">local</span> selected_files <span class="co">///</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"HD2021"</span> <span class="co">///</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"EFFY2022"</span> <span class="co">///</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SFA2122"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">local</span> selected_files <span class="co">///</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"HD2021"</span> <span class="co">///</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"EFFY2022"</span> <span class="co">///</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SFA2122"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><strong>3</strong>. Select the whole <code>IPEDtaS.do</code> script and hit “Run”</p>
 <p><strong>4</strong>. Start a new Stata do file in that same folder</p>
 <p><strong>5</strong>. Load our first data set, hd2022</p>
 <div class="cell" data-collectcode="true">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="st">"data/hd2021.dta"</span>, <span class="kw">clear</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="st">"data/hd2021.dta"</span>, <span class="kw">clear</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Okay, now, take a look at the variables panel (by default in right hand panel)</p>
 <ul>
@@ -534,8 +559,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p><strong>6</strong>. Join in our other data sets in a “left join” style (i.e., all observations in the first data set are kept even if they don’t have a match in the second)</p>
 <div class="cell" data-collectcode="true">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">joinby</span> unitid <span class="kw">using</span> <span class="st">"data/sfa2122.dta"</span>, unmatched(master) <span class="dt">_merge</span>(sfa)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="kw">joinby</span> unitid <span class="kw">using</span> <span class="st">"data/effy2022.dta"</span>, unmatched(master) <span class="dt">_merge</span>(effy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">joinby</span> unitid <span class="kw">using</span> <span class="st">"data/sfa2122.dta"</span>, unmatched(master) <span class="dt">_merge</span>(sfa)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="kw">joinby</span> unitid <span class="kw">using</span> <span class="st">"data/effy2022.dta"</span>, unmatched(master) <span class="dt">_merge</span>(effy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -555,7 +580,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Let’s check how many observations our data set now contains</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 116480</code></pre>
 </div>
@@ -564,7 +589,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>I have a hunch that the data might be “long” by the variable <code>effylev</code>, so, let’s look at how many observations we have for each value of <code>effylev</code></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> <span class="fu">count</span>(effylev)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> <span class="fu">count</span>(effylev)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 2
   effylev                                        n
@@ -586,7 +611,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>The labels help us quickly identify what the different values of effylev mean and that if we are interested in undergraduate figures (which for now, we are) we want to keep rows that are <code>effylev == 2</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span> <span class="fu">filter</span>(effylev <span class="sc">==</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span> <span class="fu">filter</span>(effylev <span class="sc">==</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
@@ -597,7 +622,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Let’s check how many observations our data set now contains</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  116,480</code></pre>
 </div>
@@ -606,7 +631,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>I have a hunch that the data might be “long” by the variable <code>effylev</code>, so, let’s look at how many observations we have for each value of <code>effylev</code></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">tabulate</span> effylev</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">tabulate</span> effylev</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Undergraduate or graduate level of |
                              student |      Freq.     Percent        Cum.
@@ -628,7 +653,7 @@ Not applicable, undergraduate detail |    102,471       88.23       88.23
 </ul></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">labelbook</span> label_effylev</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">labelbook</span> label_effylev</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Value label label_effylev 
 ---------------------------------------------------------------------------------------------------------------------------
@@ -651,7 +676,7 @@ Not applicable, undergraduate detail |    102,471       88.23       88.23
 </div>
 <p>The labels help us quickly identify what the different values of effylev mean and that if we are interested in undergraduate figures (which for now, we are) we want to keep rows that are <code>effylev == 2</code></p>
 <div class="cell" data-collectcode="true">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">keep</span> <span class="kw">if</span> effylev == 2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="kw">keep</span> <span class="kw">if</span> effylev == 2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(110,800 observations deleted)</code></pre>
 </div>
@@ -668,9 +693,9 @@ Not applicable, undergraduate detail |    102,471       88.23       88.23
 <div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
 <p><strong>9</strong>. Now let’s explore some trends in our data to show how labels can help. How does the percent of students paying out-of-state tuition vary by region?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(obereg) <span class="sc">|&gt;</span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">median_perc_out_of_state =</span> <span class="fu">median</span>(scfa13p, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(obereg) <span class="sc">|&gt;</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">median_perc_out_of_state =</span> <span class="fu">median</span>(scfa13p, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 2
    obereg                                                 median_perc_out_of_s…¹
@@ -697,9 +722,9 @@ Not applicable, undergraduate detail |    102,471       88.23       88.23
 </ul></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="fu">as_factor</span>(obereg)) <span class="sc">|&gt;</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">median_perc_out_of_state =</span> <span class="fu">median</span>(scfa13p, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="fu">as_factor</span>(obereg)) <span class="sc">|&gt;</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">median_perc_out_of_state =</span> <span class="fu">median</span>(scfa13p, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 2
    `as_factor(obereg)`                                    median_perc_out_of_s…¹
@@ -721,7 +746,7 @@ Not applicable, undergraduate detail |    102,471       88.23       88.23
 <div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
 <p><strong>8</strong>. Now let’s explore some trends in our data to show how labels can help. How does the percent of students paying out-of-state tuition vary by region?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="kw">tabstat</span> scfa13p, <span class="fu">s</span>(<span class="kw">median</span>) <span class="kw">by</span>(obereg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="kw">tabstat</span> scfa13p, <span class="fu">s</span>(<span class="kw">median</span>) <span class="kw">by</span>(obereg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Summary for variables: scfa13p
 Group variable: obereg (Bureau of Economic Analysis (BEA) regions)
@@ -762,14 +787,14 @@ Other U.S. juris |         0
 <li>This wouldn’t work in a table, so, let’s look at a simple scatter plot</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data <span class="sc">|&gt;</span> <span class="fu">filter</span>(efytotlt <span class="sc">&lt;</span> <span class="dv">50000</span>),</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> efytotlt,</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> scfa13p)) <span class="sc">+</span></span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="fl">0.8</span>)) <span class="sc">+</span></span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>obereg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data <span class="sc">|&gt;</span> <span class="fu">filter</span>(efytotlt <span class="sc">&lt;</span> <span class="dv">50000</span>),</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> efytotlt,</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> scfa13p)) <span class="sc">+</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="fl">0.8</span>)) <span class="sc">+</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>obereg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-rplot-none" class="quarto-float quarto-figure quarto-figure-center" width="672">
 <figure class="quarto-float quarto-float-fig figure">
@@ -802,16 +827,16 @@ Figure&nbsp;1
 </ul></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data <span class="sc">|&gt;</span> <span class="fu">filter</span>(efytotlt <span class="sc">&lt;</span> <span class="dv">50000</span>),</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> efytotlt,</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> scfa13p)) <span class="sc">+</span></span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="fl">0.8</span>)) <span class="sc">+</span></span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">var_label</span>(data<span class="sc">$</span>efytotlt),</span>
-<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">var_label</span>(data<span class="sc">$</span>scfa13p)) <span class="sc">+</span></span>
-<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span><span class="fu">as_factor</span>(obereg))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data <span class="sc">|&gt;</span> <span class="fu">filter</span>(efytotlt <span class="sc">&lt;</span> <span class="dv">50000</span>),</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> efytotlt,</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> scfa13p)) <span class="sc">+</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="fl">0.8</span>)) <span class="sc">+</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">var_label</span>(data<span class="sc">$</span>efytotlt),</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">var_label</span>(data<span class="sc">$</span>scfa13p)) <span class="sc">+</span></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span><span class="fu">as_factor</span>(obereg))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-rplot-vals" class="quarto-float quarto-figure quarto-figure-center" width="672">
 <figure class="quarto-float quarto-float-fig figure">
@@ -834,17 +859,17 @@ Figure&nbsp;2
 </ul></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data <span class="sc">|&gt;</span> <span class="fu">filter</span>(efytotlt <span class="sc">&lt;</span> <span class="dv">50000</span>),</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> efytotlt,</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> scfa13p)) <span class="sc">+</span></span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="fl">0.8</span>)) <span class="sc">+</span></span>
-<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">var_label</span>(data<span class="sc">$</span>efytotlt),</span>
-<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">str_wrap</span>(<span class="fu">var_label</span>(data<span class="sc">$</span>scfa13p), <span class="dv">40</span>)) <span class="sc">+</span></span>
-<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span><span class="fu">as_factor</span>(obereg),</span>
-<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">labeller =</span> <span class="fu">label_wrap_gen</span>(<span class="at">multi_line =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data <span class="sc">|&gt;</span> <span class="fu">filter</span>(efytotlt <span class="sc">&lt;</span> <span class="dv">50000</span>),</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> efytotlt,</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> scfa13p)) <span class="sc">+</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="fl">0.8</span>)) <span class="sc">+</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">var_label</span>(data<span class="sc">$</span>efytotlt),</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">str_wrap</span>(<span class="fu">var_label</span>(data<span class="sc">$</span>scfa13p), <span class="dv">40</span>)) <span class="sc">+</span></span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span><span class="fu">as_factor</span>(obereg),</span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">labeller =</span> <span class="fu">label_wrap_gen</span>(<span class="at">multi_line =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-rplot-all" class="quarto-float quarto-figure quarto-figure-center" width="672">
 <figure class="quarto-float quarto-float-fig figure">
@@ -865,8 +890,8 @@ Figure&nbsp;3
 <li>This wouldn’t work in a table, so, let’s look at a simple scatter plot</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="kw">scatter</span> scfa13p efytotlt <span class="kw">if</span> efytotlt &lt; 50000, <span class="kw">by</span>(obereg, col(2))</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="kw">quietly</span> <span class="kw">graph</span> <span class="kw">export</span> <span class="kw">scatter</span>.svg, <span class="kw">replace</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="kw">scatter</span> scfa13p efytotlt <span class="kw">if</span> efytotlt &lt; 50000, <span class="kw">by</span>(obereg, col(2))</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="kw">quietly</span> <span class="kw">graph</span> <span class="kw">export</span> <span class="kw">scatter</span>.svg, <span class="kw">replace</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><img src="scatter.svg" class="img-fluid"></p>
 <ul>
@@ -888,28 +913,28 @@ Figure&nbsp;3
 <div id="tabset-8-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-8-1-tab">
 <p><strong>11</strong>. Lastly, let’s look at how labels can show up in modeling. Let’s see if the percentage of students paying out of state changes by the level of the institution (4 year, 2 year, Less than 2 year)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(scfa13p <span class="sc">~</span> <span class="fu">factor</span>(iclevel),</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> data)</span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_regression</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(scfa13p <span class="sc">~</span> <span class="fu">factor</span>(iclevel),</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> data)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_regression</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="rvfttekwrj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#rvfttekwrj table {
+<div id="gdbwcdiujo" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#gdbwcdiujo table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#rvfttekwrj thead, #rvfttekwrj tbody, #rvfttekwrj tfoot, #rvfttekwrj tr, #rvfttekwrj td, #rvfttekwrj th {
+#gdbwcdiujo thead, #gdbwcdiujo tbody, #gdbwcdiujo tfoot, #gdbwcdiujo tr, #gdbwcdiujo td, #gdbwcdiujo th {
   border-style: none;
 }
 
-#rvfttekwrj p {
+#gdbwcdiujo p {
   margin: 0;
   padding: 0;
 }
 
-#rvfttekwrj .gt_table {
+#gdbwcdiujo .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -935,12 +960,12 @@ Figure&nbsp;3
   border-left-color: #D3D3D3;
 }
 
-#rvfttekwrj .gt_caption {
+#gdbwcdiujo .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#rvfttekwrj .gt_title {
+#gdbwcdiujo .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -952,7 +977,7 @@ Figure&nbsp;3
   border-bottom-width: 0;
 }
 
-#rvfttekwrj .gt_subtitle {
+#gdbwcdiujo .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -964,7 +989,7 @@ Figure&nbsp;3
   border-top-width: 0;
 }
 
-#rvfttekwrj .gt_heading {
+#gdbwcdiujo .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -976,13 +1001,13 @@ Figure&nbsp;3
   border-right-color: #D3D3D3;
 }
 
-#rvfttekwrj .gt_bottom_border {
+#gdbwcdiujo .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#rvfttekwrj .gt_col_headings {
+#gdbwcdiujo .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -997,7 +1022,7 @@ Figure&nbsp;3
   border-right-color: #D3D3D3;
 }
 
-#rvfttekwrj .gt_col_heading {
+#gdbwcdiujo .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1017,7 +1042,7 @@ Figure&nbsp;3
   overflow-x: hidden;
 }
 
-#rvfttekwrj .gt_column_spanner_outer {
+#gdbwcdiujo .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1029,15 +1054,15 @@ Figure&nbsp;3
   padding-right: 4px;
 }
 
-#rvfttekwrj .gt_column_spanner_outer:first-child {
+#gdbwcdiujo .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#rvfttekwrj .gt_column_spanner_outer:last-child {
+#gdbwcdiujo .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#rvfttekwrj .gt_column_spanner {
+#gdbwcdiujo .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1049,11 +1074,11 @@ Figure&nbsp;3
   width: 100%;
 }
 
-#rvfttekwrj .gt_spanner_row {
+#gdbwcdiujo .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#rvfttekwrj .gt_group_heading {
+#gdbwcdiujo .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1079,7 +1104,7 @@ Figure&nbsp;3
   text-align: left;
 }
 
-#rvfttekwrj .gt_empty_group_heading {
+#gdbwcdiujo .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1094,15 +1119,15 @@ Figure&nbsp;3
   vertical-align: middle;
 }
 
-#rvfttekwrj .gt_from_md > :first-child {
+#gdbwcdiujo .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#rvfttekwrj .gt_from_md > :last-child {
+#gdbwcdiujo .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#rvfttekwrj .gt_row {
+#gdbwcdiujo .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1121,7 +1146,7 @@ Figure&nbsp;3
   overflow-x: hidden;
 }
 
-#rvfttekwrj .gt_stub {
+#gdbwcdiujo .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1134,7 +1159,7 @@ Figure&nbsp;3
   padding-right: 5px;
 }
 
-#rvfttekwrj .gt_stub_row_group {
+#gdbwcdiujo .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1148,15 +1173,15 @@ Figure&nbsp;3
   vertical-align: top;
 }
 
-#rvfttekwrj .gt_row_group_first td {
+#gdbwcdiujo .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#rvfttekwrj .gt_row_group_first th {
+#gdbwcdiujo .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#rvfttekwrj .gt_summary_row {
+#gdbwcdiujo .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1166,16 +1191,16 @@ Figure&nbsp;3
   padding-right: 5px;
 }
 
-#rvfttekwrj .gt_first_summary_row {
+#gdbwcdiujo .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#rvfttekwrj .gt_first_summary_row.thick {
+#gdbwcdiujo .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#rvfttekwrj .gt_last_summary_row {
+#gdbwcdiujo .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1185,7 +1210,7 @@ Figure&nbsp;3
   border-bottom-color: #D3D3D3;
 }
 
-#rvfttekwrj .gt_grand_summary_row {
+#gdbwcdiujo .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1195,7 +1220,7 @@ Figure&nbsp;3
   padding-right: 5px;
 }
 
-#rvfttekwrj .gt_first_grand_summary_row {
+#gdbwcdiujo .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1205,7 +1230,7 @@ Figure&nbsp;3
   border-top-color: #D3D3D3;
 }
 
-#rvfttekwrj .gt_last_grand_summary_row_top {
+#gdbwcdiujo .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1215,11 +1240,11 @@ Figure&nbsp;3
   border-bottom-color: #D3D3D3;
 }
 
-#rvfttekwrj .gt_striped {
+#gdbwcdiujo .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#rvfttekwrj .gt_table_body {
+#gdbwcdiujo .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1228,7 +1253,7 @@ Figure&nbsp;3
   border-bottom-color: #D3D3D3;
 }
 
-#rvfttekwrj .gt_footnotes {
+#gdbwcdiujo .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1242,7 +1267,7 @@ Figure&nbsp;3
   border-right-color: #D3D3D3;
 }
 
-#rvfttekwrj .gt_footnote {
+#gdbwcdiujo .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1251,7 +1276,7 @@ Figure&nbsp;3
   padding-right: 5px;
 }
 
-#rvfttekwrj .gt_sourcenotes {
+#gdbwcdiujo .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1265,7 +1290,7 @@ Figure&nbsp;3
   border-right-color: #D3D3D3;
 }
 
-#rvfttekwrj .gt_sourcenote {
+#gdbwcdiujo .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1273,72 +1298,72 @@ Figure&nbsp;3
   padding-right: 5px;
 }
 
-#rvfttekwrj .gt_left {
+#gdbwcdiujo .gt_left {
   text-align: left;
 }
 
-#rvfttekwrj .gt_center {
+#gdbwcdiujo .gt_center {
   text-align: center;
 }
 
-#rvfttekwrj .gt_right {
+#gdbwcdiujo .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#rvfttekwrj .gt_font_normal {
+#gdbwcdiujo .gt_font_normal {
   font-weight: normal;
 }
 
-#rvfttekwrj .gt_font_bold {
+#gdbwcdiujo .gt_font_bold {
   font-weight: bold;
 }
 
-#rvfttekwrj .gt_font_italic {
+#gdbwcdiujo .gt_font_italic {
   font-style: italic;
 }
 
-#rvfttekwrj .gt_super {
+#gdbwcdiujo .gt_super {
   font-size: 65%;
 }
 
-#rvfttekwrj .gt_footnote_marks {
+#gdbwcdiujo .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#rvfttekwrj .gt_asterisk {
+#gdbwcdiujo .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#rvfttekwrj .gt_indent_1 {
+#gdbwcdiujo .gt_indent_1 {
   text-indent: 5px;
 }
 
-#rvfttekwrj .gt_indent_2 {
+#gdbwcdiujo .gt_indent_2 {
   text-indent: 10px;
 }
 
-#rvfttekwrj .gt_indent_3 {
+#gdbwcdiujo .gt_indent_3 {
   text-indent: 15px;
 }
 
-#rvfttekwrj .gt_indent_4 {
+#gdbwcdiujo .gt_indent_4 {
   text-indent: 20px;
 }
 
-#rvfttekwrj .gt_indent_5 {
+#gdbwcdiujo .gt_indent_5 {
   text-indent: 25px;
 }
 
-#rvfttekwrj .katex-display {
+#gdbwcdiujo .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#rvfttekwrj div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#gdbwcdiujo div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1410,28 +1435,28 @@ Figure&nbsp;3
 </ul>
 <p>Remember from above, using <code>as_factor()</code> rather than <code>factor()</code> tells R to use the labels as the levels</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(scfa13p <span class="sc">~</span> <span class="fu">as_factor</span>(iclevel),</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> data)</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_regression</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(scfa13p <span class="sc">~</span> <span class="fu">as_factor</span>(iclevel),</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> data)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_regression</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="byxdeqcbrs" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#byxdeqcbrs table {
+<div id="pwzfchzspa" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#pwzfchzspa table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#byxdeqcbrs thead, #byxdeqcbrs tbody, #byxdeqcbrs tfoot, #byxdeqcbrs tr, #byxdeqcbrs td, #byxdeqcbrs th {
+#pwzfchzspa thead, #pwzfchzspa tbody, #pwzfchzspa tfoot, #pwzfchzspa tr, #pwzfchzspa td, #pwzfchzspa th {
   border-style: none;
 }
 
-#byxdeqcbrs p {
+#pwzfchzspa p {
   margin: 0;
   padding: 0;
 }
 
-#byxdeqcbrs .gt_table {
+#pwzfchzspa .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1457,12 +1482,12 @@ Figure&nbsp;3
   border-left-color: #D3D3D3;
 }
 
-#byxdeqcbrs .gt_caption {
+#pwzfchzspa .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#byxdeqcbrs .gt_title {
+#pwzfchzspa .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1474,7 +1499,7 @@ Figure&nbsp;3
   border-bottom-width: 0;
 }
 
-#byxdeqcbrs .gt_subtitle {
+#pwzfchzspa .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1486,7 +1511,7 @@ Figure&nbsp;3
   border-top-width: 0;
 }
 
-#byxdeqcbrs .gt_heading {
+#pwzfchzspa .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1498,13 +1523,13 @@ Figure&nbsp;3
   border-right-color: #D3D3D3;
 }
 
-#byxdeqcbrs .gt_bottom_border {
+#pwzfchzspa .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#byxdeqcbrs .gt_col_headings {
+#pwzfchzspa .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1519,7 +1544,7 @@ Figure&nbsp;3
   border-right-color: #D3D3D3;
 }
 
-#byxdeqcbrs .gt_col_heading {
+#pwzfchzspa .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1539,7 +1564,7 @@ Figure&nbsp;3
   overflow-x: hidden;
 }
 
-#byxdeqcbrs .gt_column_spanner_outer {
+#pwzfchzspa .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1551,15 +1576,15 @@ Figure&nbsp;3
   padding-right: 4px;
 }
 
-#byxdeqcbrs .gt_column_spanner_outer:first-child {
+#pwzfchzspa .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#byxdeqcbrs .gt_column_spanner_outer:last-child {
+#pwzfchzspa .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#byxdeqcbrs .gt_column_spanner {
+#pwzfchzspa .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1571,11 +1596,11 @@ Figure&nbsp;3
   width: 100%;
 }
 
-#byxdeqcbrs .gt_spanner_row {
+#pwzfchzspa .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#byxdeqcbrs .gt_group_heading {
+#pwzfchzspa .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1601,7 +1626,7 @@ Figure&nbsp;3
   text-align: left;
 }
 
-#byxdeqcbrs .gt_empty_group_heading {
+#pwzfchzspa .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1616,15 +1641,15 @@ Figure&nbsp;3
   vertical-align: middle;
 }
 
-#byxdeqcbrs .gt_from_md > :first-child {
+#pwzfchzspa .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#byxdeqcbrs .gt_from_md > :last-child {
+#pwzfchzspa .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#byxdeqcbrs .gt_row {
+#pwzfchzspa .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1643,7 +1668,7 @@ Figure&nbsp;3
   overflow-x: hidden;
 }
 
-#byxdeqcbrs .gt_stub {
+#pwzfchzspa .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1656,7 +1681,7 @@ Figure&nbsp;3
   padding-right: 5px;
 }
 
-#byxdeqcbrs .gt_stub_row_group {
+#pwzfchzspa .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1670,15 +1695,15 @@ Figure&nbsp;3
   vertical-align: top;
 }
 
-#byxdeqcbrs .gt_row_group_first td {
+#pwzfchzspa .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#byxdeqcbrs .gt_row_group_first th {
+#pwzfchzspa .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#byxdeqcbrs .gt_summary_row {
+#pwzfchzspa .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1688,16 +1713,16 @@ Figure&nbsp;3
   padding-right: 5px;
 }
 
-#byxdeqcbrs .gt_first_summary_row {
+#pwzfchzspa .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#byxdeqcbrs .gt_first_summary_row.thick {
+#pwzfchzspa .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#byxdeqcbrs .gt_last_summary_row {
+#pwzfchzspa .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1707,7 +1732,7 @@ Figure&nbsp;3
   border-bottom-color: #D3D3D3;
 }
 
-#byxdeqcbrs .gt_grand_summary_row {
+#pwzfchzspa .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1717,7 +1742,7 @@ Figure&nbsp;3
   padding-right: 5px;
 }
 
-#byxdeqcbrs .gt_first_grand_summary_row {
+#pwzfchzspa .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1727,7 +1752,7 @@ Figure&nbsp;3
   border-top-color: #D3D3D3;
 }
 
-#byxdeqcbrs .gt_last_grand_summary_row_top {
+#pwzfchzspa .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1737,11 +1762,11 @@ Figure&nbsp;3
   border-bottom-color: #D3D3D3;
 }
 
-#byxdeqcbrs .gt_striped {
+#pwzfchzspa .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#byxdeqcbrs .gt_table_body {
+#pwzfchzspa .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1750,7 +1775,7 @@ Figure&nbsp;3
   border-bottom-color: #D3D3D3;
 }
 
-#byxdeqcbrs .gt_footnotes {
+#pwzfchzspa .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1764,7 +1789,7 @@ Figure&nbsp;3
   border-right-color: #D3D3D3;
 }
 
-#byxdeqcbrs .gt_footnote {
+#pwzfchzspa .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1773,7 +1798,7 @@ Figure&nbsp;3
   padding-right: 5px;
 }
 
-#byxdeqcbrs .gt_sourcenotes {
+#pwzfchzspa .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1787,7 +1812,7 @@ Figure&nbsp;3
   border-right-color: #D3D3D3;
 }
 
-#byxdeqcbrs .gt_sourcenote {
+#pwzfchzspa .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1795,72 +1820,72 @@ Figure&nbsp;3
   padding-right: 5px;
 }
 
-#byxdeqcbrs .gt_left {
+#pwzfchzspa .gt_left {
   text-align: left;
 }
 
-#byxdeqcbrs .gt_center {
+#pwzfchzspa .gt_center {
   text-align: center;
 }
 
-#byxdeqcbrs .gt_right {
+#pwzfchzspa .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#byxdeqcbrs .gt_font_normal {
+#pwzfchzspa .gt_font_normal {
   font-weight: normal;
 }
 
-#byxdeqcbrs .gt_font_bold {
+#pwzfchzspa .gt_font_bold {
   font-weight: bold;
 }
 
-#byxdeqcbrs .gt_font_italic {
+#pwzfchzspa .gt_font_italic {
   font-style: italic;
 }
 
-#byxdeqcbrs .gt_super {
+#pwzfchzspa .gt_super {
   font-size: 65%;
 }
 
-#byxdeqcbrs .gt_footnote_marks {
+#pwzfchzspa .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#byxdeqcbrs .gt_asterisk {
+#pwzfchzspa .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#byxdeqcbrs .gt_indent_1 {
+#pwzfchzspa .gt_indent_1 {
   text-indent: 5px;
 }
 
-#byxdeqcbrs .gt_indent_2 {
+#pwzfchzspa .gt_indent_2 {
   text-indent: 10px;
 }
 
-#byxdeqcbrs .gt_indent_3 {
+#pwzfchzspa .gt_indent_3 {
   text-indent: 15px;
 }
 
-#byxdeqcbrs .gt_indent_4 {
+#pwzfchzspa .gt_indent_4 {
   text-indent: 20px;
 }
 
-#byxdeqcbrs .gt_indent_5 {
+#pwzfchzspa .gt_indent_5 {
   text-indent: 25px;
 }
 
-#byxdeqcbrs .katex-display {
+#pwzfchzspa .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#byxdeqcbrs div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#pwzfchzspa div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1932,26 +1957,26 @@ Figure&nbsp;3
 <li>Similarly to the plot above, using variable labels is a little more tricky, but, we can do it using the <code>var_label()</code> function again alongside the <code>label =</code> argument in <code>tbl_regression</code></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_regression</span>(model,</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">label =</span> <span class="fu">list</span>(<span class="st">`</span><span class="at">as_factor(iclevel)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">var_label</span>(data<span class="sc">$</span>iclevel)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tbl_regression</span>(model,</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">label =</span> <span class="fu">list</span>(<span class="st">`</span><span class="at">as_factor(iclevel)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">var_label</span>(data<span class="sc">$</span>iclevel)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="etkncjykqs" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#etkncjykqs table {
+<div id="nusonwlqoc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#nusonwlqoc table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#etkncjykqs thead, #etkncjykqs tbody, #etkncjykqs tfoot, #etkncjykqs tr, #etkncjykqs td, #etkncjykqs th {
+#nusonwlqoc thead, #nusonwlqoc tbody, #nusonwlqoc tfoot, #nusonwlqoc tr, #nusonwlqoc td, #nusonwlqoc th {
   border-style: none;
 }
 
-#etkncjykqs p {
+#nusonwlqoc p {
   margin: 0;
   padding: 0;
 }
 
-#etkncjykqs .gt_table {
+#nusonwlqoc .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1977,12 +2002,12 @@ Figure&nbsp;3
   border-left-color: #D3D3D3;
 }
 
-#etkncjykqs .gt_caption {
+#nusonwlqoc .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#etkncjykqs .gt_title {
+#nusonwlqoc .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1994,7 +2019,7 @@ Figure&nbsp;3
   border-bottom-width: 0;
 }
 
-#etkncjykqs .gt_subtitle {
+#nusonwlqoc .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -2006,7 +2031,7 @@ Figure&nbsp;3
   border-top-width: 0;
 }
 
-#etkncjykqs .gt_heading {
+#nusonwlqoc .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2018,13 +2043,13 @@ Figure&nbsp;3
   border-right-color: #D3D3D3;
 }
 
-#etkncjykqs .gt_bottom_border {
+#nusonwlqoc .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#etkncjykqs .gt_col_headings {
+#nusonwlqoc .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2039,7 +2064,7 @@ Figure&nbsp;3
   border-right-color: #D3D3D3;
 }
 
-#etkncjykqs .gt_col_heading {
+#nusonwlqoc .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2059,7 +2084,7 @@ Figure&nbsp;3
   overflow-x: hidden;
 }
 
-#etkncjykqs .gt_column_spanner_outer {
+#nusonwlqoc .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2071,15 +2096,15 @@ Figure&nbsp;3
   padding-right: 4px;
 }
 
-#etkncjykqs .gt_column_spanner_outer:first-child {
+#nusonwlqoc .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#etkncjykqs .gt_column_spanner_outer:last-child {
+#nusonwlqoc .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#etkncjykqs .gt_column_spanner {
+#nusonwlqoc .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2091,11 +2116,11 @@ Figure&nbsp;3
   width: 100%;
 }
 
-#etkncjykqs .gt_spanner_row {
+#nusonwlqoc .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#etkncjykqs .gt_group_heading {
+#nusonwlqoc .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2121,7 +2146,7 @@ Figure&nbsp;3
   text-align: left;
 }
 
-#etkncjykqs .gt_empty_group_heading {
+#nusonwlqoc .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2136,15 +2161,15 @@ Figure&nbsp;3
   vertical-align: middle;
 }
 
-#etkncjykqs .gt_from_md > :first-child {
+#nusonwlqoc .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#etkncjykqs .gt_from_md > :last-child {
+#nusonwlqoc .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#etkncjykqs .gt_row {
+#nusonwlqoc .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2163,7 +2188,7 @@ Figure&nbsp;3
   overflow-x: hidden;
 }
 
-#etkncjykqs .gt_stub {
+#nusonwlqoc .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2176,7 +2201,7 @@ Figure&nbsp;3
   padding-right: 5px;
 }
 
-#etkncjykqs .gt_stub_row_group {
+#nusonwlqoc .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2190,15 +2215,15 @@ Figure&nbsp;3
   vertical-align: top;
 }
 
-#etkncjykqs .gt_row_group_first td {
+#nusonwlqoc .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#etkncjykqs .gt_row_group_first th {
+#nusonwlqoc .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#etkncjykqs .gt_summary_row {
+#nusonwlqoc .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2208,16 +2233,16 @@ Figure&nbsp;3
   padding-right: 5px;
 }
 
-#etkncjykqs .gt_first_summary_row {
+#nusonwlqoc .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#etkncjykqs .gt_first_summary_row.thick {
+#nusonwlqoc .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#etkncjykqs .gt_last_summary_row {
+#nusonwlqoc .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2227,7 +2252,7 @@ Figure&nbsp;3
   border-bottom-color: #D3D3D3;
 }
 
-#etkncjykqs .gt_grand_summary_row {
+#nusonwlqoc .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2237,7 +2262,7 @@ Figure&nbsp;3
   padding-right: 5px;
 }
 
-#etkncjykqs .gt_first_grand_summary_row {
+#nusonwlqoc .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2247,7 +2272,7 @@ Figure&nbsp;3
   border-top-color: #D3D3D3;
 }
 
-#etkncjykqs .gt_last_grand_summary_row_top {
+#nusonwlqoc .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2257,11 +2282,11 @@ Figure&nbsp;3
   border-bottom-color: #D3D3D3;
 }
 
-#etkncjykqs .gt_striped {
+#nusonwlqoc .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#etkncjykqs .gt_table_body {
+#nusonwlqoc .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2270,7 +2295,7 @@ Figure&nbsp;3
   border-bottom-color: #D3D3D3;
 }
 
-#etkncjykqs .gt_footnotes {
+#nusonwlqoc .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2284,7 +2309,7 @@ Figure&nbsp;3
   border-right-color: #D3D3D3;
 }
 
-#etkncjykqs .gt_footnote {
+#nusonwlqoc .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2293,7 +2318,7 @@ Figure&nbsp;3
   padding-right: 5px;
 }
 
-#etkncjykqs .gt_sourcenotes {
+#nusonwlqoc .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2307,7 +2332,7 @@ Figure&nbsp;3
   border-right-color: #D3D3D3;
 }
 
-#etkncjykqs .gt_sourcenote {
+#nusonwlqoc .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2315,72 +2340,72 @@ Figure&nbsp;3
   padding-right: 5px;
 }
 
-#etkncjykqs .gt_left {
+#nusonwlqoc .gt_left {
   text-align: left;
 }
 
-#etkncjykqs .gt_center {
+#nusonwlqoc .gt_center {
   text-align: center;
 }
 
-#etkncjykqs .gt_right {
+#nusonwlqoc .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#etkncjykqs .gt_font_normal {
+#nusonwlqoc .gt_font_normal {
   font-weight: normal;
 }
 
-#etkncjykqs .gt_font_bold {
+#nusonwlqoc .gt_font_bold {
   font-weight: bold;
 }
 
-#etkncjykqs .gt_font_italic {
+#nusonwlqoc .gt_font_italic {
   font-style: italic;
 }
 
-#etkncjykqs .gt_super {
+#nusonwlqoc .gt_super {
   font-size: 65%;
 }
 
-#etkncjykqs .gt_footnote_marks {
+#nusonwlqoc .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#etkncjykqs .gt_asterisk {
+#nusonwlqoc .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#etkncjykqs .gt_indent_1 {
+#nusonwlqoc .gt_indent_1 {
   text-indent: 5px;
 }
 
-#etkncjykqs .gt_indent_2 {
+#nusonwlqoc .gt_indent_2 {
   text-indent: 10px;
 }
 
-#etkncjykqs .gt_indent_3 {
+#nusonwlqoc .gt_indent_3 {
   text-indent: 15px;
 }
 
-#etkncjykqs .gt_indent_4 {
+#nusonwlqoc .gt_indent_4 {
   text-indent: 20px;
 }
 
-#etkncjykqs .gt_indent_5 {
+#nusonwlqoc .gt_indent_5 {
   text-indent: 25px;
 }
 
-#etkncjykqs .katex-display {
+#nusonwlqoc .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#etkncjykqs div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#nusonwlqoc div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -2450,7 +2475,7 @@ Figure&nbsp;3
 <div id="tabset-8-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-8-2-tab">
 <p><strong>10</strong>. Lastly, let’s look at how labels can show up in modeling. Let’s see if the percentage of students paying out of state changes by the level of the institution (4 year, 2 year, Less than 2 year)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="kw">regress</span> scfa13p i.iclevel</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="kw">regress</span> scfa13p i.iclevel</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      Source |       SS           df       MS      Number of obs   =     1,572
 -------------+----------------------------------   F(2, 1569)      =     98.14
@@ -2494,8 +2519,8 @@ Less than 2 years (below associate)  |  -14.21038    3.35951    -4.23   0.000   
 <div id="tabset-9-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-9-1-tab">
 <p>In R, just use the <code>zap_labels()</code> function from <code>haven</code> to create an unlabelled version of your data</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(iclevel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(iclevel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 2
   iclevel                                     n
@@ -2504,10 +2529,10 @@ Less than 2 years (below associate)  |  -14.21038    3.35951    -4.23   0.000   
 2 2 [At least 2 but less than 4 years]     1575
 3 3 [Less than 2 years (below associate)]  1669</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>data_unlabelled <span class="ot">&lt;-</span> <span class="fu">zap_labels</span>(data)</span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>data_unlabelled <span class="sc">|&gt;</span></span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(iclevel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>data_unlabelled <span class="ot">&lt;-</span> <span class="fu">zap_labels</span>(data)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>data_unlabelled <span class="sc">|&gt;</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(iclevel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 2
   iclevel     n
@@ -2521,11 +2546,11 @@ Less than 2 years (below associate)  |  -14.21038    3.35951    -4.23   0.000   
 <div id="tabset-9-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-9-2-tab">
 <p>In Stata, simply type <code>label drop _all</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="kw">tabulate</span> iclevel</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="kw">label</span> <span class="kw">drop</span> <span class="dt">_all</span></span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="kw">tabulate</span> iclevel</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="kw">tabulate</span> iclevel</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="kw">label</span> <span class="kw">drop</span> <span class="dt">_all</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a><span class="kw">tabulate</span> iclevel</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               Level of institution |      Freq.     Percent        Cum.
 ------------------------------------+-----------------------------------
@@ -2567,21 +2592,21 @@ institution |      Freq.     Percent        Cum.
 <div id="tabset-10-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-10-1-tab">
 <p>Add this line</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>data_file <span class="ot">&lt;-</span> data_file <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">rename_all</span>(stringr<span class="sc">::</span>str_to_upper)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>data_file <span class="ot">&lt;-</span> data_file <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">rename_all</span>(stringr<span class="sc">::</span>str_to_upper)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>directly above (near end of script)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>haven<span class="sc">::</span><span class="fu">write_dta</span>(data_file, dta_name)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>haven<span class="sc">::</span><span class="fu">write_dta</span>(data_file, dta_name)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div id="tabset-10-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-10-2-tab">
 <p>Add this line</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="kw">rename</span> *, <span class="fu">upper</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="kw">rename</span> *, <span class="fu">upper</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>directly above (near end of script)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="kw">save</span> ../<span class="kw">data</span>/<span class="ot">`dta_name'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="kw">save</span> ../<span class="kw">data</span>/<span class="ot">`dta_name'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
