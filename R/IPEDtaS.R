@@ -16,37 +16,50 @@
 ##' This R script automates downloading IPEDS complete data files and applying
 ##' labels using the information from IPEDS Stata .do files
 ##' 
-##' To select which files are downloaded, delete or comment-out file names in
-##' selected_files list at the top of the script
+##' To select which files are downloaded, simply add the files you want to the 
+##' selected_files list
 ##' 
 ##' The resulting files with be a Stata .dta files in the data/ folder
-##' 
-##' For example, to read in HD2022
-##' 
-##' library(haven)
-##' data <- read_dta("data/hd2022.dta")
 ##' 
 ##' If the required packages readr, haven, dplyr, and stringr are not installed,
 ##'  the script auto-installs them for you
 ##' 
 ##' Note: This does not require Stata or a Stata license, the long loop at the end of
 ##' the script reads the .do files and applies Haven style labels all within R
+##' 
+##' This project builds off Dr. Ben Skinner's [`downloadipeds.R` project](https://github.com/btskinner/downloadipeds) and wouldn't have been possible without him or his work
+
+
+##'----------------------------------------------------------------------------**
+##' [Instruction Manual]
+##'----------------------------------------------------------------------------**
+  
+##' 1. Select which files to download (below)
+##' 2. Ensure working directory is where you want the files to be stored
+##' 3. Hit "Run"
 
 ## ---------------------------
 ##' [File Selection]
 ## ---------------------------
 
-# Hint: "Error ... argument x is empty"
-# means you need to delete a comma after your final file
+##' *Edit this list to change the files you download*
 
-# Hint: "Unexpected string constant"
-# means you need to add a comma between those variables
+##' The only rule is that the `selected_files <- c()` must be a valid list of IPEDS file names
+##' Each line/entry **must end in a comma `,`** except the final one
 
 selected_files <- c(
   "HD2023",
   "EFFY2023"
 )
 
+# Hint: at the bottom of the script there is a list with every single IPEDS file in it
+#       if you want the entire dataset you can just copy and paste that longer list 
+#       here and edit as needed
+# Hint: "Error ... argument x is empty"
+# means you need to delete a comma after your final file
+
+# Hint: "Unexpected string constant"
+# means you need to add a comma between those variables
 
 ## ---------------------------
 ##' [Download, Unzip, and Sort Files]

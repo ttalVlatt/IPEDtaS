@@ -15,9 +15,9 @@
 
 /* 
 
-- This `.do` file automates downloading IPEDS complete `.csv` data files, `.do` labeling files, and dictionaries
-- It then processes the `.csv` data and `.do` files to create labeled `.dta` files ready of analysis in Stata or R via `haven`
-- To select which files are downloaded, comment out and/or delete lines from the list at the top of the script (instructions are provided)
+- This Stata script automates downloading IPEDS complete data files and applying labels using the information from IPEDS Stata .do files
+
+- To select which files are downloaded, simply add the files you want to the `local selected_files` list
 
 ## System Requirements
 
@@ -38,7 +38,7 @@
 
 ## Acknowledgement
 
-- This project builds off Dr. Ben Skinner's [`downloadipeds.R` project](https://github.com/btskinner/downloadipeds) and wouldn't have been possible without it
+- This project builds off Dr. Ben Skinner's [`downloadipeds.R` project](https://github.com/btskinner/downloadipeds) and wouldn't have been possible without him or his work
 
 */
 
@@ -48,11 +48,33 @@
 
 /*
 
-1. Select which files to download (see below section)
+1. Select which files to download (below)
 2. Ensure working directory is where you want the files to be stored
 3. Hit "Do"
 
 */
+
+**----------------------------------------------------------------------------**
+** Select Which Files to Download
+**----------------------------------------------------------------------------**
+
+/*
+
+`local selected_files` needs to be a valid list
+  - Each line in the list must end in `///` except the final one
+  - If you wish to, you can also comment out lines using multi-line comments (see tutorial)
+
+Hint: The error "<Name> is not a valid command name" means you missed a "///"
+Hint: The error "var list not allowed" means you have incorrectly formatted comments
+Hint: at the bottom of the script there is a list with every single IPEDS file in it
+	  if you want the entire dataset you can just copy and paste that longer list 
+	  here and edit as needed
+
+*/
+
+local selected_files ///
+"HD2023" ///
+"EFFY2023"
 
 **----------------------------------------------------------------------------**
 ** Check Python Installation for PyStata
@@ -66,51 +88,6 @@ if _rc != 0 {
 	di "Python (required for PyStata) is not installed visit https://www.python.org/downloads/"
 	exit
 }
-
-**----------------------------------------------------------------------------**
-** Select Which Files to Download
-**----------------------------------------------------------------------------**
-
-/*
-
-Below is a list of all IPEDS files available
-
-This is the only part of the script that should be edited
-
-The process is realtively simple
-	- If the file name is not commented, it will be downloaded
-	- If the file name is commented, it will not be downloaded
-
-By default selected files from the most recent survey year will be downloaded
-	- Follow the demonstrated pattern for comments
-
-Use multiline comments (start "/*", end "*/") to comment files (single line *s don't work)
-	- For ease, there is already a comment end "* /" at the bottom of the list
-	- To not download anything below line x, simply
-		- add /// as a new line above x (already there for new years)
-		- add "/*" at the start of line x
-		- add "*/" to end a multi-line comment
-			- There is already one at the bottom of the list, add "/*" to not
-			  download anything below that line
-
-Important: All lines in this block MUST end "///"
-Important: The line before the start of a comment MUST be ONLY "///"
-
-Hint: The error "var list not allowed" means the comment formatting got off
-Hint: The error "<Name> is not a valid command name" means you missed a "///"
-Hint: You can also delete unwanted lines if you prefer
-
-*/
-
-*/
-
-**-------------------------------
-** LAST UPDATED: 14 February 2024
-**-------------------------------
-
-local selected_files ///
-"HD2023" ///
-"EFFY2023"
 
 **----------------------------------------------------------------------------**
 ** Create Folders
@@ -933,6 +910,8 @@ di "Done! Labeled data is in the data/ folder"
 
 **----------------------------------------------------------------------------**
 ** Appendix: Full list of IPEDS files
+
+** LAST UPDATED: 14 February 2024
 **----------------------------------------------------------------------------**
 
 local selected_files ///
