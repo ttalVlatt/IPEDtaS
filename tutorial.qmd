@@ -7,17 +7,56 @@ execute:
 # `IPEDtaS` Tutorial
 
 - This page will walk you the basics of how to use `IPEDtaS` to automagically retrieve labelled IPEDS `.dta` files
-- NCES provide all the information needed to create labelled IPEDS data
-- For Stata users, there is a reasonable amount of cleaning work to make the scripts run
-- For R users, there is no direct way of getting labelled IPEDS data
-- These scripts automate the process so you simply have
-1. Select the files you need
-2. Hit "run" or "do"
-- The R and Stata scripts are essentially the same the in terms of what they do
-- The instructions are mostly the same, but a few details are specific to each language
-- Where things differ, you will see it separated into tabs below
 
-# System Requirements
+## What `IPEDtaS` does
+
+- NCES provide all the information needed to create labelled IPEDS data
+  - However, it can be cumbersome to put all the pieces together manually
+- If you've worked with IPEDS before, you've likely seen this screen
+![Screenshot of IPEDS Data Center](IPEDS-data-center.jpg)
+- When I first started working with IPEDS, I assume the "Stata Data File" would be a nicely labelled data set, like you can get with other NCES data sets
+  - However, it's not
+  - Instead, it's just a plain .csv data set that is designed to be combined with the "STATA Program File" which applies the labels
+    - These program files are also full of issues
+      - Such as hard coded file paths from the NCES worker who wrote the script's computer which you would have to update for each piece of data
+      ![](hard-file-path.png)
+      - And error-causing line breaks which you'd have to fix before the script would run
+      ![](broken-line.png)
+  - Between downloading two files, fixing the issues, then running them together, it's a lot of work so most people don't bother
+  - Plus, they only work in Stata, R users without a Stata license are left out...
+- The R and Stata `IPEDtaS` scripts do all this heavy lifting for you so you can use nicely labelled IPEDS data without the extra effort!
+
+## Why Would I Want Labels Any?
+
+You will see more of this in the applied example below, but, in short, they make data analysis much easier and reduce the amount you will have to look at the dictionary/codebook!
+
+- Look at the difference from these simple data checks on the number of colleges in each region
+
+```{r}
+#| echo: false
+library(tidyverse)
+data_with_labels <- haven::read_dta("data/hd2021.dta")
+data_without_labels <- haven::zap_labels(data)
+```
+
+- Without labels, we just get the numeric code for each region which we'd have to look up
+
+```{r}
+data_without_labels |>
+  count(obereg)
+```
+
+- With labels, we get a description of each region too
+
+```{r}
+data_with_labels |>
+  count(obereg)
+```
+
+- First, this makes life easier reducing the amount we have to look back and forth to the code book
+- Second, it makes it easier to spot accidental errors when checking our work, leading to more reliable analyses
+
+## System Requirements
 
 First things first, let's consider the what you will need on your computer to get started
 
@@ -26,20 +65,20 @@ First things first, let's consider the what you will need on your computer to ge
 ## {{< fa brands r-project >}} R
 
 1. An up-to-date version of `R`
-- If you're not sure how up-to-date your R is, download a new version of R from [https://cran.r-project.org](https://cran.r-project.org)
+    - If you're not sure how up-to-date your R is, download a new version of R from [https://cran.r-project.org](https://cran.r-project.org)
 2. An up-to-date `tidyverse` package
-- In your R console type `install.packages("tidyverse")` to get the latest version
-3. Up to 11.58gb of space (if you want to store the whole of IPEDS, most of you won't)
+    - In your R console type `install.packages("tidyverse")` to get the latest version
+3. If you want to download all of IPEDS, up to 12gb of permanent space and 36gb of temporary space
 
 ## ![](stata-icon.png){width=0.15in} Stata
 
-1. An up-to-date installation of Python
-- Don't fret, you don't have to use Python, but the .do file uses PyStata to clean up the scripts, so Python just needs to be on your machine
-- You can see if you already have Python by typing `python search` into your Stata command box
-- You can install a copy of Python from [https://www.python.org/downloads/](https://www.python.org/downloads/)
-2. An up-to-date and licensed copy of Stata version 16.0 or higher (BE or Basic is sufficient)
-- You can upgrade/purchase/download Stata from [https://www.stata.com](https://www.stata.com)
-3. Up to 4.01gb of space (if you want to store the whole of IPEDS, most of you won't)
+1. An up-to-date and licensed copy of Stata version 16.0 or higher (BE or Basic is sufficient)
+    - You can upgrade/purchase/download Stata from [https://www.stata.com](https://www.stata.com)
+2. An up-to-date installation of Python
+    - Don't fret, you don't have to use Python, but the .do file uses PyStata to clean up the scripts, so Python just needs to be on your machine
+    - You can see if you already have Python by typing `python search` into your Stata command box
+    - You can install a copy of Python from [https://www.python.org/downloads/](https://www.python.org/downloads/)
+3. If you want to download all of IPEDS, up to 4gb of permanent space and 12gb of temporary space
 
 :::
 
@@ -47,46 +86,45 @@ First things first, let's consider the what you will need on your computer to ge
 
 This part is identical for both Stata and R users, the main points to note are:
 
-1. Wherever you place the `IPEDtaS.do` or `IPEDtaS.R` file will be treated as "home" or the "working directory" a.k.a. `.`
-- When the script runs it will store output in `./data` and `./dictionaries`
-- **Caution**: Anything you have in folders with that name will be overwritten
-- This also applies to `./zip-data`, `./zip-do-files`, `./zip-dictionaries`, `./unzip-data`, `./unzip-do-files`, `./unzip-dictionaries` which are folders used temporarily behind-the-scenes
+1. Download either the Stata or R version of the script from the links at the top of this page
+  - Hint: If the file is opening in your browser, use "download linked file" on macOS, or, "save link as" on windows to save the file (you can also just copy and paste)
+1. The script is designed to treat where ever you place the `IPEDtaS.do` or `IPEDtaS.R` file as the "working directory"
+  - **Check the working directory is set to your current project before doing anything else**
+    - If you download the script, save it in your project folder, then open it, you will often get the correct working directory by default, but it's always best to check
+    - When the script runs it will store output in `./data` and `./dictionaries` folders
+      - **Caution**: Anything you have in folders with that name will be overwritten
+      - This also applies to `./zip-data`, `./zip-do-files`, `./zip-dictionaries`, `./unzip-data`, `./unzip-do-files`, `./unzip-dictionaries` which are folders used temporarily behind-the-scenes
 3. Personally, I set up my projects with scripts in the top-level of the project folder (as in, not in a sub-folder), so that is how `IPEDtaS` was designed
-- If you **need** everything in a sub-folder for sanity reasons either:
-a. Place `IPEDtaS` in your data folder (e.g `./data/IPEDtaS.do`) which will place the data in `./data/data/hd2022.dta`
-b. Place `IPEDtaS` in your scripts folder and go through adjusting all the relative paths by adding `../` to back out one level
+    - If you **need** everything in a sub-folder for sanity reasons either:
+      a. Place `IPEDtaS` in your data folder (e.g `./data/IPEDtaS.do`) which will place the data in `./data/data/hd2022.dta`
+      b. Place `IPEDtaS` in your `./scripts` folder and go through adjusting all the relative paths by adding `../` to back out one level
 
 # File Selection
 
 The only real change you have to make in the whole process is to the scripts is selecting which files you want to download
 
-- By default the scripts will download every single file in IPEDS
-- This might be something you want to do once, however, probably not every time you use them
-- The basic premise is the same: comment out or delete the file names you don't want
-- In the tabs below, I will outline how the most efficient way of doing this in each language
-- Note: While the script has all files listed in chronological order and then by the order they appear at [https://nces.ed.gov/ipeds/datacenter/DataFiles.aspx](https://nces.ed.gov/ipeds/datacenter/DataFiles.aspx), this is arbritrary
-- You could list files in any order you like, it's just the order they will be downloaded in
+- By default the scripts are set to download directory information (HD) and enrollment data (EFFY) for the 2023 reporting cycle
+  - To change these you need to update the list to the files you want 
+  - **Note**: at the bottom of the script there is a list with every single IPEDS file in it, if you want the entire dataset you can just copy and paste that longer list to the top of the script and edit as needed
+- To edit the list you basically just need to follow the list rules for each language
 
 ::: {.panel-tabset}
 
 ## {{< fa brands r-project >}} R
 
 - The only rule is that the `selected_files <- c()` must be a valid list of IPEDS file names
-- Each line/entry **must end in a comma `,`** except the final one
-- In R, there is no code for a multi-line comment, you need a `#` at the start of each line to comment it out
-- If you're using RStudio to run R, you can comment out multiple lines at once by
-1. Highlight the file names you want to comment or un-comment
-2. Use the keyboard shortcut  
-- Mac: <kbd>Commmand</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd>  
-- Windows: <kbd>Control</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd>
+  - Each line/entry **must end in a comma `,`** except the final one
 
 Here are some short examples of file selection
 
-1. You can delete all the files you don't want and leave a simple list
-- This is probably the easiest if you're only downloading a small number of files
+1. A simple list
 
 ```{r}
 #| eval: false
+selected_files <- c("HD2021", "EFFY2022", "SFA2122")
+
+## OR
+
 selected_files <- c(
   "HD2021",
   "EFFY2022",
@@ -94,7 +132,7 @@ selected_files <- c(
 )
 ```
 
-2. You can comment out files you don't want from list already in the file
+2. You can also comment out files you don't want from a longer list
 
 ```{r}
 #| eval: false
@@ -112,61 +150,30 @@ That's about it, when you run the script, the files you put in `selected_files` 
 
 ## ![](stata-icon.png){width=0.15in} Stata
 
-- For the Stata version `local selected_files` needs to be a valid list, there are a few more rules than in R
-- Each line in the list **must end in `///`** except the final one
-- Stata has both single-line comments `//` or `*` and multi-line commments which start `/*` and end `*/`
-- Multi-line comments make it easier to comment out large blocks like we want to do here
-- To work in the list, the line before a multi-line comment must be `///` and nothing else
-- Below this start the first line of a multi-line comment with `/*`
-- If you don't want anything below that line, just leave it, there is a `*/` at the end of the list anyway
-- To close out a multi-line commment somewhere else use `*/`
-- You can also just comment out lines you don't want with `//` or `*` at the start of each line or just delete any file names you don't want
-
+- For the Stata version `local selected_files` needs to be a valid list of IPEDS file names
+  - Each line in the list **must end in `///`** except the final one
 
 Here are some short examples of file selection
 
-1. You can delete all the files you don't want and leave a simple list
-- This is probably the easiest if you're only downloading a small number of files
+1. A simple list
 
 ```{stata}
-#| eval: false
+*| eval: false
 local selected_files ///
   "HD2021" ///
   "EFFY2022" ///
   "SFA2122"
 ```
 
-2. You can comment out files you don't want from list already in the file using single-line comments
+2. Use multi-line comments to comment out files you don't want
+  - Stata has both single-line comments `//` or `*` and multi-line commments which start `/*` and end `*/`
+    - Because of the way the list is structured, we have to use multi-line comments here (even to comment a single line) which have 3 rules
+    1. To work in the list, the line before a multi-line comment must be `///` and nothing else
+    2. Below this start the first line of a multi-line comment with `/*`
+    3. To close out a multi-line comment somewhere else use `*/`
 
 ```{stata}
-#| eval: false
-local selected_files ///
-  "HD2021" ///
-  // "IC2022" ///
-  // "IC2022_AY" ///
-  "EFFY2022" ///
-  //  "EFFY2022_DIST" ///
-  "SFA2122"
-```
-
-Which is the same as
-
-```{stata}
-#| eval: false
-local selected_files ///
-  "HD2021" ///
-  * "IC2022" ///
-  * "IC2022_AY" ///
-  "EFFY2022" ///
-  *  "EFFY2022_DIST" ///
-  "SFA2122"
-
-```
-
-3. Use multi-line comments to comment out files you don't want
-
-```{stata}
-#| eval: false
+*| eval: false
 local selected_files ///
   "HD2021" ///
   ///
@@ -185,7 +192,6 @@ local selected_files ///
 
 That's about it, when you run the script, the files you put in `local selected_files` will be downloaded
 
-
 :::
 
 # Runnning the Script
@@ -196,7 +202,7 @@ If you're using this tool as part of a reproducible research project, you might 
 
 - However, you don't want to run it every time you run your code, only if the data isn't already downloaded
 - The below code blocks will do exactly that if you include them at the start of your analysis code
-- Just change `hd2021.dta` to a file you download
+  - Just change `hd2021.dta` to a file you download
 
 ::: {.panel-tabset}
 
@@ -210,14 +216,14 @@ if(!file.exists("data/hd2021.dta")) { source("IPEDtaS.R") }
 ## ![](stata-icon.png){width=0.15in} Stata
 
 ```{stata}
-#| eval: false
+*| eval: false
 if(!fileexists("data/hd2021.dta")) { do "IPEDtaS.do" }
 ```
 
 
 :::
 
-# Working with Labeled IPEDS Data
+# Applied Example Using with Labelled IPEDS Data
 
 Okay, now we have our labelled IPEDS data, let's walk through a simple descriptive analysis using
 
@@ -225,12 +231,21 @@ Okay, now we have our labelled IPEDS data, let's walk through a simple descripti
 - EFFY2022 (enrollment for 2021-2022 school year)
 - SFA2022 (financial aid for 2021-2022 school year)
 
+Two things to note:
+  
+  1. These examples are just meant to illustrate how the labels can help in your work, they are not meant to be ground-breaking informative analyses
+    - If you're feeling adventurous, play around and swap out different variables as you follow along
+  2. To be able to understand some of the code, you'd a decent understanding of R and the tidyverse, but again, the point is just to see how the labels can help
+
+## 1. Running `IPEDtaS`, Reading Data, & Joining Data
+
 ::: {.panel-tabset}
 
 ## {{< fa brands r-project >}} R
 
-1. Start a new project folder, download a copy of `IPEDtaS.R`, and place it in the folder
-2. Adjust `selected_files <- c()` to download the 3 files we want
+**1**. Create a new folder on your computer, download a copy of `IPEDtaS.R`, and place it in the folder
+
+**2**. Adjust `selected_files <- c()` in `IPEDtaS.R` to download the 3 files we want like below
 
 ```{r}
 selected_files <- c(
@@ -240,16 +255,21 @@ selected_files <- c(
 )
 ```
 
-3. Hit "Run"
-4. Load tidyverse and haven (part of tidyverse, but requires loading separately)
+**3**. Select the whole `IPEDtaS.R` script and hit "Run"
+
+**4**. Start a new R script in that same folder 
+
+**5**. Load tidyverse, haven (part of tidyverse, but requires loading separately), labelled (what haven uses behind the scenes), and gtsummary (to easily create output tables)
 
 ```{r}
 #| message: false
 library(tidyverse)
 library(haven)
+library(labelled)
+library(gtsummary)
 ```
 
-5. Read our data in
+**6**. Read our data in
 
 ```{r}
 data_info <- read_dta("data/hd2021.dta")
@@ -257,66 +277,198 @@ data_enroll <- read_dta("data/effy2022.dta")
 data_aid <- read_dta("data/sfa2122.dta")
 ```
 
-Okay, now, take a look at the data_info we just read in
+Okay, now, take a look at the enrollment data we just read in (click on `data_enroll` in the environment in the top right)
 
-- Do you see the descriptions under each variable name?
-- If you're familiar with IPEDS, you won't be used to seeing those
-- They're the variable labels we added, super useful for quick questions without having to open the code book!
+![Screenshot of Enrollment Data Showing Variable Labels](var-labels.png)
 
-6. Hmm, data_enroll is much "longer" than our other 2 data frames, we means we probably have a little light data-wrangling to do
-- I have a hunch that the data might be "long" by the variable EFFYLEV, so, let's look at how many observations we have for each value of that 
+Notice the descriptions under each variable name
+    
+  - If you're familiar with IPEDS data, you won't be used to seeing those
+  - They're the variable labels we added, super useful for quick questions without having to open the code book!
 
-```{r}
-data_enroll |>
-  count(effylev)
-```
-
-Once again, note how get labels in addition to the effylev values!
-
-- This is the best of both worlds,
-- We still have the original values to check with the codebook (which you don't get with some tools we will discuss later)
-- The labels help us quickly identify that we want to just keep `effylev == 2` for undergraduate students
-
-```{r}
-data_enroll <- data_enroll |>
-  filter(effylev == 2)
-```
-
-7. Now we want to join our data together
+**7**. Now we want to join our data together
 
 ```{r}
 data <- left_join(data_info, data_enroll, by = "unitid") |>
   left_join(data_aid, by = "unitid")
 ```
 
-8. Now let's start exploring some basic trends to illustrate how labels can help
+## ![](stata-icon.png){width=0.15in} Stata
 
-a. How does the percent paying in-state tuition vary by region?
+```{r}
+#| include: false
+library(Statamarkdown)
+```
+
+**1**. Create a new folder on your computer, download a copy of `IPEDtaS.do`, and place it in the folder
+
+**2**. Adjust `local selected_files` in `IPEDtaS.do` to download the 3 files we want like below
+
+```{stata}
+*| eval: false
+local selected_files ///
+  "HD2021" ///
+  "EFFY2022" ///
+  "SFA2122"
+```
+
+**3**. Select the whole `IPEDtaS.do` script and hit "Run"
+
+**4**. Start a new Stata do file in that same folder 
+
+**5**. Load our first data set, hd2022
+
+```{stata}
+*| collectcode: true
+use "data/hd2021.dta", clear
+```
+
+Okay, now, take a look at the variables panel (by default in right hand panel)
+
+  - Each of the variables has a label that describes what the variable means
+  - If you're familiar with standard IPEDS data, you won't be used to seeing those
+  - They're the variable labels we added, super useful for quick questions without having to open the code book!
+
+![Screenshot of Showing Variable Labels](stata-var-labels.png){height=450}
+
+**6**. Join in our other data sets in a "left join" style (i.e., all observations in the first data set are kept even if they don't have a match in the second)
+
+```{stata}
+*| collectcode: true
+joinby unitid using "data/sfa2122.dta", unmatched(master) _merge(sfa)
+joinby unitid using "data/effy2022.dta", unmatched(master) _merge(effy)
+```
+
+:::
+
+## 2. Data Cleaning with Labels
+
+Now we have everything read in the advantage of the labels will truly begin to show!
+
+::: {.panel-tabset}
+
+## {{< fa brands r-project >}} R
+
+**8**. Some of you may have noticed that our data has become extremely "long" 
+ 
+ - As in, our data now has many more observations than we originally had
+ - This we means we probably have a little light data-wrangling to do
+ - Let's check how many observations our data set now contains
+
+```{r}
+nrow(data)
+```
+
+- I have a hunch that the data might be "long" by the variable `effylev`, so, let's look at how many observations we have for each value of `effylev`
+
+```{r}
+data |> count(effylev)
+```
+
+Once again, if you're used to IPEDS data, you wouldn't usually see the information in the `[square brackets]`
+
+- These are our value labels, again, super useful for quick questions without having to open the code book!
+- One thing I really like about using labels is you get the best of both worlds
+  - We still have the original values to check with the code book (which you don't get with some tools we will discuss later)
+  
+The labels help us quickly identify what the different values of effylev mean and that if we are interested in undergraduate figures (which for now, we are) we want to keep rows that are `effylev == 2`
+
+```{r}
+data <- data |> filter(effylev == 2)
+```
+
+## ![](stata-icon.png){width=0.15in} Stata
+
+**7**. Some of you may have noticed that our data has become extremely "long" 
+ 
+ - As in, our data now has many more observations than we originally had
+ - This we means we probably have a little light data-wrangling to do
+ - Let's check how many observations our data set now contains
+
+```{stata}
+count
+```
+
+- I have a hunch that the data might be "long" by the variable `effylev`, so, let's look at how many observations we have for each value of `effylev`
+
+```{stata}
+tabulate effylev
+```
+
+Once again, if you're used to IPEDS data, you would usually see a bunch of numbers in the left-hand column, but now we see informative labels
+
+- These are our value labels, again, super useful for quick questions without having to open the code book!
+  - If these are ever unclear, the data still contains the original values to check with the code book (which you don't get with some tools we will discuss later)
+  - You can use the command `labelbook` to check these
+  
+```{stata}
+labelbook label_effylev
+```
+
+The labels help us quickly identify what the different values of effylev mean and that if we are interested in undergraduate figures (which for now, we are) we want to keep rows that are `effylev == 2`
+
+```{stata}
+*| collectcode: true
+keep if effylev == 2
+```
+
+:::
+
+## 3. Tables with Labels 
+
+::: {.panel-tabset}
+
+## {{< fa brands r-project >}} R
+
+**9**. Now let's explore some trends in our data to show how labels can help. How does the percent of students paying out-of-state tuition vary by region?
 
 ```{r}
 data |>
   group_by(obereg) |>
-  summarize(median_in_state = median(scfa12p, na.rm = TRUE))
+  summarize(median_perc_out_of_state = median(scfa13p, na.rm = TRUE))
 ```
 
-- Notice how again the labels make our analysis instantly more informative, we know what obereg 3 actually means without going to the code book
-- Now, if we want to just use the labels as the variable in the graph, haven has a handy tool for that as well `as_factor()`
-- This converts a column with value labels to a factor using the label as the value
+Notice how again the labels make our analysis instantly more informative
+  
+  - We know what obereg 7 means without going to the code book
+  - Now, if we want to just use the labels the column, `haven` has a handy tool for that as well `as_factor()`
+    - This converts a column with value labels to a factor using the label as the value
 
 ```{r}
 data |>
   group_by(as_factor(obereg)) |>
-  summarize(median_in_state = median(scfa12p, na.rm = TRUE))
+  summarize(median_perc_out_of_state = median(scfa13p, na.rm = TRUE))
 ```
 
-b. What about the relationship between total enrollment and the percent paying instate tuition? Are bigger schools relying more on out-of-state students?
+## ![](stata-icon.png){width=0.15in} Stata
+
+**8**. Now let's explore some trends in our data to show how labels can help. How does the percent of students paying out-of-state tuition vary by region?
+
+```{stata}
+tabstat scfa13p, s(median) by(obereg)
+```
+
+Notice how again the labels make our analysis instantly more informative
+  
+  - We know which region has 19% of students paying out-of-state tuition without going to the code book (it would previously just have said 7)
+
+:::
+
+## 4. Plots with Labels 
+
+::: {.panel-tabset}
+
+## {{< fa brands r-project >}} R
+
+**10**. What about the relationship between total enrollment and the percent paying instate tuition? Are bigger schools relying more on out-of-state students? Does this trend vary by region?
 
 - This wouldn't work in a table, so, let's look at a simple scatter plot
 
 ```{r}
+#| label: fig-rplot-none
 ggplot(data |> filter(efytotlt < 50000),
        aes(x = efytotlt,
-           y = scfa12p)) +
+           y = scfa13p)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   theme_minimal() +
@@ -324,43 +476,214 @@ ggplot(data |> filter(efytotlt < 50000),
   facet_wrap(~obereg)
 ```
 
-- Okay... But what do those variables mean?
+Okay... But what do those variables mean?
+ 
+  - Without labels, the plot it hard to understand
 
-- Unfortunately, with continuous variables there isn't something quite as nice as `as_factor()` but, we can set our x and y labels using the `var_label()` from the `labelled` package (a dependency of haven)
+So, let's add labels
+  
+  - The first step is to change `facet_wrap(~obereg)` to `facet_wrap(~as_factor(obereg))`
+    - This is the same as we did in the table above, using a new version of the column that uses the value labels as the value
+  - The second step involves pulling out the variable labels to go on the x and y axis
+    - This is a little more manual, but, we can set our x and y labels using the `labs()` argument as normal
+      - But instead of putting something like `x = "my x axis label"`, we use the `var_label()` from the `labelled` package
 
 ```{r}
-library(labelled)
+#| label: fig-rplot-vals
 
 ggplot(data |> filter(efytotlt < 50000),
        aes(x = efytotlt,
-           y = scfa12p)) +
+           y = scfa13p)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 0.8)) +
   labs(x = var_label(data$efytotlt),
-       y = var_label(data$scfa12p)) +
+       y = var_label(data$scfa13p)) +
   facet_wrap(~as_factor(obereg))
 ```
 
-- With a couple of tweaks to allow longer labels to wrap around, we now have a much better looking plot
+Well, that's more informative, but a little messy
+  
+  - With a couple of tweaks to allow longer labels to wrap around, we now have a much better looking plot
+    - `y = str_wrap(var_label(data$scfa13p), 40)` says to make a new line every 40 characters on the y axis
+    - `labeller = label_wrap_gen(multi_line = TRUE)` inside our `facet_wrap()` allows the facet labels to wrap onto multiple lines
 
 ```{r}
+#| label: fig-rplot-all
 ggplot(data |> filter(efytotlt < 50000),
        aes(x = efytotlt,
-           y = scfa12p)) +
+           y = scfa13p)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 0.8)) +
   labs(x = var_label(data$efytotlt),
-       y = str_wrap(var_label(data$scfa12p), 40)) +
+       y = str_wrap(var_label(data$scfa13p), 40)) +
   facet_wrap(~as_factor(obereg),
              labeller = label_wrap_gen(multi_line = TRUE))
 ```
 
+## ![](stata-icon.png){width=0.15in} Stata
 
+**9**. What about the relationship between total enrollment and the percent paying instate tuition? Are bigger schools relying more on out-of-state students? Does this trend vary by region?
+
+- This wouldn't work in a table, so, let's look at a simple scatter plot
+
+```{stata}
+scatter scfa13p efytotlt if efytotlt < 50000, by(obereg, col(2))
+quietly graph export scatter.svg, replace
+```
+
+![](scatter.svg)
+
+```{stata}
+*| include: false
+*| eval: false
+scatter scfa13p efytotlt if efytotlt < 50000, by(obereg, col(3) legend(off)) || lfit scfa13p efytotlt if efytotlt < 50000
+quietly graph export scatter2.svg, replace
+```
+
+- See how by default the x, y, and by/facet labels use the labels and not the variable names/values?
+  - This instantly makes your plots more intuitive
+- I don't typically use Stata for plotting, so I'm not sure how to get the longer labels to wrap, but I'm sure there's a way
+
+:::
+
+## 5. Models with Labels 
+
+::: {.panel-tabset}
+
+## {{< fa brands r-project >}} R
+
+**11**. Lastly, let's look at how labels can show up in modeling. Let's see if the percentage of students paying out of state changes by the level of the institution (4 year, 2 year, Less than 2 year)
+
+```{r}
+
+model <- lm(scfa13p ~ factor(iclevel),
+            data = data)
+
+tbl_regression(model)
+```
+
+Without using labels, the regression output needs the code book to interpret
+  
+  - What is iclevel 2?
+
+Remember from above, using `as_factor()` rather than `factor()` tells R to use the labels as the levels
+
+```{r}
+model <- lm(scfa13p ~ as_factor(iclevel),
+            data = data)
+
+tbl_regression(model)
+```
+
+Okay that is much clearer what is going on!
+  
+  - `as_factor(iclevel)` is still a bit messy though
+  - Similarly to the plot above, using variable labels is a little more tricky, but, we can do it using the `var_label()` function again alongside the `label =` argument in `tbl_regression`
+
+```{r}
+tbl_regression(model,
+               label = list(`as_factor(iclevel)` = var_label(data$iclevel)))
+```
 
 ## ![](stata-icon.png){width=0.15in} Stata
+
+
+**10**. Lastly, let's look at how labels can show up in modeling. Let's see if the percentage of students paying out of state changes by the level of the institution (4 year, 2 year, Less than 2 year)
+
+```{stata}
+regress scfa13p i.iclevel
+```
+
+As you can see, the variable labels automatically show up in our regression output
+
+  - Before, you would have seen 2 and 3 in the iclevel column, but now you get informative labels
+  - With the labels, it's easier to interpret which makes you work easier to read and also less likely you will get mixed up and report the wrong value!
+
+:::
+
+
+# Removing Value Labels
+
+It's rare, but, there are occasions where you might need to remove value labels from your data
+  
+  - For instance, in R certain advanced analysis packages get confused when you have value labels
+  - You may also spot an error in labelling and need to get rid of it
+  - Luckily, it's pretty easy!
+  
+::: {.panel-tabset}
+
+## {{< fa brands r-project >}} R
+
+In R, just use the `zap_labels()` function from `haven` to create an unlabelled version of your data
+  
+```{r}
+data |>
+  count(iclevel)
+
+data_unlabelled <- zap_labels(data)
+
+data_unlabelled |>
+  count(iclevel)
+```
+
+## ![](stata-icon.png){width=0.15in} Stata
+
+In Stata, simply type `label drop _all`
+
+```{stata}
+tabulate iclevel
+
+label drop _all
+
+tabulate iclevel
+```
+
+
+:::
+
+# Getting Capitalized Variable Names
+
+- By default, `IPEDtaS` gives you lower-case variable names (which is the default for Stata-style data)
+- Usually, this is going to be easier to work with
+  - However, sometimes you might need to keep the original upper-case variable names, such as if you're adding this to an existing project that already uses upper-case variable names
+- To do this, you just need to add a single line near the end of the `IPEDtaS` script
+
+::: {.panel-tabset}
+
+## {{< fa brands r-project >}} R
+
+Add this line
+
+```{r}
+#| eval: false
+data_file <- data_file |> dplyr::rename_all(stringr::str_to_upper)
+```
+
+directly above (near end of script)
+
+```{r}
+#| eval: false
+haven::write_dta(data_file, dta_name)
+```
+
+## ![](stata-icon.png){width=0.15in} Stata
+
+Add this line
+
+```{stata}
+*| eval: false
+rename *, upper
+```
+
+directly above (near end of script)
+
+```{stata}
+*| eval: false
+save ../data/`dta_name'
+```
 
 :::
