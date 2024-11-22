@@ -36,7 +36,7 @@ You will see more of this in the applied example below, but, in short, they make
 #| echo: false
 library(tidyverse)
 data_with_labels <- haven::read_dta("data/hd2021.dta")
-data_without_labels <- haven::zap_labels(data)
+data_without_labels <- haven::zap_labels(data_with_labels)
 ```
 
 - Without labels, we just get the numeric code for each region which we'd have to look up
