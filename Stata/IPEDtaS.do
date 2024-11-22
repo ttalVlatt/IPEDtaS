@@ -19,6 +19,8 @@
 
 - To select which files are downloaded, simply add the files you want to the `local selected_files` list
 
+- There is a full tutorial available at https://capaldi.info/IPEDtaS
+
 ## System Requirements
 
 - Stata `version 16.0` or higher
@@ -64,6 +66,14 @@
   - Each line in the list must end in `///` except the final one
   - If you wish to, you can also comment out lines using multi-line comments (see tutorial)
 
+*/
+
+local selected_files ///
+"HD2023" ///
+"EFFY2023"
+
+/*
+
 Hint: The error "<Name> is not a valid command name" means you missed a "///"
 Hint: The error "var list not allowed" means you have incorrectly formatted comments
 Hint: at the bottom of the script there is a list with every single IPEDS file in it
@@ -72,9 +82,6 @@ Hint: at the bottom of the script there is a list with every single IPEDS file i
 
 */
 
-local selected_files ///
-"HD2023" ///
-"EFFY2023"
 
 **----------------------------------------------------------------------------**
 ** Check Python Installation for PyStata

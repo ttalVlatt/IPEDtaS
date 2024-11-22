@@ -8,7 +8,7 @@ execute:
 
 - This page will walk you the basics of how to use `IPEDtaS` to automagically retrieve labelled IPEDS `.dta` files
 
-## What `IPEDtaS` does
+## What `IPEDtaS` Does
 
 - NCES provide all the information needed to create labelled IPEDS data
   - However, it can be cumbersome to put all the pieces together manually
@@ -88,7 +88,7 @@ This part is identical for both Stata and R users, the main points to note are:
 
 1. Download either the Stata or R version of the script from the links at the top of this page
   - Hint: If the file is opening in your browser, use "download linked file" on macOS, or, "save link as" on windows to save the file (you can also just copy and paste)
-1. The script is designed to treat where ever you place the `IPEDtaS.do` or `IPEDtaS.R` file as the "working directory"
+2. The script is designed to treat where ever you place the `IPEDtaS.do` or `IPEDtaS.R` file as the "working directory"
   - **Check the working directory is set to your current project before doing anything else**
     - If you download the script, save it in your project folder, then open it, you will often get the correct working directory by default, but it's always best to check
     - When the script runs it will store output in `./data` and `./dictionaries` folders

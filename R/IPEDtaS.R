@@ -19,6 +19,8 @@
 ##' To select which files are downloaded, simply add the files you want to the 
 ##' selected_files list
 ##' 
+##' There is a full tutorial available at https://capaldi.info/IPEDtaS
+##' 
 ##' The resulting files with be a Stata .dta files in the data/ folder
 ##' 
 ##' If the required packages readr, haven, dplyr, and stringr are not installed,
