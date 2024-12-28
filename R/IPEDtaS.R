@@ -237,15 +237,14 @@ suppressWarnings(
           
         } else
           
-          if(is.numeric(var_values) & !is.numeric(data_file[[var]]) |
-             is.numeric(data_file[[var]]) & is.character(var_values)) {
+          if(!is.numeric(var_values)) {
             
             data_file[[var]] <- haven::labelled(data_file[[var]],
                                                 label = var_label)
             
             # Let us know what vars this happened with
             print(paste("FYI: Only applied variable label for", file_name,
-                        "variable", var, "due to mismatch of char/num data and labels"))
+                        "variable", var, "due to string values incompatible with .dta format"))
             
           } else
             
