@@ -1,6 +1,6 @@
 ## -----------------------------------------------------------------------------
 ##
-##' [PROJ: IPEDtaS-R]
+##' [PROJ: IPEDtaS.R]
 ##' [FILE: Automagically Download Labelled .dta IPEDS Files]
 ##' [INIT: March 25th 2024]
 ##' [UPDT: November 21 2024]
