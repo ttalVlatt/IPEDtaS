@@ -243,8 +243,8 @@ suppressWarnings(
                                                 label = var_label)
             
             # Let us know what vars this happened with
-            print(paste("FYI: Only applied variable label for", file_name,
-                        "variable", var, "due to string values incompatible with .dta format"))
+            #print(paste("FYI: Only applied variable label for", file_name,
+             #           "variable", var, "due to string values incompatible with .dta format"))
             
           } else
             
@@ -310,14 +310,44 @@ selected_files <- c(
   "EFFY2023_DIST", 
   "EFFY2023_HS", 
   "EFIA2023", 
-  "FLAGS2023", 
+  "ADM2023",
+  "EF2023A",
+  "EF2023B",
+  "EF2023C",
+  "EF2023D",
+  "EF2023A_DIST",
   "C2023_A", 
   "C2023_B", 
   "C2023_C", 
   "C2023DEP", 
+  "SAL2023_IS",
+  "SAL2023_NIS",
+  "S2023_OC",
+  "S2023_SIS",
+  "S2023_IS",
+  "S2023_NH",
+  "EAP2023",
+  "F2223_F1A",
+  "F2223_F2",
+  "F2223_F3",
+  "SFA2223",
+  "SFAV2223",
+  "GR2023",
+  "GR2023_L2",
+  "GR2023_PELL_SSL",
+  "GR200_23",
+  "OM2023",
+  "AL2023",
   "DRVIC2023", 
+  "DRVADM2023",
+  "DRVEF2023",
   "DRVEF122023", 
   "DRVC2023", 
+  "DRVGR2023",
+  "DRVOM2023",
+  "DRVF2023",
+  "DRVHR2023",
+  "DRVAL2023",
   
   # 2022
   
