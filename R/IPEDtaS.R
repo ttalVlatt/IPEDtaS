@@ -237,7 +237,7 @@ suppressWarnings(
           
         } else
           
-          if(!is.numeric(var_values)) {
+          if(!is.numeric(var_values)|!is.numeric(data_file[[var]])) {
             
             data_file[[var]] <- haven::labelled(data_file[[var]],
                                                 label = var_label)
